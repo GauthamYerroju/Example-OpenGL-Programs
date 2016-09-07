@@ -21,7 +21,7 @@ brew install glew glm sdl2
 ## Building and Running
 To build this project use CMake. Shader file paths must be sent as arguments to the program  using the following format:
 
-<executable-filename> <vertex-shader-filepath> <fragment-shader-filepath>  
+executable-filename vertex-shader-filepath fragment-shader-filepath  
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary.
