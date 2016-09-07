@@ -22,6 +22,7 @@ class Object
     GLuint IB;
 
     float angle;
+    float orbit_radius;
 };
 
 #endif /* OBJECT_H */
