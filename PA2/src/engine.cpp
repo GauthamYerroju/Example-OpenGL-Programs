@@ -66,7 +66,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, eventFlags);
     m_graphics->Render();
 
     // Swap to the Window
@@ -83,9 +83,47 @@ void Engine::Keyboard()
   else if (m_event.type == SDL_KEYDOWN)
   {
     // handle key down events here
-    if (m_event.key.keysym.sym == SDLK_ESCAPE)
-    {
-      m_running = false;
+    switch(m_event.key.keysym.sym){
+      case SDLK_ESCAPE:
+        m_running = false;
+        break;
+      case SDLK_1:
+        //1 pressed, change cube rotation direction
+        if( eventFlags.clockwise_rotate == false )
+          eventFlags.clockwise_rotate = true;
+        else if( eventFlags.clockwise_rotate == true )
+          eventFlags.clockwise_rotate = false;
+        break;
+      case SDLK_2:
+        //2 pressed, change cube orbit direction
+        if( eventFlags.clockwise_orbit== false )
+          eventFlags.clockwise_orbit = true;
+        else if( eventFlags.clockwise_orbit == true )
+          eventFlags.clockwise_orbit = false;
+        break;
+      case SDLK_3:
+        //3 pressed, toggle (start/stop) cube rotation
+        if( eventFlags.pause_rotate == false )
+          eventFlags.pause_rotate = true;
+        else if( eventFlags.pause_rotate == true)
+          eventFlags.pause_rotate = false;
+        break;
+      case SDLK_4:
+        //4 pressed, toggle (start/stop) cube orbit
+        if( eventFlags.pause_orbit == false )
+          eventFlags.pause_orbit = true;
+        else if( eventFlags.pause_orbit == true )
+          eventFlags.pause_orbit = false;
+        break;
+      case SDLK_PAUSE:
+        //Pause or resume program
+        if( eventFlags.pause_all == false )
+          eventFlags.pause_all = true;
+        else if( eventFlags.pause_all == true )
+          eventFlags.pause_all = false;
+        break;
+      default:
+        break;
     }
   }
 }

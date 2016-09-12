@@ -30,4 +30,21 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec3 c): vertex(v), color(c) {}
 };
 
+struct EventFlag
+{
+	bool clockwise_rotate;
+    bool clockwise_orbit;
+    bool pause_rotate;
+    bool pause_orbit;
+    bool pause_all;
+ 
+    EventFlag(){
+    	clockwise_rotate = false; 
+    	clockwise_orbit = false; 
+    	pause_rotate = false; 
+    	pause_orbit = false; 
+    	pause_all = false;
+	}
+};
+
 #endif /* GRAPHICS_HEADERS_H */

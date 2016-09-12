@@ -60,7 +60,8 @@ Object::Object()
     Indices[i] = Indices[i] - 1;
   }
 
-  angle = 0.0f;
+  angle_rotate = 0.0f;
+  angle_orbit = 0.0f;
   orbit_radius = 5.0f;
 
   glGenBuffers(1, &VB);
@@ -78,11 +79,31 @@ Object::~Object()
   Indices.clear();
 }
 
-void Object::Update(unsigned int dt)
+void Object::Update(unsigned int dt, EventFlag e_flags)
 {
-  angle += dt * M_PI/1000;
-  model = glm::translate(glm::mat4(1.0f), glm::vec3(cos(angle/4)*orbit_radius, 0.0f, sin(angle/4)*orbit_radius));
-  model = glm::rotate(model, (angle), glm::vec3(0.0, 1.0, 0.0));
+  if( !e_flags.pause_all ){
+    // rotation
+    if( !e_flags.pause_rotate ){
+      if( !e_flags.clockwise_rotate )
+        // Set counter clockwise angle of rotation
+        angle_rotate += dt * M_PI/1000;
+      else if( e_flags.clockwise_rotate )
+        // Set clockwise angle of rotation
+        angle_rotate -= dt * M_PI/1000;
+    }
+    // orbit
+    if( !e_flags.pause_orbit ){
+      if( !e_flags.clockwise_orbit )
+        // Set counter clockwise angle of orbit
+        angle_orbit += (dt * M_PI/1000)/4;
+      else if( e_flags.clockwise_orbit )
+        // Set clockwise angle of orbit
+        angle_orbit -= (dt * M_PI/1000)/4;
+    }
+  }
+  
+  model = glm::translate(glm::mat4(1.0f), glm::vec3(sin(angle_orbit)*orbit_radius, 0.0f, cos(angle_orbit)*orbit_radius));
+  model = glm::rotate(model, (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
   
 }
 

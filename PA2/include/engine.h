@@ -4,6 +4,7 @@
 #include <sys/time.h>
 #include <assert.h>
 
+#include "graphics_headers.h"
 #include "window.h"
 #include "graphics.h"
 
@@ -32,6 +33,8 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
+
+    EventFlag eventFlags;
 };
 
 #endif // ENGINE_H
