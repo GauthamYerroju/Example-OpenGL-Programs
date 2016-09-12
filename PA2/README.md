@@ -1,4 +1,4 @@
-# PA2: Interaction
+# PA2: Interaction (Keyboard and Mouse)
 
 # Dependencies, Building, and Running
 
@@ -37,7 +37,7 @@ make
 ## Keyboard Events
 The following keyboard commands are used to interact with the program:
 
-Key			Event  
+Key	- Event  
 
 1	- Reverse cube rotation direction  
 2	- Reverse cube orbit direction  
