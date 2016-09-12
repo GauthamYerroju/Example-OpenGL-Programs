@@ -63,6 +63,7 @@ void Engine::Run()
     while(SDL_PollEvent(&m_event) != 0)
     {
       Keyboard();
+      Mouse();
     }
 
     // Update and render the graphics
@@ -121,6 +122,32 @@ void Engine::Keyboard()
           eventFlags.pause_all = true;
         else if( eventFlags.pause_all == true )
           eventFlags.pause_all = false;
+        break;
+      default:
+        break;
+    }
+  }
+}
+
+void Engine::Mouse(){
+
+  if (m_event.type == SDL_MOUSEBUTTONDOWN)
+  {
+    // handle mouse button down events here
+    switch(m_event.button.button){
+      case SDL_BUTTON_LEFT:
+        //Left click, change cube rotation direction
+        if( eventFlags.clockwise_rotate == false )
+          eventFlags.clockwise_rotate = true;
+        else if( eventFlags.clockwise_rotate == true )
+          eventFlags.clockwise_rotate = false;
+        break;
+      case SDL_BUTTON_RIGHT:
+        //Right click, change cube orbit direction
+        if( eventFlags.clockwise_orbit== false )
+          eventFlags.clockwise_orbit = true;
+        else if( eventFlags.clockwise_orbit == true )
+          eventFlags.clockwise_orbit = false;
         break;
       default:
         break;

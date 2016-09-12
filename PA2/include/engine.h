@@ -17,6 +17,7 @@ class Engine
     bool Initialize(char **argv);
     void Run();
     void Keyboard();
+    void Mouse();
     unsigned int getDT();
     long long GetCurrentTimeMillis();
   
@@ -28,13 +29,14 @@ class Engine
     int m_WINDOW_HEIGHT;
     bool m_FULLSCREEN;
     SDL_Event m_event;
+    EventFlag eventFlags;
 
     Graphics *m_graphics;
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
 
-    EventFlag eventFlags;
+    
 };
 
 #endif // ENGINE_H

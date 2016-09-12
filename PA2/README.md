@@ -19,7 +19,7 @@ brew install glew glm sdl2
 ```
 
 ## Building and Running
-To build this project use CMake. Shader file paths must be sent as arguments to the program  using the following format:
+To build this project use CMake. Shader file paths must be sent as arguments to the program  using the following format:  
 
 executable-filename vertex-shader-filepath fragment-shader-filepath  
 
@@ -34,18 +34,23 @@ make
 ./Tutorial shaders/vShader.vert shaders/fShader.frag
 ```
 
-## Keyboard events
+## Keyboard Events
 The following keyboard commands are used to interact with the program:
 
-Key			Event
+Key			Event  
 
-1 	- Reverse cube rotation direction
-2 	- Reverse cube orbit direction
-3 	- Toggle (start/stop) cube rotation
-4 	- Toggle (start/stop) cube orbit
-Pause 	- Pause or resume program
-Esc	- Close program
+1	- Reverse cube rotation direction  
+2	- Reverse cube orbit direction  
+3	- Toggle (start/stop) cube rotation  
+4	- Toggle (start/stop) cube orbit  
+Pause	- Pause or resume program  
+Esc	- Close program  
 
+## Mouse Events
+The following mouse commands are used to interact with the program:
+
+Left-Click	- Reverse cube rotation direction  
+Right-Click	- Reverse cube orbit direction  
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
