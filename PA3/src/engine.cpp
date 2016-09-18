@@ -46,6 +46,9 @@ bool Engine::Initialize(char **argv)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
+  eventFlags.push_back(EventFlag());
+  eventFlags.push_back(EventFlag());
+
   // No errors
   return true;
 }
@@ -90,38 +93,44 @@ void Engine::Keyboard()
         break;
       case SDLK_1:
         //1 pressed, change cube rotation direction
-        if( eventFlags.clockwise_rotate == false )
-          eventFlags.clockwise_rotate = true;
-        else if( eventFlags.clockwise_rotate == true )
-          eventFlags.clockwise_rotate = false;
+        if( eventFlags[0].clockwise_rotate == false )
+          eventFlags[0].clockwise_rotate = true;
+        else if( eventFlags[0].clockwise_rotate == true )
+          eventFlags[0].clockwise_rotate = false;
         break;
       case SDLK_2:
         //2 pressed, change cube orbit direction
-        if( eventFlags.clockwise_orbit== false )
-          eventFlags.clockwise_orbit = true;
-        else if( eventFlags.clockwise_orbit == true )
-          eventFlags.clockwise_orbit = false;
+        if( eventFlags[0].clockwise_orbit== false )
+          eventFlags[0].clockwise_orbit = true;
+        else if( eventFlags[0].clockwise_orbit == true )
+          eventFlags[0].clockwise_orbit = false;
         break;
       case SDLK_3:
         //3 pressed, toggle (start/stop) cube rotation
-        if( eventFlags.pause_rotate == false )
-          eventFlags.pause_rotate = true;
-        else if( eventFlags.pause_rotate == true)
-          eventFlags.pause_rotate = false;
+        if( eventFlags[0].pause_rotate == false )
+          eventFlags[0].pause_rotate = true;
+        else if( eventFlags[0].pause_rotate == true)
+          eventFlags[0].pause_rotate = false;
         break;
       case SDLK_4:
         //4 pressed, toggle (start/stop) cube orbit
-        if( eventFlags.pause_orbit == false )
-          eventFlags.pause_orbit = true;
-        else if( eventFlags.pause_orbit == true )
-          eventFlags.pause_orbit = false;
+        if( eventFlags[0].pause_orbit == false )
+          eventFlags[0].pause_orbit = true;
+        else if( eventFlags[0].pause_orbit == true )
+          eventFlags[0].pause_orbit = false;
         break;
       case SDLK_PAUSE:
         //Pause or resume program
-        if( eventFlags.pause_all == false )
-          eventFlags.pause_all = true;
-        else if( eventFlags.pause_all == true )
-          eventFlags.pause_all = false;
+        if( eventFlags[0].pause_all == false )
+        {
+          eventFlags[0].pause_all = true;
+          eventFlags[1].pause_all = true;
+        }
+        else if( eventFlags[0].pause_all == true )
+        { 
+          eventFlags[0].pause_all = false;
+          eventFlags[1].pause_all = false;
+        }
         break;
       default:
         break;
@@ -137,17 +146,17 @@ void Engine::Mouse(){
     switch(m_event.button.button){
       case SDL_BUTTON_LEFT:
         //Left click, change cube rotation direction
-        if( eventFlags.clockwise_rotate == false )
-          eventFlags.clockwise_rotate = true;
-        else if( eventFlags.clockwise_rotate == true )
-          eventFlags.clockwise_rotate = false;
+        if( eventFlags[0].clockwise_rotate == false )
+          eventFlags[0].clockwise_rotate = true;
+        else if( eventFlags[0].clockwise_rotate == true )
+          eventFlags[0].clockwise_rotate = false;
         break;
       case SDL_BUTTON_RIGHT:
         //Right click, change cube orbit direction
-        if( eventFlags.clockwise_orbit== false )
-          eventFlags.clockwise_orbit = true;
-        else if( eventFlags.clockwise_orbit == true )
-          eventFlags.clockwise_orbit = false;
+        if( eventFlags[0].clockwise_orbit== false )
+          eventFlags[0].clockwise_orbit = true;
+        else if( eventFlags[0].clockwise_orbit == true )
+          eventFlags[0].clockwise_orbit = false;
         break;
       default:
         break;

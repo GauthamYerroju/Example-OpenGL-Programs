@@ -1,4 +1,4 @@
-# PA2: Interaction (Keyboard and Mouse)
+# PA3: Moons
 
 # Dependencies, Building, and Running
 

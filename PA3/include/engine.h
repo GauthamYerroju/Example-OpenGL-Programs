@@ -3,6 +3,7 @@
 
 #include <sys/time.h>
 #include <assert.h>
+#include <vector>
 
 #include "graphics_headers.h"
 #include "window.h"
@@ -29,7 +30,7 @@ class Engine
     int m_WINDOW_HEIGHT;
     bool m_FULLSCREEN;
     SDL_Event m_event;
-    EventFlag eventFlags;
+    vector<EventFlag> eventFlags;
 
     Graphics *m_graphics;
     unsigned int m_DT;

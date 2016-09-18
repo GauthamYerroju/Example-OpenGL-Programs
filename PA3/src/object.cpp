@@ -63,6 +63,9 @@ Object::Object()
   angle_rotate = 0.0f;
   angle_orbit = 0.0f;
   orbit_radius = 5.0f;
+  orbit_speed = 0.25f;
+  rotate_speed = 1.0f;
+  orbit_center = glm::mat4(1.0f);
 
   glGenBuffers(1, &VB);
   glBindBuffer(GL_ARRAY_BUFFER, VB);
@@ -86,30 +89,50 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
     if( !e_flags.pause_rotate ){
       if( !e_flags.clockwise_rotate )
         // Set counter clockwise angle of rotation
-        angle_rotate += dt * M_PI/1000;
+        angle_rotate += (dt * M_PI/1000) * rotate_speed;
       else if( e_flags.clockwise_rotate )
         // Set clockwise angle of rotation
-        angle_rotate -= dt * M_PI/1000;
+        angle_rotate -= (dt * M_PI/1000) * rotate_speed;
     }
     // orbit
     if( !e_flags.pause_orbit ){
       if( !e_flags.clockwise_orbit )
         // Set counter clockwise angle of orbit
-        angle_orbit += (dt * M_PI/1000)/4;
+        angle_orbit += (dt * M_PI/1000) * orbit_speed;
       else if( e_flags.clockwise_orbit )
         // Set clockwise angle of orbit
-        angle_orbit -= (dt * M_PI/1000)/4;
+        angle_orbit -= (dt * M_PI/1000) * orbit_speed;
     }
   }
   
   model = glm::translate(glm::mat4(1.0f), glm::vec3(sin(angle_orbit)*orbit_radius, 0.0f, cos(angle_orbit)*orbit_radius));
+  position = model;
   model = glm::rotate(model, (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
   
+}
+
+void Object::Set_OrbitSpeed(float o_speed)
+{
+  orbit_speed = o_speed;
+}
+
+void Object::Set_RotateSpeed(float r_speed)
+{
+  rotate_speed = r_speed;
+}
+
+void Object::Set_OrbitCenter(glm::mat4 o_center)
+{
+  orbit_center = o_center;
 }
 
 glm::mat4 Object::GetModel()
 {
   return model;
+}
+
+glm::mat4 Object::GetPosition(){
+  return position;
 }
 
 void Object::Render()

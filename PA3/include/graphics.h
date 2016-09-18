@@ -15,7 +15,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, char **argv);
-    void Update(unsigned int dt, EventFlag e_flags);
+    void Update(unsigned int dt, vector<EventFlag> e_flags);
     void Render();
 
   private:
@@ -29,6 +29,7 @@ class Graphics
     GLint m_modelMatrix;
 
     Object *m_cube;
+    Object *m_cube_moon;
 };
 
 #endif /* GRAPHICS_H */
