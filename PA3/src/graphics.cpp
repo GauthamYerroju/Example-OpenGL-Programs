@@ -48,6 +48,16 @@ bool Graphics::Initialize(int width, int height, char **argv)
   m_cube = new Object();
   m_cube_moon = new Object();
 
+  // Initialize planet attributes
+  m_cube->Set_RotateSpeed(0.25);
+  m_cube->Set_OrbitSpeed(0.125);
+
+  // Initialize moon attributes
+  m_cube_moon->Set_RotateSpeed(1.0);
+  m_cube_moon->Set_OrbitSpeed(0.75);
+  m_cube_moon->Set_OrbitRadius(3.0);
+  m_cube_moon->Set_Scale(0.50);
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -110,8 +120,10 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
 void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
 {
-  // Update the object
+  // Update the planet
   m_cube->Update(dt, e_flags[0]);
+  
+  // Get planet position 
   m_cube_moon->Set_OrbitCenter(m_cube->GetPosition());
   m_cube_moon->Update(dt, e_flags[1]);
 }

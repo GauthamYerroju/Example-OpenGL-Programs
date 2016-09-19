@@ -91,33 +91,73 @@ void Engine::Keyboard()
       case SDLK_ESCAPE:
         m_running = false;
         break;
-      case SDLK_1:
-        //1 pressed, change cube rotation direction
-        if( eventFlags[0].clockwise_rotate == false )
-          eventFlags[0].clockwise_rotate = true;
-        else if( eventFlags[0].clockwise_rotate == true )
+      case SDLK_a:
+        //'a' pressed, change planet rotation direction counter-clockwise
+        if( eventFlags[0].clockwise_rotate == true )
           eventFlags[0].clockwise_rotate = false;
         break;
-      case SDLK_2:
-        //2 pressed, change cube orbit direction
-        if( eventFlags[0].clockwise_orbit== false )
-          eventFlags[0].clockwise_orbit = true;
-        else if( eventFlags[0].clockwise_orbit == true )
+      case SDLK_d:
+        //'d' pressed, change planet rotation direction clockwise
+        if( eventFlags[0].clockwise_rotate == false )
+          eventFlags[0].clockwise_rotate = true;
+        break;
+      case SDLK_LEFT:
+        //Left Arrow, change moon rotation direction counter-clockwise
+        if( eventFlags[1].clockwise_rotate == true )
+          eventFlags[1].clockwise_rotate = false;
+        break;
+      case SDLK_RIGHT:
+        //Right Arrow, change moon rotation clockwise
+        if( eventFlags[1].clockwise_rotate == false )
+          eventFlags[1].clockwise_rotate = true;
+        break;
+      case SDLK_w:
+        //'w' pressed, change planet orbit direction counter-clockwise
+        if( eventFlags[0].clockwise_orbit == true )
           eventFlags[0].clockwise_orbit = false;
         break;
-      case SDLK_3:
-        //3 pressed, toggle (start/stop) cube rotation
+      case SDLK_s:
+        //'s' pressed, change planet orbit direction clockwise
+        if( eventFlags[0].clockwise_orbit == false )
+          eventFlags[0].clockwise_orbit = true;
+        break;
+      case SDLK_UP:
+        //Up Arrow, change moon orbit direction counter-clockwise
+        if( eventFlags[1].clockwise_orbit == true )
+          eventFlags[1].clockwise_orbit = false;
+          break;
+      case SDLK_DOWN:
+        //Up Arrow, change moon orbit direction counter-clockwise
+        if( eventFlags[1].clockwise_orbit == false )
+          eventFlags[1].clockwise_orbit = true;
+          break;
+      case SDLK_1:
+        //'1' pressed, toggle (start/stop) planet rotation
         if( eventFlags[0].pause_rotate == false )
           eventFlags[0].pause_rotate = true;
         else if( eventFlags[0].pause_rotate == true)
           eventFlags[0].pause_rotate = false;
         break;
-      case SDLK_4:
-        //4 pressed, toggle (start/stop) cube orbit
+      case SDLK_2:
+        //'2' pressed, toggle (start/stop) moon rotation
+        if( eventFlags[1].pause_rotate == false )
+          eventFlags[1].pause_rotate = true;
+        else if( eventFlags[1].pause_rotate == true)
+          eventFlags[1].pause_rotate = false;
+        break;
+      case SDLK_3:
+        //'3' pressed, toggle (start/stop) planet orbit
         if( eventFlags[0].pause_orbit == false )
           eventFlags[0].pause_orbit = true;
         else if( eventFlags[0].pause_orbit == true )
           eventFlags[0].pause_orbit = false;
+        break;
+      case SDLK_4:
+        //'4' pressed, toggle (start/stop) moon orbit
+        if( eventFlags[1].pause_orbit == false )
+          eventFlags[1].pause_orbit = true;
+        else if( eventFlags[1].pause_orbit == true )
+          eventFlags[1].pause_orbit = false;
         break;
       case SDLK_PAUSE:
         //Pause or resume program

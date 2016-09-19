@@ -37,20 +37,28 @@ make
 ## Keyboard Events
 The following keyboard commands are used to interact with the program:
 
-Key	- Event  
+Key          - Event  
 
-1	- Reverse cube rotation direction  
-2	- Reverse cube orbit direction  
-3	- Toggle (start/stop) cube rotation  
-4	- Toggle (start/stop) cube orbit  
-Pause	- Pause or resume program  
-Esc	- Close program  
+a            - Change planet rotation to counter-clockwise  
+d            - Change planet rotation to clockwise  
+w            - Change planet orbit to counter-clockwise  
+s            - Change planet orbit to clockwise  
+LeftArrow    - Change moon rotation to counter-clockwise  
+RightArrow   - Change moon rotation to clockwise  
+UpArrow      - Change moon orbit to counter-clockwise  
+DownArrow    - Change moon orbit to clockwise  
+1            - Toggle (start/stop) planet rotation  
+2            - Toggle (start/stop) moon rotation  
+3            - Toggle (start/stop) planet orbit  
+4            - Toggle (start/stop) moon orbit  
+Pause        - Pause or resume program  
+Esc          - Close program  
 
 ## Mouse Events
 The following mouse commands are used to interact with the program:
 
-Left-Click	- Reverse cube rotation direction  
-Right-Click	- Reverse cube orbit direction  
+Left-Click    - Reverse planet rotation direction  
+Right-Click   - Reverse planet orbit direction  
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the Tutorial executable use this line to execute.
