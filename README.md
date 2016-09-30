@@ -14,3 +14,20 @@ This is a cube that rotates in place while orbiting around the origin on the scr
 
 ## PA2: Interaction (Keyboard and Mouse)
 This is a cube that rotates in place while orbiting around the origin on the screen. The cube rotation and orbit can be reversed using keybaord and mouse commands. The cube rotation and orbit can be toggled (start/stop) and the program can be paused or resumed using keyboard commands. To run this project ```cd PA2``` then follow the instructions in the README.md.
+
+## PA3: Moons
+This is a cube (planet) that rotates in place while orbiting around the origin on the screen. The cube rotation and orbit can be reversed using keybaord and mouse commands. The cube rotation and orbit can be toggled (start/stop) and the program can be paused or resumed using keyboard commands. Further, there is another cube (moon) which rotates around its own axis and orbits the first cube. The cube rotation and orbit can be reversed using keyboard commands. The cube rotation and orbit can be toggled (start/stop). To run this project ```cd PA3``` then follow the instructions in the README.md.
+
+## PA4: Blending and Model Loading
+This is an model loader which loads triangulated blender OBJ files. Verticies and faces are loaded and then rendered to rotate on the screen. To run this project ```cd PA4``` then follow the instructions in the README.md.
+
+## PA5: Assimp and Model Loading
+This is a group project consisting of the following three collaborators:
+
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
+
+This is a model loader using assimp to load verticies, faces, and colors from a model and render the model to rotate on the screen. To run this project ```cd PA5``` then follow the instructions in the README.md.
+
+
