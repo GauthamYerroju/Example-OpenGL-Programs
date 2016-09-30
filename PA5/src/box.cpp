@@ -117,7 +117,7 @@ bool Box::Model_Loader(const char *filePath)
 
       Vertices.push_back(vert);
 
-      std::cout << "Vertex: " << glm::to_string(glm::vec3(v_position.x, v_position.y, v_position.z)) << std::endl;
+      std::cout << "Vertex " << vert_indx << ": " << glm::to_string(glm::vec3(v_position.x, v_position.y, v_position.z)) << std::endl;
     }
 
     std::cout << std::endl;
