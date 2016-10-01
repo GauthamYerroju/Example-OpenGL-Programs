@@ -66,9 +66,9 @@ void Box::Set_Scale( float sclr )
 
 bool Box::Model_Loader(const char *filePath)
 {
-  // Create an instance of the Importer class
+  
   Assimp::Importer importer;
-
+  int face_indx_offset = 0;
 
   /*
   aiProcessPreset_TargetRealtime_Fast
@@ -90,14 +90,15 @@ bool Box::Model_Loader(const char *filePath)
     return false;
   }
 
- 
   std::cout << "The number of meshes in this scene: " << scene->mNumMeshes << std::endl << std::endl;
 
+  // Read in vertices and face indices for each mesh
   for( unsigned int mesh_indx = 0; mesh_indx < scene->mNumMeshes; mesh_indx++){
     const aiMesh *mesh = scene->mMeshes[mesh_indx];
     const aiMaterial *mtl = scene->mMaterials[mesh->mMaterialIndex];
     
-    aiColor3D color (0.f,0.f,0.f);
+    // Get the diffuse color for the current mesh
+    aiColor3D color (0.0f,0.0f,0.0f);
     mtl->Get(AI_MATKEY_COLOR_DIFFUSE,color);
     
     std::cout << "MESH #" << (mesh_indx + 1) << std::endl;
@@ -108,13 +109,13 @@ bool Box::Model_Loader(const char *filePath)
     std::cout << "The material used by this mesh (MaterialIndex): " << mesh->mMaterialIndex << std::endl;
     std::cout << "Diffuse Color: " << glm::to_string(glm::vec3( color.r, color.g, color.b)) << std::endl << std::endl;
 
+    // Get vertices for the current mesh
     for( unsigned int vert_indx = 0; vert_indx < mesh->mNumVertices; vert_indx++){
       const aiVector3D v_position = mesh->mVertices[vert_indx];
              
       Vertex vert(glm::vec3(0.0f), glm::vec3(0.0f));
       vert.vertex = glm::vec3(v_position.x, v_position.y, v_position.z);
       vert.color = glm::vec3( color.r, color.g, color.b);
-
       Vertices.push_back(vert);
 
       std::cout << "Vertex " << vert_indx << ": " << glm::to_string(glm::vec3(v_position.x, v_position.y, v_position.z)) << std::endl;
@@ -122,19 +123,23 @@ bool Box::Model_Loader(const char *filePath)
 
     std::cout << std::endl;
 
+    // Get face indices for the current mesh
     for( unsigned int face_indx = 0; face_indx < mesh->mNumFaces; face_indx++){
       const aiFace face = mesh->mFaces[face_indx];
 
       for( unsigned int indx = 0; indx < face.mNumIndices; indx++){
         std::cout << face.mIndices[indx] << " ";
 
-        Indices.push_back(face.mIndices[indx]);
+        Indices.push_back(face.mIndices[indx] + v_indx_offset);
       }
 
       std::cout << std::endl;  
     }
 
     std::cout << std::endl;
+    
+    // Set vertex offset to current size of Verticies vector for next mesh
+    v_indx_offset = Vertices.size();
   }
  
   return true;
