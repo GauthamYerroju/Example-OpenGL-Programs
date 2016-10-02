@@ -45,7 +45,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   }
 
   // Create the object
-  m_box = new Box(argv[3]);
+  m_box = new Object(argv[3]);
 
   // Initialize box attributes
   m_box->Set_RotateSpeed(0.25);

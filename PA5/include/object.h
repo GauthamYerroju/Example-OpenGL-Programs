@@ -2,25 +2,33 @@
 #define OBJECT_H
 
 #include <vector>
+#include <string>
+#include <fstream>
+#include <sstream>
 #include "graphics_headers.h"
 
 class Object
 {
   public:
-    Object();
+    Object(const char *objPath);
     ~Object();
 
     void Render();
     glm::mat4 GetModel();
 
-    virtual void Update(unsigned int dt, EventFlag e_flags) =0;
-    virtual void Set_RotateSpeed(float r_speed) = 0;
-    virtual void Set_Scale( float sclr ) = 0;
-    virtual bool Model_Loader(const char *filePath) = 0;
+    void Update(unsigned int dt, EventFlag e_flags);
+    void Set_RotateSpeed(float r_speed); 
+    void Set_Scale( float sclr );
+    bool Model_Loader(const char *filePath);
 
-
-  protected:
+  private:
     glm::mat4 model;
+    glm::mat4 rotation;
+    glm::mat4 scale;
+
+    float angle_rotate;
+    float rotate_speed;
+    float scaler;
 
     std::vector<Vertex> Vertices;
     std::vector<unsigned int> Indices;
