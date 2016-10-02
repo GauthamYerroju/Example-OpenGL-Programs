@@ -130,7 +130,7 @@ bool Box::Model_Loader(const char *filePath)
       for( unsigned int indx = 0; indx < face.mNumIndices; indx++){
         std::cout << face.mIndices[indx] << " ";
 
-        Indices.push_back(face.mIndices[indx] + v_indx_offset);
+        Indices.push_back(face.mIndices[indx] + face_indx_offset);
       }
 
       std::cout << std::endl;  
@@ -139,7 +139,7 @@ bool Box::Model_Loader(const char *filePath)
     std::cout << std::endl;
     
     // Set vertex offset to current size of Verticies vector for next mesh
-    v_indx_offset = Vertices.size();
+    face_indx_offset = Vertices.size();
   }
  
   return true;
