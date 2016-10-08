@@ -27,6 +27,9 @@
 #include <assimp/postprocess.h> //includes the postprocessing variables for the importer
 #include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects 
 
+// Magick++
+#include <Magick++.h>
+
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
 struct Vertex
