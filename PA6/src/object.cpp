@@ -138,3 +138,20 @@ bool Object::Model_Loader(const char *filePath)
   return true;
 }
 
+
+bool Object::Image_Loader(const char *filePath)
+{
+  
+  try
+  {
+    m_pImage.read(filePath);
+    m_pImage.write( &m_Blob, "RGBA" );
+  }
+  catch( Magick::Error& error )
+  {
+    printf("Error loading image '%s': '%s'\n", filePath, error.what());
+    return false;
+  }
+
+  return true;
+}

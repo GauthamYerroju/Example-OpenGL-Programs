@@ -20,6 +20,7 @@ class Object
     void Set_RotateSpeed(float r_speed); 
     void Set_Scale( float sclr );
     bool Model_Loader(const char *filePath);
+    bool Image_Loader(const char *filePath);
 
   private:
     glm::mat4 model;
@@ -34,6 +35,9 @@ class Object
     std::vector<unsigned int> Indices;
     GLuint VB;
     GLuint IB;
+
+    Magick::Image m_pImage;
+    Magick::Blob m_Blob;
    
 };
 
