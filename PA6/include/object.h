@@ -20,7 +20,7 @@ class Object
     void Set_RotateSpeed(float r_speed); 
     void Set_Scale( float sclr );
     bool Model_Loader(const char *filePath);
-    bool Image_Loader(const char *filePath);
+    bool Texture_Loader(const char *filePath, GLenum GL_TEXTUREi);
 
   private:
     glm::mat4 model;
@@ -36,6 +36,7 @@ class Object
     GLuint VB;
     GLuint IB;
 
+    std::vector<Texture> textures;
     Magick::Image m_pImage;
     Magick::Blob m_Blob;
    

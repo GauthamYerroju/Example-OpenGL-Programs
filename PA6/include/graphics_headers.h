@@ -35,9 +35,22 @@
 struct Vertex
 {
   glm::vec3 vertex;
-  glm::vec3 color;
+  glm::vec2 uv_Coords;
 
-  Vertex(glm::vec3 v, glm::vec3 c): vertex(v), color(c) {}
+  Vertex(glm::vec3 v, glm::vec2 uv): vertex(v), uv_Coords(uv) {}
+};
+
+struct Texture
+{
+  GLuint textureID;
+  Magick::Image m_pImage;
+  Magick::Blob m_Blob;
+  GLenum GL_TEXTUREi;
+
+  void setID( GLuint tID ){ textureID = tID; }
+  void setImage( Magick::Image mImg ){ m_pImage = mImg; }
+  void setBlob( Magick::Blob blob ){ m_Blob = blob; }
+  void setGLTEXTUREi( GLenum GL_Ti ) {GL_TEXTUREi = GL_Ti;}
 };
 
 struct EventFlag

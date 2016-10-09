@@ -38,7 +38,7 @@ mkdir build
 cd build
 cmake ..
 make
-./PA5 shaders/vShader.vert shaders/fShader.frag models/box.obj
+./PA6 shaders/vShader.vert shaders/fShader.frag models/capsule.obj
 ```
 
 ## Keyboard Events
@@ -60,5 +60,5 @@ Right-Click   - Change object rotation to clockwise
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./PA5 shaders/vShader.vert shaders/fShader.frag models/box.obj
+/usr/NX/scripts/vgl/vglrun ./PA6 shaders/vShader.vert shaders/fShader.frag models/capsule.obj
 ```

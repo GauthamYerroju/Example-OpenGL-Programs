@@ -1,10 +1,12 @@
 #version 330
           
           layout (location = 0) in vec3 v_position;
-          layout (location = 1) in vec3 v_color;
-          
-          smooth out vec3 color;
-          
+          layout (location = 1) in vec2 v_texCoord;
+
+            
+          out vec2 texCoord;
+
+               
           uniform mat4 projectionMatrix;
           uniform mat4 viewMatrix;
           uniform mat4 modelMatrix; 
@@ -13,5 +15,6 @@
           {
             vec4 v = vec4(v_position, 1.0);
             gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v;
-            color = v_color;
+            texCoord = v_texCoord;
+
           }
