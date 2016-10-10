@@ -1,5 +1,5 @@
 
-#include "engine.h"
+#include "engine.hpp"
 
 Engine::Engine(string name, int width, int height)
 {

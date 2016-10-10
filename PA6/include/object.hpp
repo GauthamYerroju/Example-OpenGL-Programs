@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "graphics_headers.h"
+#include "graphics_headers.hpp"
 
 class Object
 {

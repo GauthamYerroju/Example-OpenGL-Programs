@@ -5,9 +5,9 @@
 #include <assert.h>
 #include <vector>
 
-#include "graphics_headers.h"
-#include "window.h"
-#include "graphics.h"
+#include "graphics_headers.hpp"
+#include "window.hpp"
+#include "graphics.hpp"
 
 class Engine
 {
