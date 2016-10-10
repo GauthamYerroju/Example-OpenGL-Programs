@@ -40,11 +40,6 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec2 uv): vertex(v), uv_Coords(uv) {}
 };
 
-struct Texture
-{
-  GLuint textureID;
-};
-
 struct EventFlag
 {
 	bool clockwise_rotate;
