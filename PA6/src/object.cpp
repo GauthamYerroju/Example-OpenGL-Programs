@@ -6,38 +6,10 @@ Object::Object(const char *objPath)
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
 
-  for( unsigned int t_i = 0; t_i < textures.size(); t_i++){
-
-    glGenTextures(1, &textures[t_i].textureID);
-    
-    // Assign texture to ID
-    glBindTexture(GL_TEXTURE_2D, textures[t_i].textureID);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, textures[t_i].m_pImage.columns(), textures[t_i].m_pImage.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, textures[t_i].m_Blob.data());
-  
-    //glGenerateMipmap(GL_TEXTURE_2D);  
-
-    // Parameters
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
-  
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-    //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  
-
-    glActiveTexture(textures[t_i].GL_TEXTUREi); // TextureUnit: GL_TEXTURE0, GL_TEXTURE1, etc
-    glBindTexture(GL_TEXTURE_2D, textures[t_i].textureID);
-
+  for( unsigned int i = 0; i < meshes.size(); i++ )
+  {
+    meshes[i].Initialize();
   }
-  
-  glGenBuffers(1, &VB);
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * Vertices.size(), &Vertices[0], GL_STATIC_DRAW);
-
-  glGenBuffers(1, &IB);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * Indices.size(), &Indices[0], GL_STATIC_DRAW);
 
   angle_rotate = 0.0f;
   rotate_speed = 1.0f;
@@ -47,8 +19,8 @@ Object::Object(const char *objPath)
 
 Object::~Object()
 {
-  Vertices.clear();
-  Indices.clear();
+  // Vertices.clear();
+  // Indices.clear();
 }
 
 void Object::Update(unsigned int dt, EventFlag e_flags)
@@ -86,19 +58,10 @@ glm::mat4 Object::GetModel()
 
 void Object::Render()
 {
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-
-  glBindBuffer(GL_ARRAY_BUFFER, VB);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex,uv_Coords));
-
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IB);
-  
-  glDrawElements(GL_TRIANGLES, Indices.size(), GL_UNSIGNED_INT, 0);
-
-  glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
+  for( unsigned int i = 0; i < meshes.size(); i++ )
+  {
+    meshes[i].Render();
+  }
 }
 
 bool Object::Model_Loader(const char *filePath)
@@ -106,20 +69,8 @@ bool Object::Model_Loader(const char *filePath)
   
   Assimp::Importer importer;
   int face_indx_offset = 0;
-  int i = 0;
 
-  /*
-  aiProcessPreset_TargetRealtime_Fast
-  ( aiProcess_CalcTangentSpace |  
-    aiProcess_GenNormals |  
-    aiProcess_JoinIdenticalVertices |  
-    aiProcess_Triangulate |  
-    aiProcess_GenUVCoords |  
-    aiProcess_SortByPType |  
-    0 
-  )
-  */
-  const aiScene *scene = importer.ReadFile( filePath, aiProcessPreset_TargetRealtime_Fast );
+  const aiScene *scene = importer.ReadFile( filePath, aiProcessPreset_TargetRealtime_Fast | aiProcess_Triangulate );
  
   // Failed to import from file
   if( !scene )
@@ -131,7 +82,11 @@ bool Object::Model_Loader(const char *filePath)
   std::cout << "The number of meshes in this scene: " << scene->mNumMeshes << std::endl << std::endl;
 
   // Read in vertices and face indices for each mesh
-  for( unsigned int mesh_indx = 0; mesh_indx < scene->mNumMeshes; mesh_indx++){
+  for( unsigned int mesh_indx = 0; mesh_indx < scene->mNumMeshes; mesh_indx++)
+  {
+    face_indx_offset = 0;
+    Mesh *tmpMesh = new Mesh();
+    
     const aiMesh *mesh = scene->mMeshes[mesh_indx];
     const aiMaterial *mtl = scene->mMaterials[mesh->mMaterialIndex];
     
@@ -155,7 +110,7 @@ bool Object::Model_Loader(const char *filePath)
         vert.uv_Coords = glm::vec2( tex_uv.x, tex_uv.y );
       }
 
-      Vertices.push_back(vert);
+      tmpMesh->Vertices.push_back(vert);
     }
 
     // Get face indices for the current mesh
@@ -163,82 +118,65 @@ bool Object::Model_Loader(const char *filePath)
       const aiFace face = mesh->mFaces[face_indx];
 
       for( unsigned int indx = 0; indx < face.mNumIndices; indx++){
-        Indices.push_back(face.mIndices[indx] + face_indx_offset);
+        tmpMesh->Indices.push_back(face.mIndices[indx] + face_indx_offset);
       }
     }
 
     // Set vertex offset to current size of Verticies vector for next mesh
-    face_indx_offset = Vertices.size();
+    face_indx_offset = tmpMesh->Vertices.size();
 
-    
-
-    for( unsigned int t_indx = 0; t_indx <  mtl->GetTextureCount(aiTextureType_DIFFUSE); t_indx++ ){
+    for( unsigned int t_indx = 0; t_indx <  mtl->GetTextureCount(aiTextureType_DIFFUSE); t_indx++ )
+    {
       aiString tFileName;
       std::string tPath;
 
-      if (mtl->GetTexture(aiTextureType_DIFFUSE, 0, &tFileName, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS){
-        tPath = "models/" + std::string(tFileName.data);
-        if( !Texture_Loader(tPath.c_str(), GL_TEXTURE0 + i ) )
+      if ( mtl->GetTexture(aiTextureType_DIFFUSE, 0, &tFileName, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS )
+      {
+        tPath = "models/" + std::string( tFileName.data );
+        if ( !Texture_Loader(tPath.c_str(), tmpMesh ) )
         {
           //do something
         }
-        i++;
-
       }
 
       std::cout << "Diffuse Texture #" << (t_indx + 1) << " file path: " << tPath << std::endl; 
     }
 
+    meshes.push_back(*tmpMesh);
   }
  
   return true;
 }
 
-
-bool Object::Texture_Loader(const char *filePath, GLenum GL_TEXTUREi )
+bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
 {
-  Texture text;
+  GLuint textureID;
+  
+  Magick::Blob m_Blob;
+  Magick::Image m_pImage;
+
   try
   {
-    
-    m_pImage.read(filePath);
+    m_pImage.read( filePath );
     m_pImage.write( &m_Blob, "RGBA" );
+    
+    glGenTextures(1, &textureID);
 
-    text.setImage(m_pImage);
-    text.setBlob(m_Blob);
-    text.setGLTEXTUREi(GL_TEXTUREi);
-    textures.push_back(text);
+    // Assign texture to ID
+    glBindTexture(GL_TEXTURE_2D, textureID);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_pImage.columns(), m_pImage.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_Blob.data());
+    
+    // Parameters
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+    mesh->textures.push_back(textureID);
   }
   catch( Magick::Error& error )
   {
     printf("Error loading image '%s': '%s'\n", filePath, error.what());
     return false;
   }
-/*
-  GLuint textureID;
-  glGenTextures(1, &textureID);
-    
-  // Assign texture to ID
-  glBindTexture(GL_TEXTURE_2D, textureID);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, m_pImage.columns(), m_pImage.rows(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_Blob.data());
-  
-  //glGenerateMipmap(GL_TEXTURE_2D);  
-
-  // Parameters
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); 
-  
-  //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT );
-  //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT );
-  //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR );
-  //glTexParameteri( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  
-  std::cout << GL_TEXTUREi << std::endl;
-  std::cout << GL_TEXTURE0 << " " << GL_TEXTURE1 << std::endl;
-  glActiveTexture(GL_TEXTUREi); // TextureUnit: GL_TEXTURE0, GL_TEXTURE1, etc
-  glBindTexture(GL_TEXTURE_2D, textureID);
-*/
 
   return true;
 }

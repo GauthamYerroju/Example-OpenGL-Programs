@@ -43,14 +43,6 @@ struct Vertex
 struct Texture
 {
   GLuint textureID;
-  Magick::Image m_pImage;
-  Magick::Blob m_Blob;
-  GLenum GL_TEXTUREi;
-
-  void setID( GLuint tID ){ textureID = tID; }
-  void setImage( Magick::Image mImg ){ m_pImage = mImg; }
-  void setBlob( Magick::Blob blob ){ m_Blob = blob; }
-  void setGLTEXTUREi( GLenum GL_Ti ) {GL_TEXTUREi = GL_Ti;}
 };
 
 struct EventFlag
