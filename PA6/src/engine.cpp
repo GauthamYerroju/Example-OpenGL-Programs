@@ -46,7 +46,6 @@ bool Engine::Initialize(char **argv)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
-
   eventFlags.push_back(EventFlag());
 
   // No errors

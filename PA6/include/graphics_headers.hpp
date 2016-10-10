@@ -27,7 +27,7 @@
 #include <assimp/postprocess.h> //includes the postprocessing variables for the importer
 #include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects 
 
-// Magick++
+// Magick++ for image loading
 #include <Magick++.h>
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
@@ -56,11 +56,12 @@ struct Texture
 struct EventFlag
 {
 	bool clockwise_rotate;
-    bool pause_all;
- 
-    EventFlag(){
-    	clockwise_rotate = false; 
-    	pause_all = false;
+  bool pause_all;
+
+  EventFlag()
+  {
+    clockwise_rotate = false;
+    pause_all = false;
 	}
 };
 

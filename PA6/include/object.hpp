@@ -39,7 +39,6 @@ class Object
     std::vector<Texture> textures;
     Magick::Image m_pImage;
     Magick::Blob m_Blob;
-   
 };
 
 #endif /* OBJECT_H */

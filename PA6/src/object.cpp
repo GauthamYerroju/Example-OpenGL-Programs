@@ -8,7 +8,6 @@ Object::Object(const char *objPath)
 
   for( unsigned int t_i = 0; t_i < textures.size(); t_i++){
 
-  
     glGenTextures(1, &textures[t_i].textureID);
     
     // Assign texture to ID
@@ -74,7 +73,6 @@ void Object::Set_RotateSpeed(float r_speed)
 {
   rotate_speed = r_speed;
 }
-
 
 void Object::Set_Scale( float sclr )
 {
