@@ -30,7 +30,7 @@ Gautham Yerroju
 
 This is a model loader using assimp to load verticies, faces, and colors from a model and render the model to rotate on the screen. To run this project ```cd PA5``` then follow the instructions in the README.md.
 
-## PA6: Assimp with Tectures
+## PA6: Assimp with Textures
 This is a group project consisting of the following three collaborators:
 
 Kevin Green  
