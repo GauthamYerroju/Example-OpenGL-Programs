@@ -2,10 +2,7 @@
           
           in vec2 texCoord;
 
-         
-       
           out vec4 frag_color;
-
 
 	  	  uniform sampler2D gSampler;
           

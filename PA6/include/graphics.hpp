@@ -4,10 +4,10 @@
 #include <iostream>
 using namespace std;
 
-#include "graphics_headers.h"
-#include "camera.h"
-#include "shader.h"
-#include "object.h"
+#include "graphics_headers.hpp"
+#include "camera.hpp"
+#include "shader.hpp"
+#include "object.hpp"
 
 class Graphics
 {

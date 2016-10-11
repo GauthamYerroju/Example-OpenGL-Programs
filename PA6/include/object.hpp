@@ -5,7 +5,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include "graphics_headers.h"
+#include "graphics_headers.hpp"
+#include "mesh.hpp"
 
 class Object
 {
@@ -20,7 +21,7 @@ class Object
     void Set_RotateSpeed(float r_speed); 
     void Set_Scale( float sclr );
     bool Model_Loader(const char *filePath);
-    bool Texture_Loader(const char *filePath, GLenum GL_TEXTUREi);
+    bool Texture_Loader(const char *filePath, Mesh *mesh);
 
   private:
     glm::mat4 model;
@@ -31,15 +32,7 @@ class Object
     float rotate_speed;
     float scaler;
 
-    std::vector<Vertex> Vertices;
-    std::vector<unsigned int> Indices;
-    GLuint VB;
-    GLuint IB;
-
-    std::vector<Texture> textures;
-    Magick::Image m_pImage;
-    Magick::Blob m_Blob;
-   
+    std::vector<Mesh> meshes;
 };
 
 #endif /* OBJECT_H */

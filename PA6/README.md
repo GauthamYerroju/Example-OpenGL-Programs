@@ -28,7 +28,9 @@ Note: This project has not been tested on Max OSX and cannot be guaranteed to wo
 ## Building and Running
 To build this project use CMake. Shader file paths must be sent as arguments to the program using the following format:  
 
-exe-filename vert-shader-filepath frag-shader-filepath obj-filepath  
+exe-filename vert-shader-filepath frag-shader-filepath obj-filepath
+
+NOTE: The material file must be in the same folder as the object file. Texture files must be flaced in the model folder (hard coded path).  
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary.

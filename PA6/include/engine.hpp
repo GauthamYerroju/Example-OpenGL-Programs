@@ -5,9 +5,9 @@
 #include <assert.h>
 #include <vector>
 
-#include "graphics_headers.h"
-#include "window.h"
-#include "graphics.h"
+#include "graphics_headers.hpp"
+#include "window.hpp"
+#include "graphics.hpp"
 
 class Engine
 {
@@ -36,8 +36,6 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
-
-    
 };
 
 #endif // ENGINE_H

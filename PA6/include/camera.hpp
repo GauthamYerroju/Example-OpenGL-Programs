@@ -1,7 +1,7 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include "graphics_headers.h"
+#include "graphics_headers.hpp"
 
 class Camera
 {

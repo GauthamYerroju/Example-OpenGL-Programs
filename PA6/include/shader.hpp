@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 #include <iterator>
-#include "graphics_headers.h"
+#include "graphics_headers.hpp"
 
 class Shader
 {

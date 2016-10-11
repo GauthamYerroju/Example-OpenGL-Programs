@@ -27,7 +27,7 @@
 #include <assimp/postprocess.h> //includes the postprocessing variables for the importer
 #include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects 
 
-// Magick++
+// Magick++ for image loading
 #include <Magick++.h>
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
@@ -40,27 +40,15 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec2 uv): vertex(v), uv_Coords(uv) {}
 };
 
-struct Texture
-{
-  GLuint textureID;
-  Magick::Image m_pImage;
-  Magick::Blob m_Blob;
-  GLenum GL_TEXTUREi;
-
-  void setID( GLuint tID ){ textureID = tID; }
-  void setImage( Magick::Image mImg ){ m_pImage = mImg; }
-  void setBlob( Magick::Blob blob ){ m_Blob = blob; }
-  void setGLTEXTUREi( GLenum GL_Ti ) {GL_TEXTUREi = GL_Ti;}
-};
-
 struct EventFlag
 {
 	bool clockwise_rotate;
-    bool pause_all;
- 
-    EventFlag(){
-    	clockwise_rotate = false; 
-    	pause_all = false;
+  bool pause_all;
+
+  EventFlag()
+  {
+    clockwise_rotate = false;
+    pause_all = false;
 	}
 };
 

@@ -1,5 +1,5 @@
 
-#include "engine.h"
+#include "engine.hpp"
 
 Engine::Engine(string name, int width, int height)
 {
@@ -45,7 +45,6 @@ bool Engine::Initialize(char **argv)
 
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
-
 
   eventFlags.push_back(EventFlag());
 
