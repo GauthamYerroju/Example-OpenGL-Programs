@@ -34,6 +34,7 @@ class Object
     void Set_ScaleFactor(float value);
     void Set_SpeedFactor(float value);
     
+    void Set_Radius(float value);
     void Set_SpinSpeed(float value);
     void Set_OrbitSpeed(float value);
     void Set_OrbitRadius(float value);
@@ -49,12 +50,14 @@ class Object
     glm::mat4 model;
     glm::mat4 rotation;
     glm::mat4 scale;
+    glm::mat4 translation;
 
     // Global modifiers
     float scaleFactor; // Convert to scale matrix and multiply with model (before orbit translation)
     float speedFactor; // Multiply with orbitSpeed and spinSpeed every frame
 
     // Cross-frame metrics
+    float radius; // Should be a ratio (float)
     float spinSpeed; // Should be in radians
     float orbitSpeed; // Should be in radians
     float orbitRadius; // Should be in length units (au?)

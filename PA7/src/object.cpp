@@ -17,6 +17,7 @@ Object::Object(const char *objPath)
   speedFactor = 1.0f;
 
   // Cross-frame metrics
+  radius = 1.0f; // Should be a ratio (float)
   spinSpeed = 1.0f; // Should be in radians
   orbitSpeed = 1.0f; // Should be in radians
   orbitRadius = 1.0f; // Should be in length units (au?)
@@ -53,14 +54,18 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
       currentSpinAngle -= (dt * M_PI/1000) * ( GetSpinSpeed() );
   }
 
-  rotation = glm::rotate(glm::mat4(1.0f), (currentSpinAngle), glm::vec3(0.0, 1.0, 0.0));
-  scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaleFactor);
+  // rotation = glm::rotate(glm::mat4(1.0f), (currentSpinAngle), glm::vec3(0.0, 1.0, 0.0));
+  // scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaleFactor);
 
-  model = rotation * scale;
+  scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * (scaleFactor * radius));
+  rotation = glm::rotate(glm::mat4(1.0f), (currentSpinAngle), glm::vec3(0.0, 1.0, 0.0));
+  translation = glm::translate(glm::vec3( (scaleFactor * orbitRadius * 5.0), 0.0, 0.0));
+
+  model = translation * rotation * scale;
 }
 
 //--- Calculated values ----------------------------------------------------------------------------
-float GetSpinSpeed()
+float Object::GetSpinSpeed()
 {
   return spinSpeed * speedFactor;
 }
@@ -68,6 +73,11 @@ float GetSpinSpeed()
 //--------------------------------------------------------------------------------------------------
 
 //--- Getters and setters --------------------------------------------------------------------------
+void Object::Set_Radius(float value)
+{
+  radius = value;
+}
+
 void Object::Set_ScaleFactor(float value)
 {
   scaleFactor = value;

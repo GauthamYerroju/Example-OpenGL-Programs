@@ -44,11 +44,36 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
-  // Create the object
-  m_box = new Object(argv[3]);
+  // TODO: Load objects from config file ( path in argv[3] )
+  std::ifstream config_file("../config.json");
+  json config;
+  config << config_file;
+  for (json::iterator it = config.begin(); it != config.end(); ++it)
+  {
+    auto objectConfig = *it;
+    
+    // Load the model
+    std::string modelFile = objectConfig["modelFile"];
+    modelFile = "./models/" + modelFile;
+    Object obj = Object( modelFile.c_str() );
+
+    // Set object attributes
+    // TODO: Modifiers from cspice will go here
+    obj.Set_Radius( float( objectConfig["radius"] ) );
+    obj.Set_OrbitRadius( float( objectConfig["orbitRadius"] ) );
+    obj.Set_OrbitSpeed( float( objectConfig["orbitSpeed"] ) );
+    obj.Set_SpinSpeed( float( objectConfig["spinSpeed"] ) );
+
+    objects.push_back( obj );
+  }
+
+  // m_box = new Object(argv[3]);
 
   // Initialize box attributes
-  m_box->Set_SpeedFactor(0.25);
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    objects[i].Set_SpeedFactor(0.25);
+  }
 
   // Set up the shaders
   m_shader = new Shader();
@@ -112,14 +137,17 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
 void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
 {
-  // Update the object
-  m_box->Update(dt, e_flags[0]);
+  // Update the objects
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    objects[i].Update(dt, e_flags[0]);
+  }
 }
 
 void Graphics::Render()
 {
   //clear the screen
-  glClearColor(0.0, 0.0, 0.2, 1.0);
+  glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   // Start the correct program
@@ -130,8 +158,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(m_box->GetModel()));
-  m_box->Render();
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i].GetModel()));
+    objects[i].Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();
