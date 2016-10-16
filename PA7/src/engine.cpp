@@ -137,6 +137,38 @@ void Engine::Mouse(){
         break;
     }
   }
+
+	//handle mouse look here
+  if (m_event.type == SDL_MOUSEMOTION)
+  {
+		if (m_event.motion.xrel < 0){
+			printf("left mouse move\n");
+		}
+
+		if (m_event.motion.xrel > 0){
+			printf("right mouse move\n");
+		}
+	
+		if (m_event.motion.yrel < 0){
+			printf("down mouse move\n");
+		}
+
+		if (m_event.motion.yrel > 0){
+			printf("up mouse move\n");
+		}		
+  }
+
+	//handle zoom
+	if (m_event.type == SDL_MOUSEWHEEL)
+	{
+		if (m_event.wheel.y < 0){
+			printf("wheel down\n");
+		}
+		
+		if (m_event.wheel.y > 0){
+			printf("wheel up\n");
+		}
+	}
 }
 
 unsigned int Engine::getDT()
