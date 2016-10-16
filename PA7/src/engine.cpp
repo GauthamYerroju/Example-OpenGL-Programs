@@ -69,8 +69,11 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, eventFlags);
+    m_graphics->Update(m_DT, eventFlags, viewUpdate);
     m_graphics->Render();
+
+		//reset the view update type
+		viewUpdate.type = NONE;
 
     // Swap to the Window
     m_window->Swap();
@@ -90,27 +93,57 @@ void Engine::Keyboard()
       case SDLK_ESCAPE:
         m_running = false;
         break;
+
       case SDLK_LEFT:
         //'Left Arrow' pressed, change object rotation direction counter-clockwise
         if( eventFlags[0].clockwise_rotate == true )
           eventFlags[0].clockwise_rotate = false;
         break;
+
       case SDLK_RIGHT:
         //'Right Arrow' pressed, change object rotation direction clockwise
         if( eventFlags[0].clockwise_rotate == false )
           eventFlags[0].clockwise_rotate = true;
         break;
+
       case SDLK_PAUSE:
         //Pause or resume program
         if( eventFlags[0].pause_all == false )
         {
           eventFlags[0].pause_all = true;
         }
+
         else if( eventFlags[0].pause_all == true )
         { 
           eventFlags[0].pause_all = false;
         }
+
         break;
+
+			case SDLK_w:
+				//'W' pressed, move camera forward
+				viewUpdate.type = EYE;
+				viewUpdate.value = glm::vec3(0.0f, 0.0f, 5.0f);
+				break;
+
+			case SDLK_a:
+				//'A' pressed, move camera left
+				viewUpdate.type = EYE;
+				viewUpdate.value = glm::vec3(-5.0f, 0.0f, 0.0f);
+				break;
+
+			case SDLK_s:
+				//'S' pressed, move camera backward
+				viewUpdate.type = EYE;
+				viewUpdate.value = glm::vec3(0.0f, 0.0f, -5.0f);
+				break;
+
+			case SDLK_d:
+				//'D' pressed, move camera right
+				viewUpdate.type = EYE;
+				viewUpdate.value = glm::vec3(5.0f, 0.0f, 0.0f);
+				break;
+
       default:
         break;
     }
@@ -139,23 +172,26 @@ void Engine::Mouse(){
   }
 
 	//handle mouse look here
-  if (m_event.type == SDL_MOUSEMOTION)
-  {
+  if (m_event.type == SDL_MOUSEMOTION){
 		if (m_event.motion.xrel < 0){
-			printf("left mouse move\n");
+			viewUpdate.type = FOCUS;
+			viewUpdate.value = glm::vec3(-15.0f, 0.0f, 0.0f);
 		}
 
 		if (m_event.motion.xrel > 0){
-			printf("right mouse move\n");
+			viewUpdate.type = FOCUS;
+			viewUpdate.value = glm::vec3(15.0f, 0.0f, 0.0f);
 		}
 	
 		if (m_event.motion.yrel < 0){
-			printf("down mouse move\n");
+			viewUpdate.type = FOCUS;
+			viewUpdate.value = glm::vec3(0.0f, -15.0f, 0.0f);
 		}
 
 		if (m_event.motion.yrel > 0){
-			printf("up mouse move\n");
-		}		
+			viewUpdate.type = FOCUS;
+			viewUpdate.value = glm::vec3(0.0f, 15.0f, 0.0f);
+		}	
   }
 
 	//handle zoom

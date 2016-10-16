@@ -117,7 +117,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
+void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate viewUpdate)
 {
 
   // Update the object
@@ -127,7 +127,7 @@ void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
   moon->Set_OrbitCenter(earth->GetPosition()); 
   moon->Update(dt, e_flags[0]);
 
-
+	m_camera->Update(viewUpdate);
 }
 
 void Graphics::Render()

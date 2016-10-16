@@ -15,7 +15,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, char **argv);
-    void Update(unsigned int dt, vector<EventFlag> e_flags);
+    void Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate viewUpdate);
     void Render();
 
   private:

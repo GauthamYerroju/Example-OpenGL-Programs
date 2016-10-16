@@ -33,6 +33,7 @@ class Engine
     vector<EventFlag> eventFlags;
 
     Graphics *m_graphics;
+		ViewUpdate viewUpdate;
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
