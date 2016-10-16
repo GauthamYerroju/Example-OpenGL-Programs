@@ -48,7 +48,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   m_box = new Object(argv[3]);
 
   // Initialize box attributes
-  m_box->Set_RotateSpeed(0.25);
+  m_box->Set_SpeedFactor(0.25);
 
   // Set up the shaders
   m_shader = new Shader();

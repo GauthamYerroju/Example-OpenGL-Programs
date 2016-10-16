@@ -2,7 +2,8 @@
 
 Object::Object(const char *objPath)
 { 
-  if(!Model_Loader(objPath)){
+  if(!Model_Loader(objPath))
+  {
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
 
@@ -11,47 +12,24 @@ Object::Object(const char *objPath)
     meshes[i].Initialize();
   }
 
-  angle_rotate = 0.0f;
-  rotate_speed = 1.0f;
-  scaler = 1.0f;
+  // Global modifiers
+  scaleFactor = 1.0f;
+  speedFactor = 1.0f;
 
+  // Cross-frame metrics
+  spinSpeed = 1.0f; // Should be in radians
+  orbitSpeed = 1.0f; // Should be in radians
+  orbitRadius = 1.0f; // Should be in length units (au?)
+  axialTilt = glm::vec3(0.0f, 0.0f, 0.0f); // Axial tilt along x, y and z axes in radians
+  orbitalTilt = glm::vec3(0.0f, 0.0f, 0.0f); // Axial tilt along x, y and z axes in radians
+
+  // Per-frame metrics
+  currentSpinAngle = 0.0f;
+  currentOrbitAngle = 0.0f;
 }
 
 Object::~Object()
 {
-}
-
-void Object::Update(unsigned int dt, EventFlag e_flags)
-{
-  // If system not paused
-  if( !e_flags.pause_all ){
-    if( !e_flags.clockwise_rotate )
-    // Set counter clockwise angle of rotation
-      angle_rotate += (dt * M_PI/1000) * rotate_speed;
-    else if( e_flags.clockwise_rotate )
-    // Set clockwise angle of rotation
-      angle_rotate -= (dt * M_PI/1000) * rotate_speed;
-    }
-
-  rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
-  scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
-
-  model = rotation * scale;
-}
-
-void Object::Set_RotateSpeed(float r_speed)
-{
-  rotate_speed = r_speed;
-}
-
-void Object::Set_Scale( float sclr )
-{
-  scaler = sclr;
-}
-
-glm::mat4 Object::GetModel()
-{
-  return model;
 }
 
 void Object::Render()
@@ -61,6 +39,75 @@ void Object::Render()
     meshes[i].Render();
   }
 }
+
+void Object::Update(unsigned int dt, EventFlag e_flags)
+{
+  // If system not paused
+  if( !e_flags.pause_all )
+  {
+    if( !e_flags.clockwise_rotate )
+      // Set counter clockwise angle of rotation
+      currentSpinAngle += (dt * M_PI/1000) * ( GetSpinSpeed() );
+    else if( e_flags.clockwise_rotate )
+      // Set clockwise angle of rotation
+      currentSpinAngle -= (dt * M_PI/1000) * ( GetSpinSpeed() );
+  }
+
+  rotation = glm::rotate(glm::mat4(1.0f), (currentSpinAngle), glm::vec3(0.0, 1.0, 0.0));
+  scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaleFactor);
+
+  model = rotation * scale;
+}
+
+//--- Calculated values ----------------------------------------------------------------------------
+float GetSpinSpeed()
+{
+  return spinSpeed * speedFactor;
+}
+
+//--------------------------------------------------------------------------------------------------
+
+//--- Getters and setters --------------------------------------------------------------------------
+void Object::Set_ScaleFactor(float value)
+{
+  scaleFactor = value;
+}
+
+void Object::Set_SpeedFactor(float value)
+{
+  speedFactor = value;
+}
+
+void Object::Set_SpinSpeed(float value)
+{
+  spinSpeed = value;
+}
+
+void Object::Set_OrbitSpeed(float value)
+{
+  orbitSpeed = value;
+}
+
+void Object::Set_OrbitRadius(float value)
+{
+  orbitRadius = value;
+}
+
+void Object::Set_AxialTilt(glm::vec3 value)
+{
+  axialTilt = value;
+}
+
+void Object::Set_OrbitalTilt(glm::vec3 value)
+{
+  orbitalTilt = value;
+}
+
+glm::mat4 Object::GetModel()
+{
+  return model;
+}
+//--------------------------------------------------------------------------------------------------
 
 bool Object::Model_Loader(const char *filePath)
 {
