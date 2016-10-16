@@ -44,8 +44,8 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
-  // TODO: Load objects from config file ( path in argv[3] )
-  std::ifstream config_file("../config.json");
+  // Load objects from config file ( path in argv[3] )
+  std::ifstream config_file(argv[3]);
   json config;
   config << config_file;
   for (json::iterator it = config.begin(); it != config.end(); ++it)
@@ -58,7 +58,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
     Object obj = Object( modelFile.c_str() );
 
     // Set object attributes
-    // TODO: Modifiers from cspice will go here
+    // TODO: Modifiers from cspice will go here instead of from the config file
     obj.Set_Radius( float( objectConfig["radius"] ) );
     obj.Set_OrbitRadius( float( objectConfig["orbitRadius"] ) );
     obj.Set_OrbitSpeed( float( objectConfig["orbitSpeed"] ) );
