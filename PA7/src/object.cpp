@@ -13,8 +13,6 @@ Object::Object(const char *objPath, const char *planet_name, const char *planet_
   else
   {
     orbit_planet = planet_orbiting;
-    //Load the spk file for planet distances
-    furnsh_c ( "spk/de421.bsp" );  
   }
   
 
@@ -27,12 +25,13 @@ Object::Object(const char *objPath, const char *planet_name, const char *planet_
     meshes[i].Initialize();
   }
 
-
   orbit_center = glm::mat4(1.0f);
-  orbit_dist = glm::vec3(0.0f);
+  orbit_radius = glm::vec3(0.0f);
   angle_rotate = 0.0f;
   rotate_speed = 1.0f;
-  scaler = 0.0f;
+  orbit_speed = 36000;
+  scaler = 1.0f;
+  rad_scaler = 1.0f;
 
 }
 
@@ -52,11 +51,20 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
       double dist[3];
       spkpos_c(planet, et, "ECLIPJ2000", "None", orbit_planet, dist, &lt);
 
-      orbit_dist = glm::vec3((float)dist[0]*0.00005f, (float)dist[2]*0.00005f, (float)dist[1]*0.00005f);
-      et = 3600 * orbit_step;
+      // Convert from km to mega meters
+      //orbit_radius = glm::vec3((float)dist[0]/1000, (float)dist[2]/1000, (float)dist[1]/1000);
+      // Convert from km to AU
+      //orbit_radius = glm::vec3((float)dist[0]/149598000, (float)dist[2]/149598000, (float)dist[1]/149598000);
+      
+      //0.000002222
+     
+      //counterclockwise
+      orbit_radius = glm::vec3((float)dist[1]*rad_scaler, (float)dist[2]*rad_scaler, (float)dist[0]*rad_scaler);
+      
+      et = orbit_speed * orbit_step;
       orbit_step++; 
 
-      printf("%s NOT NULL\n");
+      printf("NOT NULL\n");
     }
 
     if( !e_flags.clockwise_rotate )
@@ -65,12 +73,12 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
     else if( e_flags.clockwise_rotate )
     // Set clockwise angle of rotation
       angle_rotate -= (dt * M_PI/1000) * rotate_speed;
-    }
+  }
 
 
-  printf("%s\n x: %f\ny: %f\nz: %f\n\n", planet, orbit_dist.x, orbit_dist.y, orbit_dist.z);
+  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet, orbit_radius.x, orbit_radius.y, orbit_radius.z);
 
-  translation = glm::translate(orbit_center, orbit_dist);
+  translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
   scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
 
@@ -82,9 +90,9 @@ void Object::Set_OrbitCenter(glm::mat4 o_center)
   orbit_center = o_center;
 }
 
-void Object::Set_OrbitDistance(glm::vec3 dist)
+void Object::Set_OrbitRadius(glm::vec3 rad)
 {
-  orbit_dist = dist;
+  orbit_radius = rad;
 }
 
 void Object::Set_RotateSpeed(float r_speed)
@@ -92,9 +100,15 @@ void Object::Set_RotateSpeed(float r_speed)
   rotate_speed = r_speed;
 }
 
+
 void Object::Set_Scale( float sclr )
 {
   scaler = sclr;
+}
+
+void Object::Set_RadScale( float r_sclr )
+{
+  rad_scaler = r_sclr;
 }
 
 glm::mat4 Object::GetModel()
@@ -174,6 +188,14 @@ bool Object::Model_Loader(const char *filePath)
         if( strcmp ( planet, "sun" ) == 0 )
         {
           tPath = "models/sun.jpg";
+        }
+        else if( strcmp ( planet, "mercury" ) == 0 )
+        {
+          tPath = "models/mercury.jpg";
+        }
+        else if( strcmp ( planet, "venus" ) == 0 )
+        {
+          tPath = "models/venus.jpg";
         }
         else if( strcmp ( planet, "earth" ) == 0 )
         {

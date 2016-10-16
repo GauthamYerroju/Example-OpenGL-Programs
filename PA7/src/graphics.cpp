@@ -44,19 +44,55 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
+  //Load the spk file for planet distances
+  furnsh_c ( "spk/de421.bsp" ); 
+
   // Create the object
   sun = new Object(argv[3], "sun", NULL);
-  earth = new Object(argv[3], "earth", "sun");
-  moon = new Object(argv[3], "moon", "earth");
+  mercury = new Object(argv[3], "mercury", "sun"); //parent is the sun
+  venus = new Object(argv[3], "venus", "sun"); //parent is the sun
+  earth = new Object(argv[3], "earth", "sun"); //parent is the sun
+  moon = new Object(argv[3], "moon", "earth"); //parent is the earth
 
   // Initialize box attributes
-  earth->Set_RotateSpeed(0.25);
+  sun->Set_RotateSpeed(0.040866367);
+  mercury->Set_RotateSpeed(0.005682787);
+  venus->Set_RotateSpeed(0.004114803);
+  earth->Set_RotateSpeed(1.0);
+  moon->Set_RotateSpeed(0.036600542);
 
-  sun->Set_Scale( 25.0f );
-  earth->Set_Scale( 5.0f );
-  moon->Set_Scale( 1.0f );
 
 
+  sun->Set_Scale( log(109.078080903) );
+  mercury->Set_Scale( log(0.383/2) );
+  venus->Set_Scale( log(0.949/2) );
+  earth->Set_Scale( log(1) ); 
+  moon->Set_Scale( log(0.2724/2) );
+  
+  /*
+  mercury->Set_RadScale( log(0.000156789) );
+  venus->Set_RadScale( log(0.000156789) );
+  earth->Set_RadScale( log(0.000156789) );
+  moon->Set_RadScale( log(0.000156789) );
+*/
+  
+  mercury->Set_RadScale( (0.000156789) );
+  venus->Set_RadScale( (0.000156789) );
+  earth->Set_RadScale( (0.000156789) );
+  moon->Set_RadScale( (0.000156789) );
+
+
+ // sun->Set_Scale( 398.048947948f * 0.05f );
+  //mercury->Set_Scale( 1.39606064f * 3.05f );
+  //mercury->Set_RadScale(0.000002222);
+  //venus->Set_Scale( 3.462688112f * 3.05f );
+  //venus->Set_RadScale(0.000002222);
+  //earth->Set_Scale( 3.645205876f * 3.05f );
+  //earth->Set_RadScale(0.000002222);
+  //moon->Set_Scale( 0.993834972 * 3.05f );
+  //moon->Set_RadScale(0.000002222*20);
+  // unit scale 0.000572156
+  
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -121,10 +157,14 @@ void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
 {
 
   // Update the object
-  sun->Update(dt, e_flags[0]);
-  earth->Set_OrbitCenter(sun->GetPosition());
+  sun->Update(dt, e_flags[0]);  //parent first
+  mercury->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
+  mercury->Update(dt, e_flags[0]);
+  venus->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
+  venus->Update(dt, e_flags[0]);
+  earth->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
   earth->Update(dt, e_flags[0]);
-  moon->Set_OrbitCenter(earth->GetPosition()); 
+  moon->Set_OrbitCenter(earth->GetPosition()); //child of earth
   moon->Update(dt, e_flags[0]);
 
 
@@ -142,12 +182,18 @@ void Graphics::Render()
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(sun->GetModel()));
   sun->Render(); 
   
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(mercury->GetModel()));
+  mercury->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(venus->GetModel()));
+  venus->Render();
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(earth->GetModel()));
   earth->Render();
 
@@ -194,4 +240,3 @@ std::string Graphics::ErrorString(GLenum error)
     return "None";
   }
 }
-

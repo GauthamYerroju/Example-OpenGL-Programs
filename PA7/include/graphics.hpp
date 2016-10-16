@@ -29,6 +29,8 @@ class Graphics
     GLint m_modelMatrix;
 
     Object *sun;
+    Object *mercury;
+    Object *venus;
     Object *earth;
     Object *moon;
 
