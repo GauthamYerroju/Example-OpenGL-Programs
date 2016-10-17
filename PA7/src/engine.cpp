@@ -7,6 +7,7 @@ Engine::Engine(string name, int width, int height)
   m_WINDOW_WIDTH = width;
   m_WINDOW_HEIGHT = height;
   m_FULLSCREEN = false;
+	viewUpdate.processed = true;
 }
 
 Engine::Engine(string name)
@@ -15,6 +16,7 @@ Engine::Engine(string name)
   m_WINDOW_HEIGHT = 0;
   m_WINDOW_WIDTH = 0;
   m_FULLSCREEN = true;
+	viewUpdate.processed = true;
 }
 
 Engine::~Engine()
@@ -70,10 +72,8 @@ void Engine::Run()
 
     // Update and render the graphics
     m_graphics->Update(m_DT, eventFlags, viewUpdate);
+		viewUpdate.processed = true;
     m_graphics->Render();
-
-		//reset the view update type
-		viewUpdate.type = NONE;
 
     // Swap to the Window
     m_window->Swap();
@@ -122,26 +122,34 @@ void Engine::Keyboard()
 
 			case SDLK_w:
 				//'W' pressed, move camera forward
-				viewUpdate.type = EYE;
-				viewUpdate.value = glm::vec3(0.0f, 0.0f, 5.0f);
+				viewUpdate.processed = false;
+				viewUpdate.dt = getDT();
+				viewUpdate.type = KEY;			
+				viewUpdate.direction = FORWARD;
 				break;
 
 			case SDLK_a:
 				//'A' pressed, move camera left
-				viewUpdate.type = EYE;
-				viewUpdate.value = glm::vec3(-5.0f, 0.0f, 0.0f);
+				viewUpdate.processed = false;
+				viewUpdate.dt = getDT();
+				viewUpdate.type = KEY;
+				viewUpdate.direction = LEFT;
 				break;
 
 			case SDLK_s:
 				//'S' pressed, move camera backward
-				viewUpdate.type = EYE;
-				viewUpdate.value = glm::vec3(0.0f, 0.0f, -5.0f);
+				viewUpdate.processed = false;
+				viewUpdate.dt = getDT();
+				viewUpdate.type = KEY;
+				viewUpdate.direction = BACKWARD;
 				break;
 
 			case SDLK_d:
 				//'D' pressed, move camera right
-				viewUpdate.type = EYE;
-				viewUpdate.value = glm::vec3(5.0f, 0.0f, 0.0f);
+				viewUpdate.processed = false;
+				viewUpdate.dt = getDT();
+				viewUpdate.type = KEY;
+				viewUpdate.direction = RIGHT;
 				break;
 
       default:
@@ -173,25 +181,7 @@ void Engine::Mouse(){
 
 	//handle mouse look here
   if (m_event.type == SDL_MOUSEMOTION){
-		if (m_event.motion.xrel < 0){
-			viewUpdate.type = FOCUS;
-			viewUpdate.value = glm::vec3(-15.0f, 0.0f, 0.0f);
-		}
 
-		if (m_event.motion.xrel > 0){
-			viewUpdate.type = FOCUS;
-			viewUpdate.value = glm::vec3(15.0f, 0.0f, 0.0f);
-		}
-	
-		if (m_event.motion.yrel < 0){
-			viewUpdate.type = FOCUS;
-			viewUpdate.value = glm::vec3(0.0f, -15.0f, 0.0f);
-		}
-
-		if (m_event.motion.yrel > 0){
-			viewUpdate.type = FOCUS;
-			viewUpdate.value = glm::vec3(0.0f, 15.0f, 0.0f);
-		}	
   }
 
 	//handle zoom

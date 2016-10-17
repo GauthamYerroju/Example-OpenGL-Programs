@@ -14,7 +14,7 @@ bool Camera::Initialize(int w, int h)
 {
   //--Init the view and projection matrices
   Position = glm::vec3(0.0, 20.0, 700.0); 	//Eye Position
-  Front = glm::vec3(0.0, 0.0, 0.0); 				//Focus point
+  Front = glm::vec3(0.0, 0.0, -1.0); 				//Focus point
   WorldUp = glm::vec3(0.0, 1.0, 0.0); 			//Positive Y is up
 	Yaw = -90.0f;
 	Pitch = 0.0f;
@@ -26,11 +26,11 @@ bool Camera::Initialize(int w, int h)
                                  float(w)/float(h), //Aspect Ratio, so Circles stay Circular
                                  0.01f, //Distance to the near plane, normally a small value like this
                                  20000.0f); //Distance to the far plane, 
-	Update();
+	UpdateVectors();
   return true;
 }
 
-void Camera::Update()
+void Camera::UpdateVectors()
 {
 	//Update the Front
 	glm::vec3 tempFront;
@@ -43,6 +43,17 @@ void Camera::Update()
 	//Update the Right and Up vectors
 	Right = glm::normalize(glm::cross(Front, WorldUp));
 	Up = glm::normalize(glm::cross(Right, Front));	
+}
+
+void Camera::ProcessInput(ViewUpdate viewUpdate)
+{
+	//process keyboard input
+	if (viewUpdate.type == KEY){
+		if(viewUpdate.direction == FORWARD) printf("Forward\n");
+		if(viewUpdate.direction == BACKWARD) printf("BACKWARD\n");
+		if(viewUpdate.direction == LEFT) printf("LEFT\n");
+		if(viewUpdate.direction == RIGHT) printf("RIGHT\n");
+	}
 }
 
 glm::mat4 Camera::GetProjection()

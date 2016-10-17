@@ -35,8 +35,8 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
-enum updateType {FOCUS, EYE, NONE};
-
+enum UpdateType {KEY, MOUSE};
+enum Direction {FORWARD, BACKWARD, LEFT, RIGHT};
 struct Vertex
 {
   glm::vec3 vertex;
@@ -59,7 +59,10 @@ struct EventFlag
 
 struct ViewUpdate
 {
-	glm::vec3 value;
-	updateType type;
+	bool processed;
+	unsigned int dt;
+	UpdateType type;
+	Direction direction;
+
 };
 #endif /* GRAPHICS_HEADERS_H */
