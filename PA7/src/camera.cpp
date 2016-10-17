@@ -49,10 +49,19 @@ void Camera::ProcessInput(ViewUpdate viewUpdate)
 {
 	//process keyboard input
 	if (viewUpdate.type == KEY){
-		if(viewUpdate.direction == FORWARD) printf("Forward\n");
-		if(viewUpdate.direction == BACKWARD) printf("BACKWARD\n");
-		if(viewUpdate.direction == LEFT) printf("LEFT\n");
-		if(viewUpdate.direction == RIGHT) printf("RIGHT\n");
+		GLfloat speed = MovementSpeed * viewUpdate.dt;
+		if(viewUpdate.direction == FORWARD){
+			Position += Front * speed;
+		}
+		if(viewUpdate.direction == BACKWARD){
+			Position -= Front * speed;
+		}
+		if(viewUpdate.direction == LEFT){
+			Position -= Right * speed;
+		}
+		if(viewUpdate.direction == RIGHT){
+			Position += Right * speed;
+		}
 	}
 }
 

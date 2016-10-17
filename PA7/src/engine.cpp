@@ -88,6 +88,8 @@ void Engine::Keyboard()
   }
   else if (m_event.type == SDL_KEYDOWN)
   {
+		viewUpdate.dt = 10;
+
     // handle key down events here
     switch(m_event.key.keysym.sym){
       case SDLK_ESCAPE:
@@ -123,7 +125,6 @@ void Engine::Keyboard()
 			case SDLK_w:
 				//'W' pressed, move camera forward
 				viewUpdate.processed = false;
-				viewUpdate.dt = getDT();
 				viewUpdate.type = KEY;			
 				viewUpdate.direction = FORWARD;
 				break;
@@ -131,7 +132,6 @@ void Engine::Keyboard()
 			case SDLK_a:
 				//'A' pressed, move camera left
 				viewUpdate.processed = false;
-				viewUpdate.dt = getDT();
 				viewUpdate.type = KEY;
 				viewUpdate.direction = LEFT;
 				break;
@@ -139,7 +139,6 @@ void Engine::Keyboard()
 			case SDLK_s:
 				//'S' pressed, move camera backward
 				viewUpdate.processed = false;
-				viewUpdate.dt = getDT();
 				viewUpdate.type = KEY;
 				viewUpdate.direction = BACKWARD;
 				break;
@@ -147,7 +146,6 @@ void Engine::Keyboard()
 			case SDLK_d:
 				//'D' pressed, move camera right
 				viewUpdate.processed = false;
-				viewUpdate.dt = getDT();
 				viewUpdate.type = KEY;
 				viewUpdate.direction = RIGHT;
 				break;
