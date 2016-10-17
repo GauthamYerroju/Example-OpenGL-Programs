@@ -179,19 +179,17 @@ void Engine::Mouse(){
 
 	//handle mouse look here
   if (m_event.type == SDL_MOUSEMOTION){
-
+		viewUpdate.type = MOUSE;
+		viewUpdate.processed = false;
+		viewUpdate.mouseX = m_event.motion.xrel;
+		viewUpdate.mouseY = m_event.motion.yrel;
   }
 
 	//handle zoom
-	if (m_event.type == SDL_MOUSEWHEEL)
-	{
-		if (m_event.wheel.y < 0){
-			printf("wheel down\n");
-		}
-		
-		if (m_event.wheel.y > 0){
-			printf("wheel up\n");
-		}
+	if (m_event.type == SDL_MOUSEWHEEL){
+		viewUpdate.type = ZOOM;	
+		viewUpdate.processed = false;
+		viewUpdate.scrollY = m_event.wheel.y *.1;
 	}
 }
 

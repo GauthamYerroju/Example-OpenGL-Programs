@@ -19,13 +19,10 @@ bool Camera::Initialize(int w, int h)
 	Yaw = -90.0f;
 	Pitch = 0.0f;
 	Zoom = 45.0f;
-	MouseSensitivity = 0.25f;
-	MovementSpeed = 3.0f;
-
-  projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
-                                 float(w)/float(h), //Aspect Ratio, so Circles stay Circular
-                                 0.01f, //Distance to the near plane, normally a small value like this
-                                 50000.0f); //Distance to the far plane, 
+	MouseSensitivity = 0.75f;
+	MovementSpeed = 0.5f;
+	width = w;
+	height = h;
  	UpdateVectors();
   return true;
 }
@@ -64,13 +61,46 @@ void Camera::ProcessInput(ViewUpdate viewUpdate)
 		}
 	}
 
-	//process mouse input
-	
+	//process mouse movement
+	if (viewUpdate.type == MOUSE){
+		viewUpdate.mouseX *= MouseSensitivity;
+		viewUpdate.mouseY *= MouseSensitivity;
+		Yaw += viewUpdate.mouseX;
+		Pitch -= viewUpdate.mouseY;
+
+		if (Pitch > 89.0f){
+			Pitch = 89.0f;
+		}
+
+		if (Pitch < -89.0f){
+			Pitch = -89.0f;
+		}
+
+		UpdateVectors();
+	}
+
+	//process scroll wheel
+	if (viewUpdate.type == ZOOM){
+		if (Zoom >= 44.5f && Zoom <= 45.0f){
+			Zoom -= viewUpdate.scrollY;
+		}
+
+		if (Zoom <= 44.5f){
+			Zoom = 44.5f;
+		}
+
+		if ( Zoom >= 45.0f){
+			Zoom = 45.0f;
+		}
+	}
 }
 
 glm::mat4 Camera::GetProjection()
 {
-  return projection;
+  return glm::perspective( Zoom, //the FoV typically 90 degrees is good which is what this is set to
+                                 width/height, //Aspect Ratio, so Circles stay Circular
+                                 0.01f, //Distance to the near plane, normally a small value like this
+                                 50000.0f); //Distance to the far plane
 }
 
 glm::mat4 Camera::GetView()

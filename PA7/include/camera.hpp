@@ -13,6 +13,7 @@ class Camera
 		void ProcessInput(ViewUpdate viewUpdate);
     glm::mat4 GetProjection();
     glm::mat4 GetView();
+		GLfloat Zoom;
   
   private:
 		//vp matrices
@@ -33,7 +34,10 @@ class Camera
 		//view and movement variables
 		GLfloat MovementSpeed;
 		GLfloat MouseSensitivity;
-		GLfloat Zoom;
+
+		//aspect ratio
+		GLfloat width;
+		GLfloat height;
 };
 
 #endif /* CAMERA_H */

@@ -76,7 +76,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
     obj->Set_RadScale(radScaler);
 
     objects.push_back( obj );
-    std::cout << "Object created\n";
+//    std::cout << "Object created\n";
   }
 
   // Assign parents
@@ -89,15 +89,15 @@ bool Graphics::Initialize(int width, int height, char **argv)
       {
         if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
         {
-          std::cout << "Setting parent\n";
+  //        std::cout << "Setting parent\n";
           objects[i]->Set_Parent( objects[j] );
-          std::cout << "Parent set\n";
+   //       std::cout << "Parent set\n";
 
           break;
         }
       }
     } else {
-      std::cout << "Parent is null\n";
+ //     std::cout << "Parent is null\n";
     }
   }
 

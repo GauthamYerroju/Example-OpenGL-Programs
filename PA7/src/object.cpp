@@ -43,7 +43,7 @@ Object::~Object()
 
 void Object::Update(unsigned int dt, EventFlag e_flags)
 {
-  std::cout << "\tUpdating...\n";
+  //std::cout << "\tUpdating...\n";
   // If system not paused
   if( !e_flags.pause_all ){
 
@@ -51,7 +51,7 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
     {
       orbit_center = parent->GetPosition();
 
-      std::cout << "\tSelf: " << planet << ", Parent: " << orbit_planet << "\n";
+      //std::cout << "\tSelf: " << planet << ", Parent: " << orbit_planet << "\n";
 
       double dist[3];
       spkpos_c(planet.c_str(), et, "ECLIPJ2000", "None", orbit_planet.c_str(), dist, &lt);
@@ -70,7 +70,7 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
       orbit_step++; 
 
 
-      printf("NOT NULL\n");
+//      printf("NOT NULL\n");
     }
 
     if( !e_flags.clockwise_rotate )
@@ -82,7 +82,7 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
   }
 
 
-  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet.c_str(), orbit_radius.x, orbit_radius.y, orbit_radius.z);
+//  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet.c_str(), orbit_radius.x, orbit_radius.y, orbit_radius.z);
 
   translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
@@ -137,7 +137,7 @@ void Object::Render()
   {
     meshes[i].Render();
   }
-  std::cout << planet << " rendered\n";
+  //std::cout << planet << " rendered\n";
 }
 
 bool Object::Model_Loader(const char *filePath)

@@ -37,7 +37,7 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
-enum UpdateType {KEY, MOUSE};
+enum UpdateType {KEY, MOUSE, ZOOM};
 enum Direction {FORWARD, BACKWARD, LEFT, RIGHT};
 struct Vertex
 {
@@ -65,6 +65,9 @@ struct ViewUpdate
 	unsigned int dt;
 	UpdateType type;
 	Direction direction;
+	GLfloat scrollY;
+	GLfloat mouseX;
+	GLfloat mouseY;
 
 };
 #endif /* GRAPHICS_HEADERS_H */
