@@ -4,7 +4,7 @@
 
           out vec4 frag_color;
 
-	  uniform sampler2D gSampler;
+	  	  uniform sampler2D gSampler;
           
           void main(void)
           {

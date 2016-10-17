@@ -1,7 +1,7 @@
-{
-    "sun": {
+[
+    {
         "name": "Sun",
-        "parent": null,
+        "parent": "null",
         "modelFile": "sun.obj",
         "radius": 1.5,
         "orbitRadius": 0,
@@ -10,7 +10,7 @@
         "axialTilt": [0, 0, 0],
         "orbitalTilt": [0, 0, 0]
     },
-    "earth": {
+    {
         "name": "Earth",
         "parent": "Sun",
         "modelFile": "earth.obj",
@@ -20,27 +20,5 @@
         "spinSpeed": 1,
         "axialTilt": [0, 0, 0],
         "orbitalTilt": [0, 0, 0]
-    },
-    "jupiter": {
-        "name": "Jupiter",
-        "parent": "Sun",
-        "modelFile": "jupiter.obj",
-        "radius": 11.21,
-        "orbitRadius": 5.2,
-        "orbitSpeed": 0.439,
-        "spinSpeed": 0.415,
-        "axialTilt": [0, 0, 0],
-        "orbitalTilt": [0, 0, 0]
-    },
-    "mars": {
-        "name": "Mars",
-        "parent": "Sun",
-        "modelFile": "mars.obj",
-        "radius": 0.532,
-        "orbitRadius": 1.52,
-        "orbitSpeed": 0.808,
-        "spinSpeed": 1.03,
-        "axialTilt": [0, 0, 0],
-        "orbitalTilt": [0, 0, 0]
     }
-}
+]

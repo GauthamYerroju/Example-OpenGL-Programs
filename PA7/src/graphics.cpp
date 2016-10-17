@@ -44,6 +44,9 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
+  //Load the spk file for planet distances
+  furnsh_c ( "spk/de421.bsp" );
+
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
   json config;
@@ -52,27 +55,50 @@ bool Graphics::Initialize(int width, int height, char **argv)
   {
     auto objectConfig = *it;
     
-    // Load the model
+    // Load the modelm
     std::string modelFile = objectConfig["modelFile"];
     modelFile = "./models/" + modelFile;
-    Object obj = Object( modelFile.c_str() );
+
+
+    std::string label = objectConfig["name"];
+    std::string parent = objectConfig["parent"];
+    float spinSpeed = objectConfig["spinSpeed"];
+    float scaler = objectConfig["radius"];
+    //float radScaler = 0.000156789;
+    float radScaler = 0.000002222;
+
+    Object * obj = new Object( modelFile.c_str(), label.c_str(), ( parent == "null" ? NULL : parent.c_str() ) );
 
     // Set object attributes
     // TODO: Modifiers from cspice will go here instead of from the config file
-    obj.Set_Radius( float( objectConfig["radius"] ) );
-    obj.Set_OrbitRadius( float( objectConfig["orbitRadius"] ) );
-    obj.Set_OrbitSpeed( float( objectConfig["orbitSpeed"] ) );
-    obj.Set_SpinSpeed( float( objectConfig["spinSpeed"] ) );
+    obj->Set_RotateSpeed(spinSpeed);
+    obj->Set_Scale(scaler);
+    obj->Set_RadScale(radScaler);
 
     objects.push_back( obj );
+    std::cout << "Object created\n";
   }
 
-  // m_box = new Object(argv[3]);
-
-  // Initialize box attributes
+  // Assign parents
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
-    objects[i].Set_SpeedFactor(0.25);
+    std::cout << objects[i]->Get_ParentName() << "\n";
+    if (objects[i]->Get_ParentName() != "null")
+    {
+      for( unsigned int j = 0; j < objects.size(); j++ )
+      {
+        if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
+        {
+          std::cout << "Setting parent\n";
+          objects[i]->Set_Parent( objects[j] );
+          std::cout << "Parent set\n";
+
+          break;
+        }
+      }
+    } else {
+      std::cout << "Parent is null\n";
+    }
   }
 
   // Set up the shaders
@@ -140,7 +166,7 @@ void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
   // Update the objects
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
-    objects[i].Update(dt, e_flags[0]);
+    objects[i]->Update(dt, e_flags[0]);
   }
 }
 
@@ -160,8 +186,8 @@ void Graphics::Render()
   // Render the object
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i].GetModel()));
-    objects[i].Render();
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i]->GetModel()));
+    objects[i]->Render();
   }
 
   // Get any errors from OpenGL
@@ -204,4 +230,3 @@ std::string Graphics::ErrorString(GLenum error)
     return "None";
   }
 }
-

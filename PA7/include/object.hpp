@@ -10,66 +10,54 @@
 
 class Object
 {
-  // 1. Model file (string, path)
-  // 2. Texture file (string, path)
-  // 3. Orbit radius (float, in au)
-  // 4. Orbit speed (float, radians)
-  // 5. Spin speed (float, radians)
-  // 6. Axial tilt (vec3 for degrees in 3 axes)
-  // 7. Orbital tilt (vec3 for degrees in 3 axes)
-  
   public:
-    Object(const char *objPath);
+    Object(const char *objPath, const char *planet_name, const char *planet_orbiting);
     ~Object();
 
-    // Basics
     void Render();
-    void Update(unsigned int dt, EventFlag e_flags);
+    glm::mat4 GetModel();
+    glm::mat4 GetPosition();
 
-    // Utils
+    void Update(unsigned int dt, EventFlag e_flags);
+    void Set_RotateSpeed(float r_speed);
+    void Set_Scale( float sclr );
+    void Set_RadScale( float r_sclr );
     bool Model_Loader(const char *filePath);
     bool Texture_Loader(const char *filePath, Mesh *mesh);
 
-    // Attrib Accessors
-    void Set_ScaleFactor(float value);
-    void Set_SpeedFactor(float value);
-    
-    void Set_Radius(float value);
-    void Set_SpinSpeed(float value);
-    void Set_OrbitSpeed(float value);
-    void Set_OrbitRadius(float value);
-    void Set_AxialTilt(glm::vec3 value);
-    void Set_OrbitalTilt(glm::vec3 value);
+    float getScaler();
 
-    glm::mat4 GetModel();
+    std::string Get_Name();
+    std::string Get_ParentName();
+    void Set_Parent(Object * parentPointer);
 
   private:
-    // Model matrices
-    std::vector<Mesh> meshes; // Model is a list of meshes, which contain their own textures
-
+    Object * parent;
+    
     glm::mat4 model;
+    glm::mat4 translation;
     glm::mat4 rotation;
     glm::mat4 scale;
-    glm::mat4 translation;
 
-    // Global modifiers
-    float scaleFactor; // Convert to scale matrix and multiply with model (before orbit translation)
-    float speedFactor; // Multiply with orbitSpeed and spinSpeed every frame
+    glm::mat4 orbit_center;
+    glm::vec3 orbit_radius;
 
-    // Cross-frame metrics
-    float radius; // Should be a ratio (float)
-    float spinSpeed; // Should be in radians
-    float orbitSpeed; // Should be in radians
-    float orbitRadius; // Should be in length units (au?)
-    glm::vec3 axialTilt; // Axial tilt along x, y and z axes in radians
-    glm::vec3 orbitalTilt; // Axial tilt along x, y and z axes in radians
+    std::string planet;
+    std::string orbit_planet;
 
-    // Per-frame metrics
-    float currentSpinAngle;
-    float currentOrbitAngle;
+    double et;
+    double lt;
+    int orbit_step;
 
-    // For internal use, so private
-    float GetSpinSpeed();
+    float angle_rotate;
+    float orbit_speed;
+    float rotate_speed;
+    float rad_scaler;
+    float scaler;
+
+    std::vector<Mesh> meshes;
+
+    float scaleToLog(float value);
 };
 
 #endif /* OBJECT_H */

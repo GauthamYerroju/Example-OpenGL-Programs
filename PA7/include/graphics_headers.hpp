@@ -30,6 +30,11 @@
 // Magick++ for image loading
 #include <Magick++.h>
 
+//CSPICE
+#include <SpiceUsr.h>
+
+#include <math.h>
+
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
 struct Vertex

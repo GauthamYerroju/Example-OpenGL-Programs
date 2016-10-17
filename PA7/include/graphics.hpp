@@ -32,7 +32,8 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    std::vector<Object> objects;
+    std::vector<Object*> objects;
+
 };
 
 #endif /* GRAPHICS_H */

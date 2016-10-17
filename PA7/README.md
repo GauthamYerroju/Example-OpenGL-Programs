@@ -1,8 +1,8 @@
 # PA7: Solar System
 Collaborators:
 
-Kevin Green,
-Husain Tazarvi,
+Kevin Green,  
+Husain Tazarvi,  
 Gautham Yerroju
 
 
@@ -40,7 +40,7 @@ mkdir build
 cd build
 cmake ..
 make
-./PA7 shaders/vShader.vert shaders/fShader.frag models/capsule.obj
+./PA7 shaders/vShader.vert shaders/fShader.frag models/sun.obj
 ```
 
 ## Keyboard Events
@@ -62,5 +62,5 @@ Right-Click   - Change object rotation to clockwise
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./PA6 shaders/vShader.vert shaders/fShader.frag models/capsule.obj
+/usr/NX/scripts/vgl/vglrun ./PA7 shaders/vShader.vert shaders/fShader.frag models/sun.obj
 ```
