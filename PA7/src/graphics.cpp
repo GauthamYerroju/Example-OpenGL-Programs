@@ -163,27 +163,16 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
 void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate viewUpdate)
 {
-<<<<<<< HEAD
-
-  // Update the object
-  sun->Update(dt, e_flags[0]);
-  earth->Set_OrbitCenter(sun->GetPosition());
-  earth->Update(dt, e_flags[0]);
-  moon->Set_OrbitCenter(earth->GetPosition()); 
-  moon->Update(dt, e_flags[0]);
-
 	// Update the camera
 	if (viewUpdate.processed == false){
 		m_camera->ProcessInput(viewUpdate);
 	}
 
-=======
   // Update the objects
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
     objects[i]->Update(dt, e_flags[0]);
   }
->>>>>>> 029320f427889b6dbb567f9469574282bb1de634
 }
 
 void Graphics::Render()

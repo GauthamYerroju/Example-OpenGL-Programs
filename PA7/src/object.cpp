@@ -69,11 +69,8 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
       et = orbit_speed * orbit_step;
       orbit_step++; 
 
-<<<<<<< HEAD
-      //printf("%s NOT NULL\n");
-=======
+
       printf("NOT NULL\n");
->>>>>>> 029320f427889b6dbb567f9469574282bb1de634
     }
 
     if( !e_flags.clockwise_rotate )
@@ -85,11 +82,7 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
   }
 
 
-<<<<<<< HEAD
-  //printf("%s\n x: %f\ny: %f\nz: %f\n\n", planet, orbit_dist.x, orbit_dist.y, orbit_dist.z);
-=======
   printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet.c_str(), orbit_radius.x, orbit_radius.y, orbit_radius.z);
->>>>>>> 029320f427889b6dbb567f9469574282bb1de634
 
   translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));

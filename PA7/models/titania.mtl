@@ -1,4 +1,4 @@
-# Blender MTL File: 'earth.blend'
+# Blender MTL File: 'planet.blend'
 # Material Count: 1
 
 newmtl Material.001
@@ -10,4 +10,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd C:\\Users\\enigma\\Desktop\\models\\mercury.jpg
+map_Kd titania.jpg
