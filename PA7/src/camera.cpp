@@ -13,29 +13,36 @@ Camera::~Camera()
 bool Camera::Initialize(int w, int h)
 {
   //--Init the view and projection matrices
-  cameraLocation = glm::vec3(0.0, 20.0, -700.0); 	//Eye Position
-  cameraFocus = glm::vec3(0.0, 0.0, 0.0); 				//Focus point
-  cameraUp = glm::vec3(0.0, 1.0, 0.0); 						//Positive Y is up
+  Position = glm::vec3(0.0, 20.0, 700.0); 	//Eye Position
+  Front = glm::vec3(0.0, 0.0, 0.0); 				//Focus point
+  WorldUp = glm::vec3(0.0, 1.0, 0.0); 			//Positive Y is up
+	Yaw = -90.0f;
+	Pitch = 0.0f;
+	Zoom = 45.0f;
+	MouseSensitivity = 0.25f;
+	MovementSpeed = 3.0f;
 
-	view = glm::lookAt(cameraLocation, cameraFocus, cameraUp);
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                  float(w)/float(h), //Aspect Ratio, so Circles stay Circular
                                  0.01f, //Distance to the near plane, normally a small value like this
                                  20000.0f); //Distance to the far plane, 
+	Update();
   return true;
 }
 
-void Camera::Update(ViewUpdate viewUpdate)
+void Camera::Update()
 {
-	if (viewUpdate.type == FOCUS){
-		cameraFocus += viewUpdate.value;
-		view = glm::lookAt(cameraLocation, cameraFocus, cameraUp);
-	}
+	//Update the Front
+	glm::vec3 tempFront;
 
-	if (viewUpdate.type == EYE){
-		cameraLocation += viewUpdate.value;
-		view = glm::lookAt(cameraLocation, cameraFocus, cameraUp);
-	}
+	tempFront.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	tempFront.y = sin(glm::radians(Pitch));
+	tempFront.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
+	Front = glm::normalize(tempFront);
+
+	//Update the Right and Up vectors
+	Right = glm::normalize(glm::cross(Front, WorldUp));
+	Up = glm::normalize(glm::cross(Right, Front));	
 }
 
 glm::mat4 Camera::GetProjection()
@@ -45,7 +52,7 @@ glm::mat4 Camera::GetProjection()
 
 glm::mat4 Camera::GetView()
 {
-  return view;
+  return glm::lookAt(Position, Position + Front, Up);
 }
 
 

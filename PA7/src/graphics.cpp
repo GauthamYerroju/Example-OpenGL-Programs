@@ -127,7 +127,7 @@ void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate vie
   moon->Set_OrbitCenter(earth->GetPosition()); 
   moon->Update(dt, e_flags[0]);
 
-	m_camera->Update(viewUpdate);
+	m_camera->Update();
 }
 
 void Graphics::Render()
