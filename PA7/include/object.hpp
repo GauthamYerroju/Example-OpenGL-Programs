@@ -19,34 +19,45 @@ class Object
     glm::mat4 GetPosition();
 
     void Update(unsigned int dt, EventFlag e_flags);
-    void Set_OrbitCenter(glm::mat4 o_center);
-    void Set_OrbitDistance(glm::vec3 dist);
-    void Set_RotateSpeed(float r_speed); 
+    void Set_RotateSpeed(float r_speed);
     void Set_Scale( float sclr );
+    void Set_RadScale( float r_sclr );
     bool Model_Loader(const char *filePath);
     bool Texture_Loader(const char *filePath, Mesh *mesh);
 
+    float getScaler();
+
+    std::string Get_Name();
+    std::string Get_ParentName();
+    void Set_Parent(Object * parentPointer);
+
   private:
+    Object * parent;
+    
     glm::mat4 model;
     glm::mat4 translation;
     glm::mat4 rotation;
     glm::mat4 scale;
 
     glm::mat4 orbit_center;
-    glm::vec3 orbit_dist;
+    glm::vec3 orbit_radius;
 
-    const char *planet;
-    const char *orbit_planet;
+    std::string planet;
+    std::string orbit_planet;
 
     double et;
     double lt;
     int orbit_step;
 
     float angle_rotate;
+    float orbit_speed;
     float rotate_speed;
+    float rad_scaler;
     float scaler;
 
     std::vector<Mesh> meshes;
+
+    float scaleToLog(float value);
 };
 
 #endif /* OBJECT_H */

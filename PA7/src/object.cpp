@@ -2,22 +2,20 @@
 
 Object::Object(const char *objPath, const char *planet_name, const char *planet_orbiting)
 { 
-
   et = 0.0;
   orbit_step = 0;
+  parent = NULL;
 
-  planet = planet_name;
+  planet = std::string(planet_name);
+
   if( planet_orbiting == NULL ){
-    orbit_planet = NULL;
+    orbit_planet = "null";
   }
   else
   {
-    orbit_planet = planet_orbiting;
-    //Load the spk file for planet distances
-    furnsh_c ( "spk/de421.bsp" );  
+    orbit_planet = std::string(planet_orbiting);
   }
   
-
   if(!Model_Loader(objPath)){
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
@@ -26,37 +24,56 @@ Object::Object(const char *objPath, const char *planet_name, const char *planet_
   {
     meshes[i].Initialize();
   }
-
-
+  
   orbit_center = glm::mat4(1.0f);
-  orbit_dist = glm::vec3(0.0f);
+  orbit_radius = glm::vec3(0.0f);
   angle_rotate = 0.0f;
   rotate_speed = 1.0f;
-  scaler = 0.0f;
-
+  orbit_speed = 36000;
+  scaler = 1.0f;
+  rad_scaler = 1.0f;
 }
 
 Object::~Object()
 {
-  delete planet;
-  delete orbit_planet;
+  // delete planet;
+  // delete orbit_planet;
+  delete parent;
 }
 
 void Object::Update(unsigned int dt, EventFlag e_flags)
 {
+  std::cout << "\tUpdating...\n";
   // If system not paused
   if( !e_flags.pause_all ){
 
-    if(orbit_planet != NULL)
+    if(parent != NULL)
     {
-      double dist[3];
-      spkpos_c(planet, et, "ECLIPJ2000", "None", orbit_planet, dist, &lt);
+      orbit_center = parent->GetPosition();
 
-      orbit_dist = glm::vec3((float)dist[0]*0.00005f, (float)dist[2]*0.00005f, (float)dist[1]*0.00005f);
-      et = 3600 * orbit_step;
+      std::cout << "\tSelf: " << planet << ", Parent: " << orbit_planet << "\n";
+
+      double dist[3];
+      spkpos_c(planet.c_str(), et, "ECLIPJ2000", "None", orbit_planet.c_str(), dist, &lt);
+
+      // Convert from km to mega meters
+      //orbit_radius = glm::vec3((float)dist[0]/1000, (float)dist[2]/1000, (float)dist[1]/1000);
+      // Convert from km to AU
+      //orbit_radius = glm::vec3((float)dist[0]/149598000, (float)dist[2]/149598000, (float)dist[1]/149598000);
+      
+      //0.000002222
+     
+      //counterclockwise
+      orbit_radius = glm::vec3((float)dist[1]*rad_scaler, (float)dist[2]*rad_scaler, (float)dist[0]*rad_scaler);
+      
+      et = orbit_speed * orbit_step;
       orbit_step++; 
 
+<<<<<<< HEAD
       //printf("%s NOT NULL\n");
+=======
+      printf("NOT NULL\n");
+>>>>>>> 029320f427889b6dbb567f9469574282bb1de634
     }
 
     if( !e_flags.clockwise_rotate )
@@ -65,26 +82,20 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
     else if( e_flags.clockwise_rotate )
     // Set clockwise angle of rotation
       angle_rotate -= (dt * M_PI/1000) * rotate_speed;
-    }
+  }
 
 
+<<<<<<< HEAD
   //printf("%s\n x: %f\ny: %f\nz: %f\n\n", planet, orbit_dist.x, orbit_dist.y, orbit_dist.z);
+=======
+  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet.c_str(), orbit_radius.x, orbit_radius.y, orbit_radius.z);
+>>>>>>> 029320f427889b6dbb567f9469574282bb1de634
 
-  translation = glm::translate(orbit_center, orbit_dist);
+  translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
   scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
 
   model = translation * rotation * scale;
-}
-
-void Object::Set_OrbitCenter(glm::mat4 o_center)
-{
-  orbit_center = o_center;
-}
-
-void Object::Set_OrbitDistance(glm::vec3 dist)
-{
-  orbit_dist = dist;
 }
 
 void Object::Set_RotateSpeed(float r_speed)
@@ -92,9 +103,15 @@ void Object::Set_RotateSpeed(float r_speed)
   rotate_speed = r_speed;
 }
 
+
 void Object::Set_Scale( float sclr )
 {
   scaler = sclr;
+}
+
+void Object::Set_RadScale( float r_sclr )
+{
+  rad_scaler = r_sclr;
 }
 
 glm::mat4 Object::GetModel()
@@ -106,12 +123,28 @@ glm::mat4 Object::GetPosition(){
   return translation;
 }
 
+std::string Object::Get_Name()
+{
+  return planet;
+}
+
+std::string Object::Get_ParentName()
+{
+  return orbit_planet;
+}
+
+void Object::Set_Parent(Object * parentPointer)
+{
+  parent = parentPointer;
+}
+
 void Object::Render()
 {
   for( unsigned int i = 0; i < meshes.size(); i++ )
   {
     meshes[i].Render();
   }
+  std::cout << planet << " rendered\n";
 }
 
 bool Object::Model_Loader(const char *filePath)
@@ -170,20 +203,7 @@ bool Object::Model_Loader(const char *filePath)
 
       if ( mtl->GetTexture(aiTextureType_DIFFUSE, 0, &tFileName, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS )
       {
-        //tPath = "models/" + std::string( tFileName.data );
-        if( strcmp ( planet, "sun" ) == 0 )
-        {
-          tPath = "models/sun.jpg";
-        }
-        else if( strcmp ( planet, "earth" ) == 0 )
-        {
-          tPath = "models/earth.jpg";
-        }
-        else if( strcmp ( planet, "moon" ) == 0 )
-        {
-          tPath = "models/moon.jpg";
-        }
-        
+        tPath = "models/" + std::string( tFileName.data );
         if ( !Texture_Loader(tPath.c_str(), tmpMesh ) )
         {
           printf("Failed to load diffuse texture #%d for '%s'\n", mtl->GetTextureCount(aiTextureType_DIFFUSE), mesh->mName.C_Str() );

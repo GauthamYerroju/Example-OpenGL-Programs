@@ -1,0 +1,24 @@
+[
+    {
+        "name": "Sun",
+        "parent": "null",
+        "modelFile": "sun.obj",
+        "radius": 1.5,
+        "orbitRadius": 0,
+        "orbitSpeed": 0,
+        "spinSpeed": 0.1,
+        "axialTilt": [0, 0, 0],
+        "orbitalTilt": [0, 0, 0]
+    },
+    {
+        "name": "Earth",
+        "parent": "Sun",
+        "modelFile": "earth.obj",
+        "radius": 1,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 1,
+        "axialTilt": [0, 0, 0],
+        "orbitalTilt": [0, 0, 0]
+    }
+]

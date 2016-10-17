@@ -44,18 +44,62 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
-  // Create the object
-  sun = new Object(argv[3], "sun", NULL);
-  earth = new Object(argv[3], "earth", "sun");
-  moon = new Object(argv[3], "moon", "earth");
+  //Load the spk file for planet distances
+  furnsh_c ( "spk/de421.bsp" );
 
-  // Initialize box attributes
-  earth->Set_RotateSpeed(0.25);
+  // Load objects from config file ( path in argv[3] )
+  std::ifstream config_file(argv[3]);
+  json config;
+  config << config_file;
+  for (json::iterator it = config.begin(); it != config.end(); ++it)
+  {
+    auto objectConfig = *it;
+    
+    // Load the modelm
+    std::string modelFile = objectConfig["modelFile"];
+    modelFile = "./models/" + modelFile;
 
-  sun->Set_Scale( 25.0f );
-  earth->Set_Scale( 5.0f );
-  moon->Set_Scale( 1.0f );
 
+    std::string label = objectConfig["name"];
+    std::string parent = objectConfig["parent"];
+    float spinSpeed = objectConfig["spinSpeed"];
+    float scaler = objectConfig["radius"];
+    //float radScaler = 0.000156789;
+    float radScaler = 0.000002222;
+
+    Object * obj = new Object( modelFile.c_str(), label.c_str(), ( parent == "null" ? NULL : parent.c_str() ) );
+
+    // Set object attributes
+    // TODO: Modifiers from cspice will go here instead of from the config file
+    obj->Set_RotateSpeed(spinSpeed);
+    obj->Set_Scale(scaler);
+    obj->Set_RadScale(radScaler);
+
+    objects.push_back( obj );
+    std::cout << "Object created\n";
+  }
+
+  // Assign parents
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    std::cout << objects[i]->Get_ParentName() << "\n";
+    if (objects[i]->Get_ParentName() != "null")
+    {
+      for( unsigned int j = 0; j < objects.size(); j++ )
+      {
+        if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
+        {
+          std::cout << "Setting parent\n";
+          objects[i]->Set_Parent( objects[j] );
+          std::cout << "Parent set\n";
+
+          break;
+        }
+      }
+    } else {
+      std::cout << "Parent is null\n";
+    }
+  }
 
   // Set up the shaders
   m_shader = new Shader();
@@ -119,6 +163,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
 void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate viewUpdate)
 {
+<<<<<<< HEAD
 
   // Update the object
   sun->Update(dt, e_flags[0]);
@@ -132,12 +177,18 @@ void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate vie
 		m_camera->ProcessInput(viewUpdate);
 	}
 
+=======
+  // Update the objects
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    objects[i]->Update(dt, e_flags[0]);
+  }
+>>>>>>> 029320f427889b6dbb567f9469574282bb1de634
 }
 
 void Graphics::Render()
 {
   //clear the screen
-  //glClearColor(0.0, 0.0, 0.2, 1.0);
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -149,14 +200,11 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(sun->GetModel()));
-  sun->Render(); 
-  
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(earth->GetModel()));
-  earth->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
-  moon->Render();
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i]->GetModel()));
+    objects[i]->Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -198,4 +246,3 @@ std::string Graphics::ErrorString(GLenum error)
     return "None";
   }
 }
-
