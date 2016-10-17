@@ -63,6 +63,9 @@ void Camera::ProcessInput(ViewUpdate viewUpdate)
 			Position += Right * speed;
 		}
 	}
+
+	//process mouse input
+	
 }
 
 glm::mat4 Camera::GetProjection()
