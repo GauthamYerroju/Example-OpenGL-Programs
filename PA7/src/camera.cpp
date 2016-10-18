@@ -14,13 +14,14 @@ bool Camera::Initialize(int w, int h)
 {
   //--Init the view and projection matrices
   Position = glm::vec3(0.0, 0.0, 2000.0); 	//Eye Position
-  Front = glm::vec3(0.0, 0.0, -1.0); 				//Focus point
-  WorldUp = glm::vec3(0.0, 1.0, 0.0); 			//Positive Y is up
+  Front = glm::vec3(0.0, 0.0, -1.0); 		//Focus point
+  WorldUp = glm::vec3(0.0, 1.0, 0.0); 		//Positive Y is up
 	Yaw = -90.0f;
 	Pitch = 0.0f;
 	Zoom = 45.0f;
 	MouseSensitivity = 0.25f;
 	MovementSpeed = 3.0f;
+  P_origin = Position;
 
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
                                  float(w)/float(h), //Aspect Ratio, so Circles stay Circular
@@ -69,10 +70,16 @@ void Camera::ProcessInput(ViewUpdate viewUpdate)
 	
 }
 
-void Camera::po(glm::vec3 p){
-	GLfloat scale = MovementSpeed * 6;
-	Position = p;
+void Camera::ZoomOnPlanet(glm::vec3 Pos, int PosSclr){
+	
+	GLfloat scale = MovementSpeed * PosSclr;
+	Position = Pos;
 	Position -= Front * scale;
+}
+
+void Camera::ResetPosition()
+{
+	Position = P_origin;
 }
 
 glm::mat4 Camera::GetProjection()

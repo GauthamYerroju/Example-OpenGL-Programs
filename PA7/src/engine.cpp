@@ -71,6 +71,7 @@ void Engine::Run()
     // Update and render the graphics
     m_graphics->Update(m_DT, eventFlags, viewUpdate);
 		viewUpdate.processed = true;
+    viewUpdate.resetPos = false;
     eventFlags.incrSpeed = false;
     eventFlags.dcrSpeed = false;
     m_graphics->Render();
@@ -96,7 +97,7 @@ void Engine::Keyboard()
         m_running = false;
         break;
 
-      case SDLK_KP_PLUS:
+      case SDLK_EQUALS:
         //'Left Arrow' pressed, change object rotation direction counter-clockwise
         eventFlags.incrSpeed = true;
         break;
@@ -126,6 +127,7 @@ void Engine::Keyboard()
 				viewUpdate.type = KEY;			
 				viewUpdate.direction = FORWARD;
         viewUpdate.zoom = false;
+        viewUpdate.resetPos = false;
 				break;
 
 			case SDLK_a:
@@ -134,6 +136,7 @@ void Engine::Keyboard()
 				viewUpdate.type = KEY;
 				viewUpdate.direction = LEFT;
         viewUpdate.zoom = false;
+        viewUpdate.resetPos = false;
 				break;
 
 			case SDLK_s:
@@ -142,6 +145,7 @@ void Engine::Keyboard()
 				viewUpdate.type = KEY;
 				viewUpdate.direction = BACKWARD;
         viewUpdate.zoom = false;
+        viewUpdate.resetPos = false;
 				break;
 
 			case SDLK_d:
@@ -150,57 +154,83 @@ void Engine::Keyboard()
 				viewUpdate.type = KEY;
 				viewUpdate.direction = RIGHT;
         viewUpdate.zoom = false;
+        viewUpdate.resetPos = false;
 				break;
 
       case SDLK_0:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 1;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 1;
+        viewUpdate.pViewScaler = 1;
         break;
       case SDLK_1:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 2;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 2;
+        viewUpdate.pViewScaler = 3;
         break;
       case SDLK_2:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 3;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 3;
+        viewUpdate.pViewScaler = 4;
         break;
       case SDLK_3:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 4;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 4;
+        viewUpdate.pViewScaler = 1;
         break;
        case SDLK_4:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 5;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 5;
+        viewUpdate.pViewScaler = 2;
         break;
       case SDLK_5:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 6;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 6;
+        viewUpdate.pViewScaler = 25;
         break;
       case SDLK_6:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 7;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 7;
+        viewUpdate.pViewScaler = 25;
         break;
       case SDLK_7:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 8;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 8;
+        viewUpdate.pViewScaler = 15;
         break;
       case SDLK_8:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 9;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 9;
+        viewUpdate.pViewScaler = 15;
         break;                 
       case SDLK_9:
         //'D' pressed, move camera right
         viewUpdate.zoom = true;
-        viewUpdate.planet = 10;
+        viewUpdate.resetPos = false;
+        viewUpdate.planetIndx = 10;
+        viewUpdate.pViewScaler = 1;
+        break;
+      case SDLK_BACKSPACE:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = false;
+        viewUpdate.resetPos = true;
         break;
         
 

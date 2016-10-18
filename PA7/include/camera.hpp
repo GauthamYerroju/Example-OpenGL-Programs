@@ -11,7 +11,8 @@ class Camera
     bool Initialize(int w, int h);
 		void UpdateVectors();
 		void ProcessInput(ViewUpdate viewUpdate);
-		void po(glm::vec3 p);
+		void ZoomOnPlanet(glm::vec3 Pos, int PosSclr);
+		void ResetPosition();
     glm::mat4 GetProjection();
     glm::mat4 GetView();
   
@@ -22,6 +23,7 @@ class Camera
 
 		//camera position and view vectors
 		glm::vec3 Position;
+		glm::vec3 P_origin;
 		glm::vec3 Front;
 		glm::vec3 Up;
 		glm::vec3 Right;

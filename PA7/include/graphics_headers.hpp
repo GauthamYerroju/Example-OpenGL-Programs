@@ -69,7 +69,9 @@ struct ViewUpdate
 	Direction direction;
 
   bool zoom;
-  int planet;
+  bool resetPos;
+  int planetIndx;
+  int pViewScaler;
 
 };
 #endif /* GRAPHICS_HEADERS_H */

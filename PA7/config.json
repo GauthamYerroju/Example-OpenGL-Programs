@@ -93,6 +93,13 @@
         "spinSpeed": 0
     },
     {
+        "name": "Uranus BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "uranusRing.obj",
+        "radius": 4.01,
+        "spinSpeed": 0
+    },
+    {
         "name": "Neptune BARYCENTER",
         "parent": "Sun",
         "modelFile": "neptuneRing.obj",

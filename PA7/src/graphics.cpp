@@ -45,7 +45,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   }
 
   //Load the spk file for planet distances
-  furnsh_c ( "spk/de421.bsp" );
+  furnsh_c ( "../spk/de421.bsp" );
 
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
@@ -69,8 +69,8 @@ bool Graphics::Initialize(int width, int height, char **argv)
     Object * obj = new Object( modelFile.c_str(), label.c_str(), ( parent == "null" ? NULL : parent.c_str() ) );
 
     // Set object attributes
-    // TODO: Modifiers from cspice will go here instead of from the config file
     obj->Set_RotateSpeed(spinSpeed);
+    //obj->Set_RotateSpeed(spinSpeed/24);   //24 hrs
     obj->Set_Scale(scaler);
     if(obj->Get_Name() == "Moon"){
       obj->Set_RadScale(radScaler*0.25);
@@ -160,14 +160,23 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
 void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 {
-
+  // Planet position vector
   glm::vec3 tempPos(0.0f);
+
   if(viewUpdate.zoom)
     {
-      int i = viewUpdate.planet;
-      glm::vec3 tempPos = glm::vec3(objects[i]->GetModel()[3][0],objects[i]->GetModel()[3][1],objects[i]->GetModel()[3][2]);
-      m_camera->po(tempPos);
+      // Zoom on planet indicated by pIndx
+      int pIndx = viewUpdate.planetIndx;
+      tempPos.x = objects[pIndx]->GetModel()[3][0];
+      tempPos.y = objects[pIndx]->GetModel()[3][1];
+      tempPos.z = objects[pIndx]->GetModel()[3][2];
+      // Update camera to zoom on planet position offset by scaler
+      m_camera->ZoomOnPlanet(tempPos, viewUpdate.pViewScaler);
     }
+  if(viewUpdate.resetPos){
+    m_camera->ResetPosition();
+  }
+
 	// Update the camera
 	if (viewUpdate.processed == false){
     
