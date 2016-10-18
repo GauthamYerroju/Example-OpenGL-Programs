@@ -45,54 +45,59 @@ bool Graphics::Initialize(int width, int height, char **argv)
   }
 
   //Load the spk file for planet distances
-  furnsh_c ( "spk/de421.bsp" ); 
+  furnsh_c ( "spk/de421.bsp" );
 
-  // Create the object
-  sun = new Object(argv[3], "sun", NULL);
-  mercury = new Object(argv[3], "mercury", "sun"); //parent is the sun
-  venus = new Object(argv[3], "venus", "sun"); //parent is the sun
-  earth = new Object(argv[3], "earth", "sun"); //parent is the sun
-  moon = new Object(argv[3], "moon", "earth"); //parent is the earth
-
-  // Initialize box attributes
-  sun->Set_RotateSpeed(0.040866367);
-  mercury->Set_RotateSpeed(0.005682787);
-  venus->Set_RotateSpeed(0.004114803);
-  earth->Set_RotateSpeed(1.0);
-  moon->Set_RotateSpeed(0.036600542);
+  // Load objects from config file ( path in argv[3] )
+  std::ifstream config_file(argv[3]);
+  json config;
+  config << config_file;
+  for (json::iterator it = config.begin(); it != config.end(); ++it)
+  {
+    auto objectConfig = *it;
+    
+    // Load the modelm
+    std::string modelFile = objectConfig["modelFile"];
+    modelFile = "./models/" + modelFile;
 
 
+    std::string label = objectConfig["name"];
+    std::string parent = objectConfig["parent"];
+    float spinSpeed = objectConfig["spinSpeed"];
+    float scaler = objectConfig["radius"];
+    float radScaler = 200000;
 
-  sun->Set_Scale( log(109.078080903) );
-  mercury->Set_Scale( log(0.383/2) );
-  venus->Set_Scale( log(0.949/2) );
-  earth->Set_Scale( log(1) ); 
-  moon->Set_Scale( log(0.2724/2) );
-  
-  /*
-  mercury->Set_RadScale( log(0.000156789) );
-  venus->Set_RadScale( log(0.000156789) );
-  earth->Set_RadScale( log(0.000156789) );
-  moon->Set_RadScale( log(0.000156789) );
-*/
-  
-  mercury->Set_RadScale( (0.000156789) );
-  venus->Set_RadScale( (0.000156789) );
-  earth->Set_RadScale( (0.000156789) );
-  moon->Set_RadScale( (0.000156789) );
+    Object * obj = new Object( modelFile.c_str(), label.c_str(), ( parent == "null" ? NULL : parent.c_str() ) );
 
+    // Set object attributes
+    // TODO: Modifiers from cspice will go here instead of from the config file
+    obj->Set_RotateSpeed(spinSpeed);
+    obj->Set_Scale(scaler);
+    if(obj->Get_Name() == "Moon"){
+      obj->Set_RadScale(radScaler*0.25);
+    }
+    else
+      obj->Set_RadScale(radScaler);
 
- // sun->Set_Scale( 398.048947948f * 0.05f );
-  //mercury->Set_Scale( 1.39606064f * 3.05f );
-  //mercury->Set_RadScale(0.000002222);
-  //venus->Set_Scale( 3.462688112f * 3.05f );
-  //venus->Set_RadScale(0.000002222);
-  //earth->Set_Scale( 3.645205876f * 3.05f );
-  //earth->Set_RadScale(0.000002222);
-  //moon->Set_Scale( 0.993834972 * 3.05f );
-  //moon->Set_RadScale(0.000002222*20);
-  // unit scale 0.000572156
-  
+    objects.push_back( obj );
+  }
+
+  // Assign parents
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    if (objects[i]->Get_ParentName() != "null")
+    {
+      for( unsigned int j = 0; j < objects.size(); j++ )
+      {
+        if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
+        {
+          objects[i]->Set_Parent( objects[j] );
+          break;
+        }
+      }
+    } else {
+    }
+  }
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -153,27 +158,32 @@ bool Graphics::Initialize(int width, int height, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags)
+void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 {
 
-  // Update the object
-  sun->Update(dt, e_flags[0]);  //parent first
-  mercury->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
-  mercury->Update(dt, e_flags[0]);
-  venus->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
-  venus->Update(dt, e_flags[0]);
-  earth->Set_OrbitCenter(sun->GetPosition()); //child second; also parent for moon
-  earth->Update(dt, e_flags[0]);
-  moon->Set_OrbitCenter(earth->GetPosition()); //child of earth
-  moon->Update(dt, e_flags[0]);
+  glm::vec3 tempPos(0.0f);
+  if(viewUpdate.zoom)
+    {
+      int i = viewUpdate.planet;
+      glm::vec3 tempPos = glm::vec3(objects[i]->GetModel()[3][0],objects[i]->GetModel()[3][1],objects[i]->GetModel()[3][2]);
+      m_camera->po(tempPos);
+    }
+	// Update the camera
+	if (viewUpdate.processed == false){
+    
+		m_camera->ProcessInput(viewUpdate);
+	}
 
-
+  // Update the objects
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    objects[i]->Update(dt, e_flags);
+  }
 }
 
 void Graphics::Render()
 {
   //clear the screen
-  //glClearColor(0.0, 0.0, 0.2, 1.0);
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -182,23 +192,14 @@ void Graphics::Render()
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection())); 
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView())); 
 
   // Render the object
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(sun->GetModel()));
-  sun->Render(); 
-  
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(mercury->GetModel()));
-  mercury->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(venus->GetModel()));
-  venus->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(earth->GetModel()));
-  earth->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(moon->GetModel()));
-  moon->Render();
+  for( unsigned int i = 0; i < objects.size(); i++ )
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i]->GetModel()));
+    objects[i]->Render();
+  }
 
   // Get any errors from OpenGL
   auto error = glGetError();

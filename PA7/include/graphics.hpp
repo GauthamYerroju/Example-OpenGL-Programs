@@ -9,13 +9,17 @@ using namespace std;
 #include "shader.hpp"
 #include "object.hpp"
 
+// For the config file
+#include "json.hpp"
+using json = nlohmann::json;
+
 class Graphics
 {
   public:
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, char **argv);
-    void Update(unsigned int dt, vector<EventFlag> e_flags);
+    void Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate);
     void Render();
 
   private:
@@ -28,11 +32,7 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    Object *sun;
-    Object *mercury;
-    Object *venus;
-    Object *earth;
-    Object *moon;
+    std::vector<Object*> objects;
 
 };
 

@@ -37,6 +37,8 @@
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
+enum UpdateType {KEY, MOUSE};
+enum Direction {FORWARD, BACKWARD, LEFT, RIGHT};
 struct Vertex
 {
   glm::vec3 vertex;
@@ -47,14 +49,27 @@ struct Vertex
 
 struct EventFlag
 {
-	bool clockwise_rotate;
   bool pause_all;
-
+  bool incrSpeed;
+  bool dcrSpeed;
+  
   EventFlag()
   {
-    clockwise_rotate = false;
     pause_all = false;
+    incrSpeed = false;
+    dcrSpeed = false;
 	}
 };
 
+struct ViewUpdate
+{
+	bool processed;
+	unsigned int dt;
+	UpdateType type;
+	Direction direction;
+
+  bool zoom;
+  int planet;
+
+};
 #endif /* GRAPHICS_HEADERS_H */

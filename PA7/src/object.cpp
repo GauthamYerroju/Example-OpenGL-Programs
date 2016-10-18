@@ -2,20 +2,20 @@
 
 Object::Object(const char *objPath, const char *planet_name, const char *planet_orbiting)
 { 
-
   et = 0.0;
   orbit_step = 0;
+  parent = NULL;
 
-  planet = planet_name;
+  planet = std::string(planet_name);
+
   if( planet_orbiting == NULL ){
-    orbit_planet = NULL;
+    orbit_planet = "null";
   }
   else
   {
-    orbit_planet = planet_orbiting;
+    orbit_planet = std::string(planet_orbiting);
   }
   
-
   if(!Model_Loader(objPath)){
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
@@ -24,21 +24,20 @@ Object::Object(const char *objPath, const char *planet_name, const char *planet_
   {
     meshes[i].Initialize();
   }
-
+  
   orbit_center = glm::mat4(1.0f);
   orbit_radius = glm::vec3(0.0f);
   angle_rotate = 0.0f;
   rotate_speed = 1.0f;
-  orbit_speed = 36000;
+  orbit_speed = 3600;
   scaler = 1.0f;
+  speed_sclr = 1.0f;
   rad_scaler = 1.0f;
-
 }
 
 Object::~Object()
 {
-  delete planet;
-  delete orbit_planet;
+  delete parent;
 }
 
 void Object::Update(unsigned int dt, EventFlag e_flags)
@@ -46,53 +45,37 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
   // If system not paused
   if( !e_flags.pause_all ){
 
-    if(orbit_planet != NULL)
+    if(parent != NULL)
     {
-      double dist[3];
-      spkpos_c(planet, et, "ECLIPJ2000", "None", orbit_planet, dist, &lt);
+      if(e_flags.incrSpeed){
+        if( (speed_sclr + 2) >=1 & (speed_sclr + 2) < 10)
+          speed_sclr += 2;
+      }
+      if(e_flags.dcrSpeed){
+        if( (speed_sclr - 2) >=1 & (speed_sclr - 2) < 10)
+          speed_sclr -= 2;
+      }
 
-      // Convert from km to mega meters
-      //orbit_radius = glm::vec3((float)dist[0]/1000, (float)dist[2]/1000, (float)dist[1]/1000);
-      // Convert from km to AU
-      //orbit_radius = glm::vec3((float)dist[0]/149598000, (float)dist[2]/149598000, (float)dist[1]/149598000);
-      
-      //0.000002222
+      orbit_center = parent->GetPosition();
+
+      double dist[3];
+      spkpos_c(planet.c_str(), et, "ECLIPJ2000", "None", orbit_planet.c_str(), dist, &lt);
      
       //counterclockwise
-      orbit_radius = glm::vec3((float)dist[1]*rad_scaler, (float)dist[2]*rad_scaler, (float)dist[0]*rad_scaler);
+      orbit_radius = glm::vec3((float)dist[1]/rad_scaler, (float)dist[2]/rad_scaler, (float)dist[0]/rad_scaler);
       
-      et = orbit_speed * orbit_step;
+      et = orbit_speed * orbit_step * speed_sclr;
       orbit_step++; 
-
-      printf("NOT NULL\n");
     }
 
-    if( !e_flags.clockwise_rotate )
-    // Set counter clockwise angle of rotation
-      angle_rotate += (dt * M_PI/1000) * rotate_speed;
-    else if( e_flags.clockwise_rotate )
-    // Set clockwise angle of rotation
-      angle_rotate -= (dt * M_PI/1000) * rotate_speed;
+    angle_rotate += (dt * M_PI/1000) * rotate_speed * speed_sclr;     
   }
-
-
-  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet, orbit_radius.x, orbit_radius.y, orbit_radius.z);
 
   translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
   scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
 
   model = translation * rotation * scale;
-}
-
-void Object::Set_OrbitCenter(glm::mat4 o_center)
-{
-  orbit_center = o_center;
-}
-
-void Object::Set_OrbitRadius(glm::vec3 rad)
-{
-  orbit_radius = rad;
 }
 
 void Object::Set_RotateSpeed(float r_speed)
@@ -118,6 +101,21 @@ glm::mat4 Object::GetModel()
 
 glm::mat4 Object::GetPosition(){
   return translation;
+}
+
+std::string Object::Get_Name()
+{
+  return planet;
+}
+
+std::string Object::Get_ParentName()
+{
+  return orbit_planet;
+}
+
+void Object::Set_Parent(Object * parentPointer)
+{
+  parent = parentPointer;
 }
 
 void Object::Render()
@@ -184,28 +182,7 @@ bool Object::Model_Loader(const char *filePath)
 
       if ( mtl->GetTexture(aiTextureType_DIFFUSE, 0, &tFileName, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS )
       {
-        //tPath = "models/" + std::string( tFileName.data );
-        if( strcmp ( planet, "sun" ) == 0 )
-        {
-          tPath = "models/sun.jpg";
-        }
-        else if( strcmp ( planet, "mercury" ) == 0 )
-        {
-          tPath = "models/mercury.jpg";
-        }
-        else if( strcmp ( planet, "venus" ) == 0 )
-        {
-          tPath = "models/venus.jpg";
-        }
-        else if( strcmp ( planet, "earth" ) == 0 )
-        {
-          tPath = "models/earth.jpg";
-        }
-        else if( strcmp ( planet, "moon" ) == 0 )
-        {
-          tPath = "models/moon.jpg";
-        }
-        
+        tPath = "models/" + std::string( tFileName.data );
         if ( !Texture_Loader(tPath.c_str(), tmpMesh ) )
         {
           printf("Failed to load diffuse texture #%d for '%s'\n", mtl->GetTextureCount(aiTextureType_DIFFUSE), mesh->mName.C_Str() );

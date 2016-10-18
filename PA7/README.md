@@ -3,7 +3,7 @@ Collaborators:
 
 Kevin Green,  
 Husain Tazarvi,  
-Gautham Yerroju  
+Gautham Yerroju
 
 
 # Dependencies, Building, and Running
@@ -48,8 +48,20 @@ The following keyboard commands are used to interact with the program:
 
 Key          - Event  
 
-LeftArrow    - Change object rotation to counter-clockwise  
-RightArrow   - Change object rotation to clockwise  
+w            - Move into screen  
+s            - Move out of screen  
+a            - Move left  
+d            - Move right
+0            - Zoom on Mercury
+1            - Zoom on Venus
+2            - Zoom on Earth
+3            - Zoom on Moon
+4            - Zoom on Mars
+5            - Zoom on Jupiter
+6            - Zoom on Saturn
+7            - Zoom on Uranus
+8            - Zoom on Neptune
+9            - Zoom on Pluto
 Pause        - Pause or resume program  
 Esc          - Close program  
 

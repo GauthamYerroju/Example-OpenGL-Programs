@@ -7,6 +7,7 @@ Engine::Engine(string name, int width, int height)
   m_WINDOW_WIDTH = width;
   m_WINDOW_HEIGHT = height;
   m_FULLSCREEN = false;
+	viewUpdate.processed = true;
 }
 
 Engine::Engine(string name)
@@ -15,6 +16,7 @@ Engine::Engine(string name)
   m_WINDOW_HEIGHT = 0;
   m_WINDOW_WIDTH = 0;
   m_FULLSCREEN = true;
+	viewUpdate.processed = true;
 }
 
 Engine::~Engine()
@@ -46,8 +48,6 @@ bool Engine::Initialize(char **argv)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
-  eventFlags.push_back(EventFlag());
-
   // No errors
   return true;
 }
@@ -69,7 +69,10 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT, eventFlags);
+    m_graphics->Update(m_DT, eventFlags, viewUpdate);
+		viewUpdate.processed = true;
+    eventFlags.incrSpeed = false;
+    eventFlags.dcrSpeed = false;
     m_graphics->Render();
 
     // Swap to the Window
@@ -85,32 +88,122 @@ void Engine::Keyboard()
   }
   else if (m_event.type == SDL_KEYDOWN)
   {
+		viewUpdate.dt = 10;
+
     // handle key down events here
     switch(m_event.key.keysym.sym){
       case SDLK_ESCAPE:
         m_running = false;
         break;
-      case SDLK_LEFT:
+
+      case SDLK_KP_PLUS:
         //'Left Arrow' pressed, change object rotation direction counter-clockwise
-        if( eventFlags[0].clockwise_rotate == true )
-          eventFlags[0].clockwise_rotate = false;
+        eventFlags.incrSpeed = true;
         break;
-      case SDLK_RIGHT:
+
+      case SDLK_MINUS:
         //'Right Arrow' pressed, change object rotation direction clockwise
-        if( eventFlags[0].clockwise_rotate == false )
-          eventFlags[0].clockwise_rotate = true;
+        eventFlags.dcrSpeed = true;
         break;
+
       case SDLK_PAUSE:
         //Pause or resume program
-        if( eventFlags[0].pause_all == false )
+        if( eventFlags.pause_all == false )
         {
-          eventFlags[0].pause_all = true;
+          eventFlags.pause_all = true;
         }
-        else if( eventFlags[0].pause_all == true )
+
+        else if( eventFlags.pause_all == true )
         { 
-          eventFlags[0].pause_all = false;
+          eventFlags.pause_all = false;
         }
+
         break;
+
+			case SDLK_w:
+				//'W' pressed, move camera forward
+				viewUpdate.processed = false;
+				viewUpdate.type = KEY;			
+				viewUpdate.direction = FORWARD;
+        viewUpdate.zoom = false;
+				break;
+
+			case SDLK_a:
+				//'A' pressed, move camera left
+				viewUpdate.processed = false;
+				viewUpdate.type = KEY;
+				viewUpdate.direction = LEFT;
+        viewUpdate.zoom = false;
+				break;
+
+			case SDLK_s:
+				//'S' pressed, move camera backward
+				viewUpdate.processed = false;
+				viewUpdate.type = KEY;
+				viewUpdate.direction = BACKWARD;
+        viewUpdate.zoom = false;
+				break;
+
+			case SDLK_d:
+				//'D' pressed, move camera right
+				viewUpdate.processed = false;
+				viewUpdate.type = KEY;
+				viewUpdate.direction = RIGHT;
+        viewUpdate.zoom = false;
+				break;
+
+      case SDLK_0:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 1;
+        break;
+      case SDLK_1:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 2;
+        break;
+      case SDLK_2:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 3;
+        break;
+      case SDLK_3:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 4;
+        break;
+       case SDLK_4:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 5;
+        break;
+      case SDLK_5:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 6;
+        break;
+      case SDLK_6:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 7;
+        break;
+      case SDLK_7:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 8;
+        break;
+      case SDLK_8:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 9;
+        break;                 
+      case SDLK_9:
+        //'D' pressed, move camera right
+        viewUpdate.zoom = true;
+        viewUpdate.planet = 10;
+        break;
+        
+
       default:
         break;
     }
@@ -119,24 +212,22 @@ void Engine::Keyboard()
 
 void Engine::Mouse(){
 
-  if (m_event.type == SDL_MOUSEBUTTONDOWN)
-  {
-    // handle mouse button down events here
-    switch(m_event.button.button){
-      case SDL_BUTTON_LEFT:
-        //Left click, change object rotation direction counter-clockwise
-        if( eventFlags[0].clockwise_rotate == true )
-          eventFlags[0].clockwise_rotate = false;
-        break;
-      case SDL_BUTTON_RIGHT:
-        //Right click, change object rotation direction clockwise
-        if( eventFlags[0].clockwise_rotate == false )
-          eventFlags[0].clockwise_rotate = true;
-        break;
-      default:
-        break;
-    }
+	//handle mouse look here
+  if (m_event.type == SDL_MOUSEMOTION){
+
   }
+
+	//handle zoom
+	if (m_event.type == SDL_MOUSEWHEEL)
+	{
+		if (m_event.wheel.y < 0){
+			printf("wheel down\n");
+		}
+		
+		if (m_event.wheel.y > 0){
+			printf("wheel up\n");
+		}
+	}
 }
 
 unsigned int Engine::getDT()

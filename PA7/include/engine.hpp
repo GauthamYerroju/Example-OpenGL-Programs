@@ -30,9 +30,10 @@ class Engine
     int m_WINDOW_HEIGHT;
     bool m_FULLSCREEN;
     SDL_Event m_event;
-    vector<EventFlag> eventFlags;
+    EventFlag eventFlags;
 
     Graphics *m_graphics;
+	ViewUpdate viewUpdate;
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
