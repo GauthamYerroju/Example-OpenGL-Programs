@@ -77,7 +77,30 @@
         "modelFile": "pluto.obj",
         "radius": 0.186,
         "spinSpeed": 0.15625
+    },
+    {
+        "name": "Jupiter BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "jupiterRing.obj",
+        "radius": 11.21,
+        "spinSpeed": 0
+    },
+    {
+        "name": "Saturn BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "saturnRing.obj",
+        "radius": 9.45,
+        "spinSpeed": 0
+    },
+    {
+        "name": "Neptune BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "neptuneRing.obj",
+        "radius": 3.88,
+        "spinSpeed": 0
     }
+
+
 ]
 
     
