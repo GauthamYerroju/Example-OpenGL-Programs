@@ -15,7 +15,7 @@ bool Camera::Initialize(int w, int h)
   //--Init the view and projection matrices
   Position = glm::vec3(0.0, 20.0, 700.0); 	//Eye Position
   Front = glm::vec3(0.0, 0.0, -1.0); 				//Focus point
-  WorldUp = glm::vec3(0.0, 1.0, 0.0); 			//Positive Y is up
+  WorldUp = glm::vec3(0.0, -1.0, 0.0); 			//Positive Y is up
 	Yaw = -90.0f;
 	Pitch = 0.0f;
 	Zoom = 45.0f;

@@ -3,12 +3,28 @@
         "name": "Sun",
         "parent": "null",
         "modelFile": "sun.obj",
-        "radius": 1.5,
+        "radius": 109.197928112,
         "orbitRadius": 0,
         "orbitSpeed": 0,
-        "spinSpeed": 0.1,
-        "axialTilt": [0, 0, 0],
-        "orbitalTilt": [0, 0, 0]
+        "spinSpeed": 0.001566416
+    },
+    {
+        "name": "Mercury",
+        "parent": "Sun",
+        "modelFile": "mercury.obj",
+        "radius": 0.383,
+        "orbitRadius": 0,
+        "orbitSpeed": 0,
+        "spinSpeed": 0.005682787
+    },
+    {
+        "name": "Venus",
+        "parent": "Sun",
+        "modelFile": "venus.obj",
+        "radius": 0.949,
+        "orbitRadius": 0,
+        "orbitSpeed": 0,
+        "spinSpeed": -0.004114803
     },
     {
         "name": "Earth",
@@ -17,8 +33,72 @@
         "radius": 1,
         "orbitRadius": 1,
         "orbitSpeed": 1,
-        "spinSpeed": 1,
-        "axialTilt": [0, 0, 0],
-        "orbitalTilt": [0, 0, 0]
+        "spinSpeed": 1
+    },
+    {
+        "name": "Moon",
+        "parent": "Earth",
+        "modelFile": "moon.obj",
+        "radius": 0.2724,
+        "orbitRadius": 0,
+        "orbitSpeed": 0,
+        "spinSpeed": 0.037037037
+    },
+    {
+        "name": "Mars BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "mars.obj",
+        "radius": 0.532,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 0.974702411
+    },
+   {
+        "name": "Jupiter BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "jupiter.obj",
+        "radius": 11.21,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 2.424242424
+    },
+    {
+        "name": "Saturn BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "saturn.obj",
+        "radius": 9.45,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 2.252252252
+    },
+    {
+        "name": "Uranus BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "uranus.obj",
+        "radius": 4.01,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": -1.392111369
+    },
+    {
+        "name": "Neptune BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "neptune.obj",
+        "radius": 3.88,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 1.5
+    },
+    {
+        "name": "Pluto BARYCENTER",
+        "parent": "Sun",
+        "modelFile": "pluto.obj",
+        "radius": 0.186,
+        "orbitRadius": 1,
+        "orbitSpeed": 1,
+        "spinSpeed": 0.15625
     }
 ]
+
+    
+  
