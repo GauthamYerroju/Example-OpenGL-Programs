@@ -25,8 +25,6 @@ class Object
     bool Model_Loader(const char *filePath);
     bool Texture_Loader(const char *filePath, Mesh *mesh);
 
-    float getScaler();
-
     std::string Get_Name();
     std::string Get_ParentName();
     void Set_Parent(Object * parentPointer);
@@ -54,6 +52,7 @@ class Object
     float rotate_speed;
     float rad_scaler;
     float scaler;
+    float speed_sclr;
 
     std::vector<Mesh> meshes;
 

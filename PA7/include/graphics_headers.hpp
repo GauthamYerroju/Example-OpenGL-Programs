@@ -49,13 +49,15 @@ struct Vertex
 
 struct EventFlag
 {
-	bool clockwise_rotate;
   bool pause_all;
-
+  bool incrSpeed;
+  bool dcrSpeed;
+  
   EventFlag()
   {
-    clockwise_rotate = false;
     pause_all = false;
+    incrSpeed = false;
+    dcrSpeed = false;
 	}
 };
 
@@ -68,6 +70,9 @@ struct ViewUpdate
 	GLfloat scrollY;
 	GLfloat mouseX;
 	GLfloat mouseY;
-
+  bool zoom;
+  bool resetPos;
+  int planetIndx;
+  int pViewScaler;
 };
 #endif /* GRAPHICS_HEADERS_H */

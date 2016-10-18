@@ -29,15 +29,14 @@ Object::Object(const char *objPath, const char *planet_name, const char *planet_
   orbit_radius = glm::vec3(0.0f);
   angle_rotate = 0.0f;
   rotate_speed = 1.0f;
-  orbit_speed = 36000;
+  orbit_speed = 3600;
   scaler = 1.0f;
+  speed_sclr = 1.0f;
   rad_scaler = 1.0f;
 }
 
 Object::~Object()
 {
-  // delete planet;
-  // delete orbit_planet;
   delete parent;
 }
 
@@ -49,40 +48,29 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
 
     if(parent != NULL)
     {
-      orbit_center = parent->GetPosition();
+      if(e_flags.incrSpeed){
+        if( (speed_sclr + 2) >=1 & (speed_sclr + 2) < 10)
+          speed_sclr += 2;
+      }
+      if(e_flags.dcrSpeed){
+        if( (speed_sclr - 2) >=1 & (speed_sclr - 2) < 10)
+          speed_sclr -= 2;
+      }
 
-      //std::cout << "\tSelf: " << planet << ", Parent: " << orbit_planet << "\n";
+      orbit_center = parent->GetPosition();
 
       double dist[3];
       spkpos_c(planet.c_str(), et, "ECLIPJ2000", "None", orbit_planet.c_str(), dist, &lt);
-
-      // Convert from km to mega meters
-      //orbit_radius = glm::vec3((float)dist[0]/1000, (float)dist[2]/1000, (float)dist[1]/1000);
-      // Convert from km to AU
-      //orbit_radius = glm::vec3((float)dist[0]/149598000, (float)dist[2]/149598000, (float)dist[1]/149598000);
-      
-      //0.000002222
      
       //counterclockwise
-      orbit_radius = glm::vec3((float)dist[1]*rad_scaler, (float)dist[2]*rad_scaler, (float)dist[0]*rad_scaler);
+      orbit_radius = glm::vec3((float)dist[1]/rad_scaler, (float)dist[2]/rad_scaler, (float)dist[0]/rad_scaler);
       
-      et = orbit_speed * orbit_step;
+      et = orbit_speed * orbit_step * speed_sclr;
       orbit_step++; 
-
-
-//      printf("NOT NULL\n");
     }
 
-    if( !e_flags.clockwise_rotate )
-    // Set counter clockwise angle of rotation
-      angle_rotate += (dt * M_PI/1000) * rotate_speed;
-    else if( e_flags.clockwise_rotate )
-    // Set clockwise angle of rotation
-      angle_rotate -= (dt * M_PI/1000) * rotate_speed;
+    angle_rotate += (dt * M_PI/1000) * rotate_speed * speed_sclr;     
   }
-
-
-//  printf("%s\nx: %f\ny: %f\nz: %f\n\n", planet.c_str(), orbit_radius.x, orbit_radius.y, orbit_radius.z);
 
   translation = glm::translate(orbit_center, orbit_radius);
   rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));

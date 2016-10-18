@@ -10,4 +10,8 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
+<<<<<<< HEAD
 map_Kd C:\\Users\\enigma\\Desktop\\models\\mercury.jpg
+=======
+map_Kd mercury.jpg
+>>>>>>> HT_orbits

@@ -45,7 +45,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
   }
 
   //Load the spk file for planet distances
-  furnsh_c ( "spk/de421.bsp" );
+  furnsh_c ( "../spk/de421.bsp" );
 
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
@@ -64,40 +64,36 @@ bool Graphics::Initialize(int width, int height, char **argv)
     std::string parent = objectConfig["parent"];
     float spinSpeed = objectConfig["spinSpeed"];
     float scaler = objectConfig["radius"];
-    //float radScaler = 0.000156789;
-    float radScaler = 0.000002222;
+    float radScaler = 200000;
 
     Object * obj = new Object( modelFile.c_str(), label.c_str(), ( parent == "null" ? NULL : parent.c_str() ) );
 
     // Set object attributes
-    // TODO: Modifiers from cspice will go here instead of from the config file
     obj->Set_RotateSpeed(spinSpeed);
+    //obj->Set_RotateSpeed(spinSpeed/24);   //24 hrs
     obj->Set_Scale(scaler);
-    obj->Set_RadScale(radScaler);
+    if(obj->Get_Name() == "Moon"){
+      obj->Set_RadScale(radScaler*0.25);
+    }
+    else
+      obj->Set_RadScale(radScaler);
 
     objects.push_back( obj );
-//    std::cout << "Object created\n";
   }
 
   // Assign parents
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
-    std::cout << objects[i]->Get_ParentName() << "\n";
     if (objects[i]->Get_ParentName() != "null")
     {
       for( unsigned int j = 0; j < objects.size(); j++ )
       {
         if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
         {
-  //        std::cout << "Setting parent\n";
           objects[i]->Set_Parent( objects[j] );
-   //       std::cout << "Parent set\n";
-
           break;
         }
       }
-    } else {
- //     std::cout << "Parent is null\n";
     }
   }
 
@@ -161,17 +157,36 @@ bool Graphics::Initialize(int width, int height, char **argv)
   return true;
 }
 
-void Graphics::Update(unsigned int dt, vector<EventFlag> e_flags, ViewUpdate viewUpdate)
+void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 {
+  // Planet position vector
+  glm::vec3 tempPos(0.0f);
+
+  if(viewUpdate.zoom)
+  {
+    // Zoom on planet indicated by pIndx
+    int pIndx = viewUpdate.planetIndx;
+    tempPos.x = objects[pIndx]->GetModel()[3][0];
+    tempPos.y = objects[pIndx]->GetModel()[3][1];
+    tempPos.z = objects[pIndx]->GetModel()[3][2];
+    // Update camera to zoom on planet position offset by scaler
+    m_camera->ZoomOnPlanet(tempPos, viewUpdate.pViewScaler);
+  }
+
+  if(viewUpdate.resetPos){
+    m_camera->ResetPosition();
+  }
+
 	// Update the camera
 	if (viewUpdate.processed == false){
+    
 		m_camera->ProcessInput(viewUpdate);
 	}
 
   // Update the objects
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
-    objects[i]->Update(dt, e_flags[0]);
+    objects[i]->Update(dt, e_flags);
   }
 }
 

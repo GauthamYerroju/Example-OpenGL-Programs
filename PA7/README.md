@@ -5,6 +5,27 @@ Kevin Green,
 Husain Tazarvi,  
 Gautham Yerroju
 
+This program simulates the solar system. The solar objects are:  
+Sun  
+Mercury  
+Venus  
+Earth  
+Moon  
+Mars  
+Jupiter (with rings)  
+Saturn (with rings)  
+Uranus (with rings)  
+Neptune (with rings)  
+Pluto  
+
+The orbit positions are calculated using NASA's [SPICE](https://naif.jpl.nasa.gov/naif/toolkit.html) library to provide accurate solar object positions with respect to an observer object at a specific period in time. This allows for the planets to be positioned on their respective planes and have eliptic orbits. The SPICE kernal file being used to get calculation is [de421.dsp](http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de421.cmt). The distances are then scaled down by a constant factor to get a better view of the solar system. 
+
+The sizes of solar objects are scaled using 1 unit as the radius of the earth (approx 6378.1) giving a ratio of planet_radius/earth_radius.
+
+The solar object rotations are scaled using 1 rotation of the earth about its axis per day. Thus the other solar objects are calculated using 1/days_for_one_rotation.
+
+The ratios, solar object names and their respective parent object which they orbit, and object files are set in a json config file in the PA7 directory called config.json.
+
 
 # Dependencies, Building, and Running
 
@@ -26,11 +47,9 @@ brew install glew glm sdl2 assimp imagemagick
 Note: This project has not been tested on Max OSX and cannot be guaranteed to work.
 
 ## Building and Running
-To build this project use CMake. Shader file paths must be sent as arguments to the program using the following format:  
+To build this project use CMake. Shader file paths and the config file path must be sent as arguments to the program using the following format:  
 
-exe-filename vert-shader-filepath frag-shader-filepath obj-filepath
-
-NOTE: The material file must be in the same folder as the object file. Texture files must be flaced in the model folder (hard coded path).  
+exe-filename vert-shader-filepath frag-shader-filepath config-filepath  
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary.
@@ -40,7 +59,7 @@ mkdir build
 cd build
 cmake ..
 make
-./PA7 shaders/vShader.vert shaders/fShader.frag models/sun.obj
+./PA7 shaders/vShader.vert shaders/fShader.frag ../config.json
 ```
 
 ## Keyboard Events
@@ -48,16 +67,32 @@ The following keyboard commands are used to interact with the program:
 
 Key          - Event  
 
-LeftArrow    - Change object rotation to counter-clockwise  
-RightArrow   - Change object rotation to clockwise  
+w            - Move into screen  
+s            - Move out of screen  
+a            - Move left  
+d            - Move right  
+0            - Zoom on Mercury  
+1            - Zoom on Venus  
+2            - Zoom on Earth  
+3            - Zoom on Moon  
+4            - Zoom on Mars  
+5            - Zoom on Jupiter  
+6            - Zoom on Saturn  
+7            - Zoom on Uranus  
+8            - Zoom on Neptune  
+9            - Zoom on Pluto  
+Backspace    - Reset camera to origin  
+"-"          - Decrees Speed  
+"="          - Increase Speed  
 Pause        - Pause or resume program  
 Esc          - Close program  
 
 ## Mouse Events
-The following mouse commands are used to interact with the program:
+The following mouse commands are used to interact with the program:  
 
-Left-Click    - Change object rotation to counter-clockwise  
-Right-Click   - Change object rotation to clockwise  
+Move Mouse    - Look around (up->lookup, down->lookdown, right->lookleft, right->lookright )  
+MouseWheel    - Zoom in(scroll up)/out(sroll down)  
+
 
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the executable use this line to execute.
