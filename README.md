@@ -38,3 +38,25 @@ Husain Tazarvi
 Gautham Yerroju  
 
 This application loads a model and its associated texture(s). The model is then rendered to rotate on the screen. To run this project ```cd PA6``` then follow the instructions in the README.md.
+
+##PA7: Solar System
+This is a group project consisting of the following three collaborators:
+
+Kevin Green  
+Husain Tazarvi  
+Gautham Yerroju  
+
+This program simulates the solar system. The solar objects are:  
+Sun  
+Mercury  
+Venus  
+Earth  
+Moon  
+Mars  
+Jupiter (with rings)  
+Saturn (with rings)  
+Uranus (with rings)  
+Neptune (with rings)  
+Pluto  
+
+To run this project ```cd PA7``` then follow the instructions in the README.md.
