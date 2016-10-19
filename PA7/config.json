@@ -105,15 +105,7 @@
         "modelFile": "neptuneRing.obj",
         "radius": 3.88,
         "spinSpeed": 0
-    },
-
-		{
-				"name": "Stars",
-				"parent": "null",
-				"modelFile": "stars2.obj",
-				"radius": 18500,
-				"spinSpeed": 0
-		}
+    }
 ]
 
     
