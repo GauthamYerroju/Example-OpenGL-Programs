@@ -1,8 +1,9 @@
 # PA7: Solar System
 
 Collaborators:
-- Kevin Green  
-- Husain Tazarvi  
+
+- Kevin Green
+- Husain Tazarvi
 - Gautham Yerroju
 
 # Index
@@ -31,10 +32,10 @@ Collaborators:
 
 # 1. Introduction
 
-This program simulates the solar system. The solar objects are:  
+This program simulates the solar system. The solar objects are:
 - Sun
-- Mercury  
-- Venus  
+- Mercury
+- Venus
 - Earth
 - Moon
 - Mars
@@ -76,9 +77,9 @@ brew install glew glm sdl2 assimp imagemagick
 Note: This project has not been tested on Max OSX and cannot be guaranteed to work.
 
 ## 2.2 Building and Running
-To build this project use CMake. Shader file paths and the config file path must be sent as arguments to the program using the following format:  
+To build this project use CMake. Shader file paths and the config file path must be sent as arguments to the program using the following format:
 
-exe-filename vert-shader-filepath frag-shader-filepath config-filepath  
+exe-filename vert-shader-filepath frag-shader-filepath config-filepath
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary.
