@@ -22,13 +22,16 @@
 #include "glm/gtx/string_cast.hpp"
 
 // ASSIMP for model loader
-#include <assimp/Importer.hpp> //includes the importer, which is used to read our obj file
+#include <assimp/Importer.hpp> //includes the importer, which is used to read our obj file 
 #include <assimp/scene.h> //includes the aiScene object
 #include <assimp/postprocess.h> //includes the postprocessing variables for the importer
-#include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects
+#include <assimp/color4.h> //includes the aiColor4 object, which is used to handle the colors from the mesh objects 
 
 // Magick++ for image loading
 #include <Magick++.h>
+
+// Bullet Physics Engine
+#include <btBulletDynamicsCommon.h>
 
 #include <math.h>
 
@@ -49,7 +52,7 @@ struct EventFlag
   bool pause_all;
   bool incrSpeed;
   bool dcrSpeed;
-
+  
   EventFlag()
   {
     pause_all = false;

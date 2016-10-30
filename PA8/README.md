@@ -1,48 +1,26 @@
-# PA7: Solar System
+# PA8: Bullet
 Collaborators:
 
 Kevin Green,  
 Husain Tazarvi,  
-Gautham Yerroju
-
-This program simulates the solar system. The solar objects are:  
-Sun  
-Mercury  
-Venus  
-Earth  
-Moon  
-Mars  
-Jupiter (with rings)  
-Saturn (with rings)  
-Uranus (with rings)  
-Neptune (with rings)  
-Pluto  
-
-The orbit positions are calculated using NASA's [SPICE](https://naif.jpl.nasa.gov/naif/toolkit.html) library to provide accurate solar object positions with respect to an observer object at a specific period in time. This allows for the planets to be positioned on their respective planes and have eliptic orbits. The SPICE kernal file being used to get calculation is [de421.dsp](http://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/a_old_versions/de421.cmt). The distances are then scaled down by a constant factor to get a better view of the solar system. 
-
-The sizes of solar objects are scaled using 1 unit as the radius of the earth (approx 6378.1) giving a ratio of planet_radius/earth_radius.
-
-The solar object rotations are scaled using 1 rotation of the earth about its axis per day. Thus the other solar objects are calculated using 1/days_for_one_rotation.
-
-The ratios, solar object names and their respective parent object which they orbit, and object files are set in a json config file in the PA7 directory called config.json.
-
+Gautham Yerroju  
 
 # Dependencies, Building, and Running
 
 ## Dependency Instructions
-For both of the operating systems to run this project installation of these four programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), [ASSIMP](http://www.assimp.org/lib_html/index.html), [Magick++](http://www.imagemagick.org/Magick++/).
+For both of the operating systems to run this project installation of these programs are required [GLEW](http://glew.sourceforge.net/), [GLM](http://glm.g-truc.net/0.9.7/index.html), [SDL2](https://wiki.libsdl.org/Tutorials), [ASSIMP](http://www.assimp.org/lib_html/index.html), [Magick++](http://www.imagemagick.org/Magick++/), and [BULLET](http://bulletphysics.org/wordpress/).
 
 This project uses OpenGL 3.3. Some computers, such as virtual machines in the ECC, can not run this version. In in order to run OpenGL 2.7 follow the instructions at [Using OpenGL 2.7](https://github.com/HPC-Vis/computer-graphics/wiki/Using-OpenGL-2.7)
 
 ### Ubuntu/Linux
 ```bash
-sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev libmagick++-dev
+sudo apt-get install libglew-dev libglm-dev libsdl2-dev libassimp-dev libmagick++-dev libbullet-dev
 ```
 
 ### Mac OSX
 Installation of brew is suggested to easily install the libs. Ensure that the latest version of the Developer Tools is installed.
 ```bash
-brew install glew glm sdl2 assimp imagemagick
+brew install glew glm sdl2 assimp imagemagick bullet
 ```
 Note: This project has not been tested on Max OSX and cannot be guaranteed to work.
 
