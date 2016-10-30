@@ -24,36 +24,41 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	{
 		case SPHERE_SHAPE:
 			// Sphere with radius 0.5
-			printf("SPHERE_SHAPE\n");
 			collisionShape = new btSphereShape(0.5);
 			break; 
 		case BOX_SHAPE:
-			// Static Plane with origin offset (0, 0, 0) and planeConstant of 1
-			printf("BOX_SHAPE\n");
-			collisionShape = new btStaticPlaneShape( btVector3(0, 0, 0), 1 );
+			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
+			collisionShape = new btStaticPlaneShape( btVector3(0, 1, 0), 0.5 );
+			break;
 		default:
+			printf("collisionShape failed to init\n");
 			return false;
 	}
 
-	if( !collisionShape )
-		printf("collisionShape failed to init\n");
-
+		
 	// btTransform: rigid transforms with only translation and rotation
 	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z) 
 	motionState = new btDefaultMotionState( btTransform(rotation, translation) ); 
-	if( !motionState)
+	if( !motionState){
 		printf("motionState failed to init\n");
+		return false;
+	}
 
 	mass = m;
 	inertia = btVector3(0, 0, 0);
-	
+
 	collisionShape->calculateLocalInertia( mass, inertia );	
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
-	rigidBody = new btRigidBody( constructionInfo );
+	// Ratio of relative speed after to the realtive speed bofore the collision
+	constructionInfo.m_restitution = 0.9f;
+	constructionInfo.m_friction = 1.5f;
 
-	if( !rigidBody )
+	rigidBody = new btRigidBody( constructionInfo );
+	if( !rigidBody ){
 		printf("rigidBody failed to init\n");
+		return false;
+	}
 
 	return true;
 }
@@ -62,7 +67,6 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 btTransform PhysicsObject::GetWorldTransform()
 {
 	btTransform trans;
-	printf("Check3.1-------\n");
 	rigidBody->getMotionState()->getWorldTransform(trans);
 
 	return trans;

@@ -71,22 +71,18 @@ bool Graphics::Initialize(int width, int height, char **argv)
     objects.push_back( obj );
   }
 
-  printf("Check1-------\n");
-
   // Create Physics Object
   board = new PhysicsObject();
   ball = new PhysicsObject();
 
-  board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) );
-  ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 5, 0) );
-
-  printf("Check2-------\n");
+  if( !board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ); )
+    prinf("PhysicsObject failed to initialize\n");
+  if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 7, 0) ); )
+    prinf("PhysicsObject failed to initialize\n");
 
   world.AddRigidBody(board->GetRigidBody());
   world.AddRigidBody(ball->GetRigidBody());
-
-  printf("Check2.1-------\n");
-
+  
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -173,27 +169,23 @@ void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 		m_camera->ProcessInput(viewUpdate);
 	}
 
+  // Step the physics world
   world.Update(dt);
 
-  printf("Check3-------\n");
-  // Update the objects
+
+  // Update the physics objects
   btTransform trans;
   trans = board->GetWorldTransform();
-  printf("Check4-------\n");
   objects[0]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-
-
 
   trans = ball->GetWorldTransform();
   objects[1]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
 
-  
+  // Update the objects
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
     objects[i]->Update(dt, e_flags);
   }
-
-  printf("Check5-------\n");
 
 }
 
