@@ -10,7 +10,8 @@ class PhysicsWorld
 		~PhysicsWorld();
 
 		void Initialize();
-		void Update();
+		void AddRigidBody( btRigidBody *rBody );
+		void Update(unsigned int dt);
 
 		void setGravity( glm::vec3 g );
 

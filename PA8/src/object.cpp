@@ -46,30 +46,8 @@ void Object::Update(unsigned int dt, EventFlag e_flags)
   // If system not paused
   if( !e_flags.pause_all ){
 
-    if(parent != NULL)
-    {
-      if(e_flags.incrSpeed){
-        if( (speed_sclr + 2) >=1 & (speed_sclr + 2) < 10)
-          speed_sclr += 2;
-      }
-      if(e_flags.dcrSpeed){
-        if( (speed_sclr - 2) >=1 & (speed_sclr - 2) < 10)
-          speed_sclr -= 2;
-      }
+    
 
-      orbit_center = parent->GetPosition();
-
-      double dist[3] = {1.0, 1.0, 1.0};
-      // spkpos_c(planet.c_str(), et, "ECLIPJ2000", "None", orbit_planet.c_str(), dist, &lt);
-
-      //counterclockwise
-      orbit_radius = glm::vec3((float)dist[1]/rad_scaler, (float)dist[2]/rad_scaler, (float)dist[0]/rad_scaler);
-
-      et = orbit_speed * orbit_step * speed_sclr;
-      orbit_step++;
-    }
-
-    angle_rotate += (dt * M_PI/1000) * rotate_speed * speed_sclr;
   }
 
   translation = glm::translate(orbit_center, orbit_radius);
@@ -93,6 +71,11 @@ void Object::Set_Scale( float sclr )
 void Object::Set_RadScale( float r_sclr )
 {
   rad_scaler = r_sclr;
+}
+
+void Object::Set_Position( glm::vec3 pos ){
+
+  orbit_radius = pos;
 }
 
 glm::mat4 Object::GetModel()

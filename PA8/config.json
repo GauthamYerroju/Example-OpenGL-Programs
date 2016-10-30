@@ -4,16 +4,8 @@
         "modelFile": "box.obj"
     },
     {
-        "name": "Cylinder",
-        "modelFile": "cylinder.obj"
-    },
-    {
-        "name": "Cube",
-        "modelFile": "cube.obj"
-    },
-    {
-        "name": "Sphere",
-        "modelFile": "sphere.obj"
+        "name": "Ball",
+        "modelFile": "ball.obj"
     }
 ]
 

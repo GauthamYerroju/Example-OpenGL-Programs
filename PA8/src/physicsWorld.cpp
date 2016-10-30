@@ -51,6 +51,16 @@ void PhysicsWorld::Initialize()
 
 }
 
+void PhysicsWorld::AddRigidBody( btRigidBody *rBody )
+{
+	dynamicsWorld->addRigidBody(rBody);
+}
+
+void PhysicsWorld::Update(unsigned int dt)
+{
+	dynamicsWorld->stepSimulation(dt/1000, 10);
+}
+
 void PhysicsWorld::setGravity( glm::vec3 g )
 {
 	if( !dynamicsWorld ){

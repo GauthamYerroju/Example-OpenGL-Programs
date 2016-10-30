@@ -8,6 +8,8 @@ using namespace std;
 #include "camera.hpp"
 #include "shader.hpp"
 #include "object.hpp"
+#include "physicsObject.hpp"
+#include "physicsWorld.hpp"
 
 // For the config file
 #include "json.hpp"
@@ -32,7 +34,10 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    std::vector<Object*> objects;
+    std::vector<Object*>                  objects;
+    PhysicsObject                         *ball;
+    PhysicsObject                         *board;
+    PhysicsWorld                          world;
 
 };
 

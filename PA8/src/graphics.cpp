@@ -44,6 +44,11 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
+
+  // Create Physics World
+  world.Initialize();
+
+
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
   json config;
@@ -66,21 +71,21 @@ bool Graphics::Initialize(int width, int height, char **argv)
     objects.push_back( obj );
   }
 
-  // Assign parents
-  // for( unsigned int i = 0; i < objects.size(); i++ )
-  // {
-  //   if (objects[i]->Get_ParentName() != "null")
-  //   {
-  //     for( unsigned int j = 0; j < objects.size(); j++ )
-  //     {
-  //       if (objects[i]->Get_ParentName() == objects[j]->Get_Name())
-  //       {
-  //         objects[i]->Set_Parent( objects[j] );
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }
+  printf("Check1-------\n");
+
+  // Create Physics Object
+  board = new PhysicsObject();
+  ball = new PhysicsObject();
+
+  board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) );
+  ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 5, 0) );
+
+  printf("Check2-------\n");
+
+  world.AddRigidBody(board->GetRigidBody());
+  world.AddRigidBody(ball->GetRigidBody());
+
+  printf("Check2.1-------\n");
 
   // Set up the shaders
   m_shader = new Shader();
@@ -168,11 +173,28 @@ void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 		m_camera->ProcessInput(viewUpdate);
 	}
 
+  world.Update(dt);
+
+  printf("Check3-------\n");
   // Update the objects
+  btTransform trans;
+  trans = board->GetWorldTransform();
+  printf("Check4-------\n");
+  objects[0]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+
+
+
+  trans = ball->GetWorldTransform();
+  objects[1]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+
+  
   for( unsigned int i = 0; i < objects.size(); i++ )
   {
     objects[i]->Update(dt, e_flags);
   }
+
+  printf("Check5-------\n");
+
 }
 
 void Graphics::Render()

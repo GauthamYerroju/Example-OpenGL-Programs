@@ -22,6 +22,7 @@ class Object
     void Set_RotateSpeed(float r_speed);
     void Set_Scale( float sclr );
     void Set_RadScale( float r_sclr );
+    void Set_Position( glm::vec3 pos );
     bool Model_Loader(const char *filePath);
     bool Texture_Loader(const char *filePath, Mesh *mesh);
 

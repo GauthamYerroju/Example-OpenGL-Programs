@@ -40,11 +40,11 @@ macro(_FIND_BULLET_LIBRARY _var)
      NAMES
         ${ARGN}
      HINTS
-        ${BULLET_ROOT}
-        ${BULLET_ROOT}/lib/Release
-        ${BULLET_ROOT}/lib/Debug
-        ${BULLET_ROOT}/out/release8/libs
-        ${BULLET_ROOT}/out/debug8/libs
+        usr
+        usr/lib/Release
+        usr/lib/Debug
+        usr/out/release8/libs
+        usr/out/debug8/libs
      PATH_SUFFIXES lib
   )
   mark_as_advanced(${_var})
@@ -61,8 +61,8 @@ endmacro()
 
 find_path(BULLET_INCLUDE_DIR NAMES btBulletCollisionCommon.h
   HINTS
-    ${BULLET_ROOT}/include
-    ${BULLET_ROOT}/src
+    usr/include
+    usr/src
   PATH_SUFFIXES bullet
 )
 
@@ -80,7 +80,7 @@ _FIND_BULLET_LIBRARY(BULLET_SOFTBODY_LIBRARY_DEBUG  BulletSoftBody_Debug BulletS
 
 # handle the QUIETLY and REQUIRED arguments and set BULLET_FOUND to TRUE if
 # all listed variables are TRUE
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(Bullet DEFAULT_MSG
     BULLET_DYNAMICS_LIBRARY BULLET_COLLISION_LIBRARY BULLET_MATH_LIBRARY
     BULLET_SOFTBODY_LIBRARY BULLET_INCLUDE_DIR)
