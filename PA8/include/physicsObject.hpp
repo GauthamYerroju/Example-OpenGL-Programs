@@ -2,11 +2,12 @@
 #define PHYSICCSOBJECT_H
 
 #include "graphics_headers.hpp"
+#include "object.hpp"
 
-class PhysicsObject
+class PhysicsObject : public Object
 {
 	public:
-		PhysicsObject();
+		PhysicsObject( const char *objPath );
 		~PhysicsObject();
 
 		enum CollisionShapeType 
@@ -16,6 +17,7 @@ class PhysicsObject
 		};
 
 		bool Initialize( CollisionShapeType shape, btScalar m, btQuaternion rotation, btVector3 translation );
+		void Update(); 
 		btTransform GetWorldTransform();
 		btRigidBody * GetRigidBody();
 

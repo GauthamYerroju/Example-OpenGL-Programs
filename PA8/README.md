@@ -37,7 +37,7 @@ mkdir build
 cd build
 cmake ..
 make
-./PA7 shaders/vShader.vert shaders/fShader.frag ../config.json
+./PA8 shaders/vShader.vert shaders/fShader.frag ../config.json
 ```
 
 ## Keyboard Events
@@ -75,5 +75,5 @@ MouseWheel    - Zoom in(scroll up)/out(sroll down)
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./PA7 shaders/vShader.vert shaders/fShader.frag models/sun.obj
+/usr/NX/scripts/vgl/vglrun ./PA8 shaders/vShader.vert shaders/fShader.frag config-filepath
 ```

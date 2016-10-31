@@ -1,7 +1,7 @@
 #include "physicsObject.hpp"
 
 
-PhysicsObject::PhysicsObject()
+PhysicsObject::PhysicsObject( const char *objPath ) : Object::Object( objPath )
 {
 	collisionShape = NULL;
 	motionState = NULL;
@@ -63,6 +63,16 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	return true;
 }
 
+
+void PhysicsObject::Update()
+{
+	btTransform trans;
+	btScalar m[16]; 
+	 
+	rigidBody->getMotionState()->getWorldTransform(trans);
+	trans.getOpenGLMatrix(m); 
+	model = glm::make_mat4(m);
+}
 
 btTransform PhysicsObject::GetWorldTransform()
 {

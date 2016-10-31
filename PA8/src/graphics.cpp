@@ -44,10 +44,8 @@ bool Graphics::Initialize(int width, int height, char **argv)
     return false;
   }
 
-
   // Create Physics World
   world.Initialize();
-
 
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
@@ -57,32 +55,35 @@ bool Graphics::Initialize(int width, int height, char **argv)
   {
     auto objectConfig = *it;
 
-    // Load the modelm
+    // Load the model
+    std::string label = objectConfig["name"];
     std::string modelFile = objectConfig["modelFile"];
     modelFile = "./models/" + modelFile;
 
-    std::string label = objectConfig["name"];
-    // std::string parent = objectConfig["parent"];
-    // float spinSpeed = objectConfig["spinSpeed"];
-    // float scaler = objectConfig["radius"];
-    // float radScaler = 200000;
+    if( label == "Box")
+    {
+      board = new PhysicsObject( modelFile.c_str() );
 
-    Object * obj = new Object( modelFile.c_str(), label.c_str(), NULL );
-    objects.push_back( obj );
+      if( !board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(board->GetRigidBody());
+    }
+    else if( label == "Ball" )
+    {
+      ball = new PhysicsObject( modelFile.c_str() );
+
+      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 7, 0) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(ball->GetRigidBody());
+    }
+    else if(label == "Paddle")
+    {
+    }
+
   }
-
-  // Create Physics Object
-  board = new PhysicsObject();
-  ball = new PhysicsObject();
-
-  if( !board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ); )
-    prinf("PhysicsObject failed to initialize\n");
-  if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 7, 0) ); )
-    prinf("PhysicsObject failed to initialize\n");
-
-  world.AddRigidBody(board->GetRigidBody());
-  world.AddRigidBody(ball->GetRigidBody());
-  
+ 
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -143,25 +144,9 @@ bool Graphics::Initialize(int width, int height, char **argv)
   return true;
 }
 
+
 void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
 {
-  // Planet position vector
-  glm::vec3 tempPos(0.0f);
-
-  // if(viewUpdate.zoom)
-  // {
-  //   // Zoom on planet indicated by pIndx
-  //   int pIndx = viewUpdate.planetIndx;
-  //   tempPos.x = objects[pIndx]->GetModel()[3][0];
-  //   tempPos.y = objects[pIndx]->GetModel()[3][1];
-  //   tempPos.z = objects[pIndx]->GetModel()[3][2];
-  //   // Update camera to zoom on planet position offset by scaler
-  //   m_camera->ZoomOnPlanet(tempPos, viewUpdate.pViewScaler);
-  // }
-
-  if(viewUpdate.resetPos){
-    m_camera->ResetPosition();
-  }
 
 	// Update the camera
 	if (viewUpdate.processed == false){
@@ -172,22 +157,12 @@ void Graphics::Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate)
   // Step the physics world
   world.Update(dt);
 
-
   // Update the physics objects
-  btTransform trans;
-  trans = board->GetWorldTransform();
-  objects[0]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-
-  trans = ball->GetWorldTransform();
-  objects[1]->Set_Position(glm::vec3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-
-  // Update the objects
-  for( unsigned int i = 0; i < objects.size(); i++ )
-  {
-    objects[i]->Update(dt, e_flags);
-  }
-
+  board->Update();
+  ball->Update();
+ 
 }
+
 
 void Graphics::Render()
 {
@@ -203,11 +178,10 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
   // Render the object
-  for( unsigned int i = 0; i < objects.size(); i++ )
-  {
-    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(objects[i]->GetModel()));
-    objects[i]->Render();
-  }
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
+  board->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
+  ball->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
@@ -217,6 +191,7 @@ void Graphics::Render()
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
 }
+
 
 std::string Graphics::ErrorString(GLenum error)
 {

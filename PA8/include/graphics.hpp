@@ -34,7 +34,6 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    std::vector<Object*>                  objects;
     PhysicsObject                         *ball;
     PhysicsObject                         *board;
     PhysicsWorld                          world;

@@ -1,115 +1,82 @@
 #include "object.hpp"
 
-Object::Object(const char *objPath, const char *planet_name, const char *planet_orbiting)
+Object::Object(const char *objPath)
 {
-  et = 0.0;
-  orbit_step = 0;
-  parent = NULL;
-
-  planet = std::string(planet_name);
-
-  if( planet_orbiting == NULL ){
-    orbit_planet = "null";
-  }
-  else
-  {
-    orbit_planet = std::string(planet_orbiting);
-  }
 
   if(!Model_Loader(objPath)){
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
 
-  for( unsigned int i = 0; i < meshes.size(); i++ )
+  for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
   {
-    meshes[i].Initialize();
+    meshes[MeshIndx].Initialize();
   }
 
-  orbit_center = glm::mat4(1.0f);
-  orbit_radius = glm::vec3(0.0f);
-  angle_rotate = 0.0f;
-  rotate_speed = 1.0f;
-  orbit_speed = 3600;
+  origin = glm::mat4(1.0f);
+  translationVec = glm::vec3(0.0f);
+  rotationAngle = 0.0f;
   scaler = 1.0f;
-  speed_sclr = 1.0f;
-  rad_scaler = 1.0f;
+
 }
 
 Object::~Object()
 {
-  delete parent;
 }
 
-void Object::Update(unsigned int dt, EventFlag e_flags)
+void Object::Update()
 {
-  //std::cout << "\tUpdating...\n";
-  // If system not paused
-  if( !e_flags.pause_all ){
-
-    
-
-  }
-
-  translation = glm::translate(orbit_center, orbit_radius);
-  rotation = glm::rotate(glm::mat4(1.0f), (angle_rotate), glm::vec3(0.0, 1.0, 0.0));
+  translation = glm::translate(origin, translationVec);
+  rotation = glm::rotate(glm::mat4(1.0f), (rotationAngle), glm::vec3(0.0, 1.0, 0.0));
   scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
 
   model = translation * rotation * scale;
 }
 
-void Object::Set_RotateSpeed(float r_speed)
+
+void Object::Set_Origin( glm::mat4 orig )
 {
-  rotate_speed = r_speed;
+  origin = orig;
 }
 
 
-void Object::Set_Scale( float sclr )
+void Object::Set_TranslationVec( glm::vec3 tVec )
+{
+
+  translationVec = tVec;
+}
+
+void Object::Set_RotationAngle( float rotAngle )
+{
+  rotationAngle = rotAngle;
+}
+
+
+void Object::Set_Scaler( float sclr )
 {
   scaler = sclr;
 }
 
-void Object::Set_RadScale( float r_sclr )
-{
-  rad_scaler = r_sclr;
-}
-
-void Object::Set_Position( glm::vec3 pos ){
-
-  orbit_radius = pos;
-}
 
 glm::mat4 Object::GetModel()
 {
   return model;
 }
 
-glm::mat4 Object::GetPosition(){
+
+glm::mat4 Object::GetPosition()
+{
   return translation;
 }
 
-std::string Object::Get_Name()
-{
-  return planet;
-}
-
-std::string Object::Get_ParentName()
-{
-  return orbit_planet;
-}
-
-void Object::Set_Parent(Object * parentPointer)
-{
-  parent = parentPointer;
-}
 
 void Object::Render()
 {
-  for( unsigned int i = 0; i < meshes.size(); i++ )
+  for( unsigned int meshIndx = 0; meshIndx < meshes.size(); meshIndx++ )
   {
-    meshes[i].Render();
+    meshes[meshIndx].Render();
   }
-  //std::cout << planet << " rendered\n";
 }
+
 
 bool Object::Model_Loader(const char *filePath)
 {
@@ -180,6 +147,7 @@ bool Object::Model_Loader(const char *filePath)
 
   return true;
 }
+
 
 bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
 {
