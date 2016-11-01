@@ -27,8 +27,8 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
 			break;
 		case SPHERE_SHAPE:
-			// Sphere with radius 0.05
-			collisionShape = new btSphereShape(0.05);
+			// Sphere with radius 0.5
+			collisionShape = new btSphereShape(0.125);
 			break;
 		case BOX_SHAPE:
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
