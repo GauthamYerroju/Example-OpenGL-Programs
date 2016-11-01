@@ -55,7 +55,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
 	// Ratio of relative speed after to the realtive speed bofore the collision
-	constructionInfo.m_restitution = 0.9f;
+	constructionInfo.m_restitution = 0.8f;
 	constructionInfo.m_friction = 1.5f;
 
 	rigidBody = new btRigidBody( constructionInfo );
