@@ -27,9 +27,9 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
 			break;
 		case SPHERE_SHAPE:
-			// Sphere with radius 0.5
-			collisionShape = new btSphereShape(0.1);
-			break; 
+			// Sphere with radius 0.05
+			collisionShape = new btSphereShape(0.05);
+			break;
 		case BOX_SHAPE:
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
 			collisionShape = new btStaticPlaneShape( btVector3(0, 1, 0), 0.5 );
@@ -39,10 +39,10 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			return false;
 	}
 
-		
+
 	// btTransform: rigid transforms with only translation and rotation
-	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z) 
-	motionState = new btDefaultMotionState( btTransform(rotation, translation) ); 
+	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+	motionState = new btDefaultMotionState( btTransform(rotation, translation) );
 	if( !motionState){
 		printf("motionState failed to init\n");
 		return false;
@@ -51,7 +51,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	mass = m;
 	inertia = btVector3(0, 0, 0);
 
-	collisionShape->calculateLocalInertia( mass, inertia );	
+	collisionShape->calculateLocalInertia( mass, inertia );
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
 	// Ratio of relative speed after to the realtive speed bofore the collision
@@ -71,7 +71,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 
 btTriangleMesh * PhysicsObject::Get_TriangleMesh()
 {
-	btVector3 triArray[3]; 
+	btVector3 triArray[3];
 	btTriangleMesh *objTriMesh = new btTriangleMesh();
 
 	//While you’re looping through all of the faces in your mesh:
@@ -81,31 +81,31 @@ btTriangleMesh * PhysicsObject::Get_TriangleMesh()
 		std::vector<unsigned int> mIndices = meshes[meshIndx].Indices;
 		for(int faceIndx = 0; faceIndx < mIndices.size(); faceIndx++)
 		{
-			
+
 			glm::vec3 position = meshes[meshIndx].Vertices[mIndices[faceIndx]].vertex;
 			triArray[triIndx] = btVector3(position.x, position.y, position.z);
-			
+
 			triIndx++;
 
 			if( triIndx == 3 )
 			{
 				objTriMesh->addTriangle(triArray[0], triArray[1], triArray[2]);
 				triIndx = 0;
-			}	
-			
+			}
+
 		}
-		
+
 	}
-	return objTriMesh;		
+	return objTriMesh;
 }
 
 void PhysicsObject::Update()
 {
 	btTransform trans;
-	btScalar m[16]; 
-	 
+	btScalar m[16];
+
 	rigidBody->getMotionState()->getWorldTransform(trans);
-	trans.getOpenGLMatrix(m); 
+	trans.getOpenGLMatrix(m);
 	model = glm::make_mat4(m);
 }
 

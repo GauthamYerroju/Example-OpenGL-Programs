@@ -31,6 +31,10 @@ bool Graphics::Initialize(int width, int height, char **argv)
     }
   #endif
 
+  m_width = width;
+  m_height = height;
+  held = false;
+
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -84,7 +88,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
     }
 
   }
- 
+
   // Set up the shaders
   m_shader = new Shader();
   if(!m_shader->Initialize())
@@ -146,8 +150,10 @@ bool Graphics::Initialize(int width, int height, char **argv)
 }
 
 
-void Graphics::Update(unsigned int dt)
+void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 {
+  // Handle input
+  HandleInput(m_event);
 
   // Step the physics world
   world.Update(dt);
@@ -155,9 +161,38 @@ void Graphics::Update(unsigned int dt)
   // Update the physics objects
   board->Update();
   ball->Update();
- 
+
 }
 
+void Graphics::HandleInput(SDL_Event *m_event)
+{
+  // On mouse click, pick a body
+  if (!held && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
+  {
+    // Pick rigid body
+    std::cout << "Left Mouse clicked\n";
+    held = true;
+
+    glm::vec3 tmp = GetRayTo(m_event->button.x, m_event->button.y);
+    std::cout << glm::to_string(tmp) << std::endl;
+  }
+
+  // On mouse release, release the rigid body if was picked earlier
+  if (held && m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)
+  {
+    // Release rigid body
+    std::cout << "Left Mouse released\n";
+    held = false;
+  }
+
+  // On mouse motion, if a rigid body is held, move it around
+  if (held && m_event->type == SDL_MOUSEMOTION)
+  {
+    // Move rigid body
+    std::cout << "Mouse is being dragged\n";
+  }
+
+}
 
 void Graphics::Render()
 {
@@ -187,6 +222,51 @@ void Graphics::Render()
   }
 }
 
+
+glm::vec3 Graphics::GetRayTo(int x, int y)
+{
+	// Normalized Device Coordinates map 2D coordinate space to a range of [-1, 1]
+	// More info here: https://www.youtube.com/watch?v=Ck1SH7oYRFM
+	// and here: https://capnramses.github.io//opengl/raycasting.html
+	// Ref: http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
+
+	// Get the start and end ray positions in NDC (easy to get in NDC)
+	glm::vec4 rayStartNDC(
+		( (float)x / (float)m_width - 0.5f ) * 2.0f, // [0, m_width] -> [-1,1]
+		( (float)y / (float)m_height - 0.5f ) * 2.0f, // [0, m_height] -> [-1,1]
+		-1.0, // The near plane maps to Z=-1 in NDC
+		1.0f
+	);
+
+	glm::vec4 rayEndNDC(
+		( (float)x / (float)m_width - 0.5f ) * 2.0f,
+		( (float)y / (float)m_height - 0.5f ) * 2.0f,
+		0.0,
+		1.0f
+	);
+
+  // Convert GLint arrays to a glm::mat4
+  glm::mat4 projectionMatrix = m_camera->GetProjection();
+  glm::mat4 viewMatrix = m_camera->GetView();
+
+	// Convert NDC positions to world space
+	glm::mat4 tmp = glm::inverse(projectionMatrix * viewMatrix);
+
+  glm::vec4 rayStartWorld = tmp * rayStartNDC;
+  rayStartWorld /= rayStartWorld.w;
+
+	glm::vec4 rayEndWorld = tmp * rayEndNDC;
+  rayEndWorld /=rayEndWorld.w;
+
+  // Calculate normalized vector indicating ray direction
+  glm::vec3 rayDirection = glm::vec3(rayEndWorld - rayStartWorld);
+  rayDirection = glm::normalize(rayDirection);
+
+  return rayDirection;
+}
+
+// TODO: Do the actual ray casting to determine if an object is clicked.
+// TODO: Code to handle picking up the object, moving it around and dropping it.
 
 std::string Graphics::ErrorString(GLenum error)
 {

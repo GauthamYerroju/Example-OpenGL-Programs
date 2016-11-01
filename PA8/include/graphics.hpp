@@ -4,6 +4,7 @@
 #include <iostream>
 using namespace std;
 
+#include <SDL2/SDL.h>
 #include "graphics_headers.hpp"
 #include "camera.hpp"
 #include "shader.hpp"
@@ -21,11 +22,18 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, char **argv);
-    void Update(unsigned int dt);
+    void Update(unsigned int dt, SDL_Event *m_event);
+    void HandleInput(SDL_Event *m_event);
     void Render();
 
+    bool held; // Temp
+
   private:
+    glm::vec3 GetRayTo(int x, int y);
     std::string ErrorString(GLenum error);
+
+    int m_width;
+    int m_height;
 
     Camera *m_camera;
     Shader *m_shader;

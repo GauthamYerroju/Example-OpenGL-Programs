@@ -67,7 +67,7 @@ void Engine::Run()
     }
 
     // Update and render the graphics
-    m_graphics->Update(m_DT);
+    m_graphics->Update(m_DT, &m_event);
     m_graphics->Render();
 
     // Swap to the Window
@@ -101,7 +101,7 @@ void Engine::Mouse(){
   if (m_event.type == SDL_MOUSEMOTION){
 
   }
-  
+
 }
 
 unsigned int Engine::getDT()
