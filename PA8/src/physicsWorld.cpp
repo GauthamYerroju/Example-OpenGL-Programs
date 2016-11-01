@@ -14,37 +14,37 @@ PhysicsWorld::PhysicsWorld()
 PhysicsWorld::~PhysicsWorld()
 {
 	if( dynamicsWorld ){
-		delete dynamicsWorld; 
+		delete dynamicsWorld;
 		dynamicsWorld = NULL;
 	}
 	if( solver ){
-		delete solver; 
+		delete solver;
 		solver = NULL;
 	}
 	if( dispatcher ){
-		delete dispatcher; 
+		delete dispatcher;
 		dispatcher = NULL;
 	}
 	if( collisionConfig ){
-		delete collisionConfig; 
+		delete collisionConfig;
 		collisionConfig = NULL;
 	}
 	if( broadphase ){
-		delete broadphase; 
+		delete broadphase;
 		broadphase = NULL;
-	}	
+	}
 }
 
 
 void PhysicsWorld::Initialize()
-{	
+{
 	broadphase = new btDbvtBroadphase();
 	collisionConfig = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfig);
 	solver = new btSequentialImpulseConstraintSolver;
 
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
-	
+
 	// Set the gravity
 	setGravity( glm::vec3(-9.81, 0.0, 0.0) );
 
@@ -58,7 +58,7 @@ void PhysicsWorld::AddRigidBody( btRigidBody *rBody )
 
 void PhysicsWorld::Update(unsigned int dt)
 {
-	dynamicsWorld->stepSimulation(dt, 5);
+	dynamicsWorld->stepSimulation(float(dt)/1000, 5);
 }
 
 void PhysicsWorld::setGravity( glm::vec3 g )
@@ -68,5 +68,5 @@ void PhysicsWorld::setGravity( glm::vec3 g )
 		return;
 	}
 	dynamicsWorld->setGravity( btVector3(g.x, g.y, g.z) );
-	
+
 }
