@@ -74,7 +74,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
     {
       ball = new PhysicsObject( modelFile.c_str() );
 
-      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 0, -0.5) ) )
+      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 0.25, 0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(ball->GetRigidBody());

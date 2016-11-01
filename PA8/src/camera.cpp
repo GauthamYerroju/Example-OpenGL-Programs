@@ -13,7 +13,7 @@ Camera::~Camera()
 bool Camera::Initialize(int w, int h)
 {
   //--Init the view and projection matrices
-  view = glm::lookAt( glm::vec3(0.0, 5.0, 0.0), //Eye Position
+  view = glm::lookAt( glm::vec3(0.0, 10.0, 0.0), //Eye Position
                       glm::vec3(0.0, 0.0, 0.0), //Focus point
                       glm::vec3(0.0, 0.0, 1.0)); //Positive Y is up
 
