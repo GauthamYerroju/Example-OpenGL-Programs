@@ -11,13 +11,15 @@ class PhysicsObject : public Object
 		~PhysicsObject();
 
 		enum CollisionShapeType 
-		{
-			BOX_SHAPE = 1,
-			SPHERE_SHAPE = 2,
+		{	
+			TRIANGLE_MESH = 1,
+			BOX_SHAPE = 2,
+			SPHERE_SHAPE = 3
 		};
 
 		bool Initialize( CollisionShapeType shape, btScalar m, btQuaternion rotation, btVector3 translation );
-		void Update(); 
+		void Update();
+		btTriangleMesh * Get_TriangleMesh(); 
 		btTransform GetWorldTransform();
 		btRigidBody * GetRigidBody();
 

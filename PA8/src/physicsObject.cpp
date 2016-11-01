@@ -22,9 +22,13 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 {
 	switch(shape)
 	{
+		case TRIANGLE_MESH:
+			//
+			collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
+			break;
 		case SPHERE_SHAPE:
 			// Sphere with radius 0.5
-			collisionShape = new btSphereShape(0.5);
+			collisionShape = new btSphereShape(0.1);
 			break; 
 		case BOX_SHAPE:
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
@@ -63,6 +67,37 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	return true;
 }
 
+
+
+btTriangleMesh * PhysicsObject::Get_TriangleMesh()
+{
+	btVector3 triArray[3]; 
+	btTriangleMesh *objTriMesh = new btTriangleMesh();
+
+	//While you’re looping through all of the faces in your mesh:
+	for(int meshIndx = 0; meshIndx < meshes.size(); meshIndx++)
+	{
+		int triIndx = 0;
+		std::vector<unsigned int> mIndices = meshes[meshIndx].Indices;
+		for(int faceIndx = 0; faceIndx < mIndices.size(); faceIndx++)
+		{
+			
+			glm::vec3 position = meshes[meshIndx].Vertices[mIndices[faceIndx]].vertex;
+			triArray[triIndx] = btVector3(position.x, position.y, position.z);
+			
+			triIndx++;
+
+			if( triIndx == 3 )
+			{
+				objTriMesh->addTriangle(triArray[0], triArray[1], triArray[2]);
+				triIndx = 0;
+			}	
+			
+		}
+		
+	}
+	return objTriMesh;		
+}
 
 void PhysicsObject::Update()
 {
