@@ -47,32 +47,5 @@ struct Vertex
   Vertex(glm::vec3 v, glm::vec2 uv): vertex(v), uv_Coords(uv) {}
 };
 
-struct EventFlag
-{
-  bool pause_all;
-  bool incrSpeed;
-  bool dcrSpeed;
-  
-  EventFlag()
-  {
-    pause_all = false;
-    incrSpeed = false;
-    dcrSpeed = false;
-	}
-};
 
-struct ViewUpdate
-{
-	bool processed;
-	unsigned int dt;
-	UpdateType type;
-	Direction direction;
-	GLfloat scrollY;
-	GLfloat mouseX;
-	GLfloat mouseY;
-  bool zoom;
-  bool resetPos;
-  int planetIndx;
-  int pViewScaler;
-};
 #endif /* GRAPHICS_HEADERS_H */

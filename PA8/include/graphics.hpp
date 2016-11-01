@@ -21,7 +21,7 @@ class Graphics
     Graphics();
     ~Graphics();
     bool Initialize(int width, int height, char **argv);
-    void Update(unsigned int dt, EventFlag e_flags, ViewUpdate viewUpdate);
+    void Update(unsigned int dt);
     void Render();
 
   private:

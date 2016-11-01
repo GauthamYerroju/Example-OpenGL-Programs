@@ -9,40 +9,12 @@ class Camera
     Camera();
     ~Camera();
     bool Initialize(int w, int h);
-	void UpdateVectors();
-	void ProcessInput(ViewUpdate viewUpdate);
-	void ZoomOnPlanet(glm::vec3 Pos, int PosSclr);
-	void ResetPosition();
     glm::mat4 GetProjection();
     glm::mat4 GetView();
-	GLfloat Zoom;
   
   private:
-	//vp matrices
     glm::mat4 projection;
     glm::mat4 view;
-
-	//camera position and view vectors
-	glm::vec3 Position;
-	glm::vec3 P_origin;
-	glm::vec3 Front;
-	glm::vec3 Up;
-	glm::vec3 Right;
-	glm::vec3 WorldUp;
-
-	//view rotation
-	GLfloat Yaw;
-	GLfloat Pitch;
-
-	//view and movement variables
-	GLfloat MovementSpeed;
-	GLfloat MouseSensitivity;
-
-
-	//aspect ratio
-	GLfloat width;
-	GLfloat height;
-
 };
 
 #endif /* CAMERA_H */
