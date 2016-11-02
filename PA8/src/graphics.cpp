@@ -273,7 +273,7 @@ void Graphics::RayTest(btVector3 rayFrom, btVector3 rayTo)
 
         btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
         btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
-        world.AddConstraint(p2p, true);
+        world.GetWorld()->addConstraint(p2p, true);
         // m_pickedConstraint = p2p;
         btScalar mousePickClamping = 30.f;
         p2p->m_setting.m_impulseClamp = mousePickClamping;
