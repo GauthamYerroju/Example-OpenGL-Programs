@@ -28,6 +28,7 @@ class Graphics
 
   private:
     std::string ErrorString(GLenum error);
+    bool impulseFlag;
 
     Camera *m_camera;
     Shader *m_shader;

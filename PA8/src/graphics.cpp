@@ -47,6 +47,8 @@ bool Graphics::Initialize(int width, int height, char **argv)
   // Create Physics World
   world.Initialize();
 
+  impulseFlag = false;
+
   // Load objects from config file ( path in argv[3] )
   std::ifstream config_file(argv[3]);
   json config;
@@ -82,7 +84,6 @@ bool Graphics::Initialize(int width, int height, char **argv)
     {
       ball = new PhysicsObject( modelFile.c_str() );
 
-      //if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
       if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.5, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
@@ -186,16 +187,22 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   ball->Update();
   paddle->Update();
   bumper->Update();
-  lid->Update();
 
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
 {
-  if (m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
+  if (!impulseFlag && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
     // Hit the paddle
-    paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 100) );
+    paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -75) );
+
+    impulseFlag = true;
+  }
+  if (m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)
+  {
+    // Reset the impulse flag
+    impulseFlag = false;
   }
 }
 
