@@ -7,6 +7,7 @@
 class PhysicsObject : public Object
 {
 	public:
+		PhysicsObject();
 		PhysicsObject( const char *objPath );
 		~PhysicsObject();
 

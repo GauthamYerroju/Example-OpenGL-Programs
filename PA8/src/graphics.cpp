@@ -72,11 +72,20 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
       world.AddRigidBody(board->GetRigidBody());
     }
+    else if( label == "Dome")
+    {
+      dome = new PhysicsObject();
+      if( !dome->Initialize(PhysicsObject::STATIC_PLANE_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 2.2, 0.0) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(dome->GetRigidBody());
+    }
     else if( label == "Ball" )
     {
       ball = new PhysicsObject( modelFile.c_str() );
 
-      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
+      //if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
+      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.5, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(ball->GetRigidBody());
@@ -103,6 +112,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
       world.AddRigidBody(bumper->GetRigidBody());
     }
+    
 
   }
 
@@ -189,7 +199,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (!held && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
     // Pick rigid body
-    std::cout << "Left Mouse clicked\n";
     held = true;
 
     if (true)
@@ -213,7 +222,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (held && m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)
   {
     // Release rigid body
-    std::cout << "Left Mouse released\n";
     held = false;
   }
 
@@ -221,7 +229,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (held && m_event->type == SDL_MOUSEMOTION)
   {
     // Move rigid body
-    std::cout << "Mouse is being dragged\n";
   }
 
 }

@@ -1,5 +1,12 @@
 #include "physicsObject.hpp"
 
+PhysicsObject::PhysicsObject()
+{
+	collisionShape = NULL;
+	motionState = NULL;
+	rigidBody = NULL;
+}
+
 
 PhysicsObject::PhysicsObject( const char *objPath ) : Object::Object( objPath )
 {
@@ -36,8 +43,8 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			collisionShape = new btBoxShape(btVector3(1.0, 1.0, 0.2));
 			break;
 		case STATIC_PLANE_SHAPE:
-			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
-			collisionShape = new btStaticPlaneShape( btVector3(0, 1, 0), 0.5 );
+			// Static Plane with normal (0, 1, 0) and planeConstant of 0.01
+			collisionShape = new btStaticPlaneShape( btVector3(0, -1, 0), 0.5 );
 			break;
 		default:
 			printf("collisionShape failed to init\n");

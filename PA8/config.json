@@ -4,6 +4,10 @@
         "modelFile": "board.obj"
     },
     {
+        "name": "Dome",
+        "modelFile": "none"
+    },
+    {
         "name": "Ball",
         "modelFile": "ball.obj"
     },
@@ -15,6 +19,7 @@
         "name": "Bumper",
         "modelFile": "bumper.obj"
     }
+    
     
 ]
 
