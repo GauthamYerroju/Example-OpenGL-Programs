@@ -28,7 +28,6 @@ class Graphics
 
   private:
     std::string ErrorString(GLenum error);
-    void RayTest(btVector3 rayFrom, btVector3 rayTo);
 
     Camera *m_camera;
     Shader *m_shader;
