@@ -14,7 +14,8 @@ class PhysicsObject : public Object
 		{	
 			TRIANGLE_MESH = 1,
 			BOX_SHAPE = 2,
-			SPHERE_SHAPE = 3
+			SPHERE_SHAPE = 3,
+			STATIC_PLANE_SHAPE = 4
 		};
 
 		bool Initialize( CollisionShapeType shape, btScalar m, btQuaternion rotation, btVector3 translation );

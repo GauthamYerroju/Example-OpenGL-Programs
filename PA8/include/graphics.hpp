@@ -42,8 +42,10 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    PhysicsObject                         *ball;
     PhysicsObject                         *board;
+    PhysicsObject                         *ball; 
+    PhysicsObject                         *paddle;
+    PhysicsObject                         *bumper;
     PhysicsWorld                          world;
 
 };

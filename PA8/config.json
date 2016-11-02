@@ -1,12 +1,21 @@
 [
     {
-        "name": "Box",
-        "modelFile": "box.obj"
+        "name": "Board",
+        "modelFile": "board.obj"
     },
     {
         "name": "Ball",
         "modelFile": "ball.obj"
+    },
+    {
+        "name": "Paddle",
+        "modelFile": "paddle.obj"
+    },
+    {
+        "name": "Bumper",
+        "modelFile": "bumper.obj"
     }
+    
 ]
 
 

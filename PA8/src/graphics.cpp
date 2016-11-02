@@ -64,7 +64,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
     std::string modelFile = objectConfig["modelFile"];
     modelFile = "./models/" + modelFile;
 
-    if( label == "Box")
+    if( label == "Board")
     {
       board = new PhysicsObject( modelFile.c_str() );
 
@@ -78,13 +78,28 @@ bool Graphics::Initialize(int width, int height, char **argv)
     {
       ball = new PhysicsObject( modelFile.c_str() );
 
-      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0, 0, 0, 1), btVector3(0, 0.25, 0) ) )
+      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(ball->GetRigidBody());
     }
     else if(label == "Paddle")
     {
+      paddle = new PhysicsObject( modelFile.c_str() );
+
+      if( !paddle->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 4.84) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(paddle->GetRigidBody());
+
+    }
+    else if( label == "Bumper")
+    {
+      bumper = new PhysicsObject( modelFile.c_str() );
+      if( !bumper->Initialize(PhysicsObject::TRIANGLE_MESH, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.0, 0.0) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(bumper->GetRigidBody());
     }
 
   }
@@ -161,6 +176,8 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   // Update the physics objects
   board->Update();
   ball->Update();
+  paddle->Update();
+  bumper->Update();
 
 }
 
@@ -212,6 +229,10 @@ void Graphics::Render()
   board->Render();
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(paddle->GetModel()));
+  paddle->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper->GetModel()));
+  bumper->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
