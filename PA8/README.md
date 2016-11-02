@@ -1,9 +1,9 @@
 # PA8: Bullet
 Collaborators:
 
-Kevin Green,  
-Husain Tazarvi,  
-Gautham Yerroju  
+Kevin Green,
+Husain Tazarvi,
+Gautham Yerroju
 
 # Dependencies, Building, and Running
 
@@ -25,9 +25,9 @@ brew install glew glm sdl2 assimp imagemagick bullet
 Note: This project has not been tested on Max OSX and cannot be guaranteed to work.
 
 ## Building and Running
-To build this project use CMake. Shader file paths and the config file path must be sent as arguments to the program using the following format:  
+To build this project use CMake. Shader file paths and the config file path must be sent as arguments to the program using the following format:
 
-exe-filename vert-shader-filepath frag-shader-filepath config-filepath  
+exe-filename vert-shader-filepath frag-shader-filepath config-filepath
 
 ### CMake Instructions
 The building of the project is done using CMake, installation with apt-get or brew may be necessary.
@@ -43,14 +43,14 @@ make
 ## Keyboard Events
 The following keyboard commands are used to interact with the program:
 
-Key          - Event  
+Key          - Event
 
-Esc          - Close program  
+Esc          - Close program
 
 ## Mouse Events
-The following mouse commands are used to interact with the program:  
+The following mouse commands are used to interact with the program:
 
-Left Mouse Click    - move paddle up  
+Left Mouse Click    - move paddle up
 
 
 ## Ubuntu.cse.unr.edu

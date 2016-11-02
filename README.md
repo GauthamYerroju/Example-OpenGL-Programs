@@ -24,51 +24,51 @@ This is an model loader which loads triangulated blender OBJ files. Verticies an
 ## PA5: Assimp and Model Loading
 This is a group project consisting of the following three collaborators:
 
-Kevin Green  
-Husain Tazarvi  
-Gautham Yerroju  
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
 
 This is a model loader using assimp to load verticies, faces, and colors from a model and render the model to rotate on the screen. To run this project ```cd PA5``` then follow the instructions in the README.md.
 
 ## PA6: Assimp with Textures
 This is a group project consisting of the following three collaborators:
 
-Kevin Green  
-Husain Tazarvi  
-Gautham Yerroju  
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
 
 This application loads a model and its associated texture(s). The model is then rendered to rotate on the screen. To run this project ```cd PA6``` then follow the instructions in the README.md.
 
 ##PA7: Solar System
 This is a group project consisting of the following three collaborators:
 
-Kevin Green  
-Husain Tazarvi  
-Gautham Yerroju  
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
 
-This program simulates the solar system. The solar objects are:  
-Sun  
-Mercury  
-Venus  
-Earth  
-Moon  
-Mars  
-Jupiter (with rings)  
-Saturn (with rings)  
-Uranus (with rings)  
-Neptune (with rings)  
-Pluto  
+This program simulates the solar system. The solar objects are:
+Sun
+Mercury
+Venus
+Earth
+Moon
+Mars
+Jupiter (with rings)
+Saturn (with rings)
+Uranus (with rings)
+Neptune (with rings)
+Pluto
 
 To run this project ```cd PA7``` then follow the instructions in the README.md.
 
 ##PA8: Bullet
 This is a group project consisting of the following three collaborators:
 
-Kevin Green  
-Husain Tazarvi  
-Gautham Yerroju  
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
 
-This program implements the bullet physics engine. There is a board with a ball and a paddle to hit the ball into the board walls and a bumper  
+This program implements the bullet physics engine. There is a board with a ball and a paddle to hit the ball into the board walls and a bumper
 
 To run this project ```cd PA8``` then follow the instructions in the README.md.
 
