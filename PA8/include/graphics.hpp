@@ -26,8 +26,6 @@ class Graphics
     void HandleInput(SDL_Event *m_event);
     void Render();
 
-    bool held; // Temp
-
   private:
     std::string ErrorString(GLenum error);
     void RayTest(btVector3 rayFrom, btVector3 rayTo);
@@ -40,9 +38,10 @@ class Graphics
     GLint m_modelMatrix;
 
     PhysicsObject                         *board;
-    PhysicsObject                         *ball; 
+    PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *bumper;
+    PhysicsObject                         *lid;
     PhysicsWorld                          world;
 
 };

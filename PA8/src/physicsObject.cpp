@@ -37,7 +37,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			break;
 		case STATIC_PLANE_SHAPE:
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
-			collisionShape = new btStaticPlaneShape( btVector3(0, 1, 0), 0.5 );
+			collisionShape = new btStaticPlaneShape( btVector3(0, -1, 0), 0.5 );
 			break;
 		default:
 			printf("collisionShape failed to init\n");

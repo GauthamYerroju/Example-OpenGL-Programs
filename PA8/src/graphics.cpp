@@ -31,8 +31,6 @@ bool Graphics::Initialize(int width, int height, char **argv)
     }
   #endif
 
-  held = false;
-
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -103,7 +101,14 @@ bool Graphics::Initialize(int width, int height, char **argv)
 
       world.AddRigidBody(bumper->GetRigidBody());
     }
+    else if (label == "Lid")
+    {
+      lid = new PhysicsObject( modelFile.c_str() );
+      if( !lid->Initialize(PhysicsObject::STATIC_PLANE_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 0.0) ) )
+          printf("PhysicsObject failed to initialize\n");
 
+      world.AddRigidBody(lid->GetRigidBody());
+    }
   }
 
   // Set up the shaders
@@ -180,50 +185,17 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   ball->Update();
   paddle->Update();
   bumper->Update();
+  lid->Update();
 
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
 {
-  // On mouse click, pick a body
-  if (!held && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
+  if (m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
-    // Pick rigid body
-    std::cout << "Left Mouse clicked\n";
-    held = true;
-
-    if (true)
-    {
-      paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 100) );
-    } else {
-      // // Perform ray test
-      // glm::vec3 rayDir = m_camera->RayCast(m_event->button.x, m_event->button.y);
-      // rayDir *= 1.0f;
-      // glm::vec3 camPos = m_camera->GetPosition();
-      // btVector3 rayFrom = btVector3(camPos.x, camPos.y, camPos.z);
-
-      // glm::vec3 tmp = camPos + rayDir;
-      // btVector3 rayTo = btVector3(tmp.x, tmp.y, tmp.z);
-
-      // RayTest(rayFrom, rayTo);
-    }
+    // Hit the paddle
+    paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 100) );
   }
-
-  // On mouse release, release the rigid body if was picked earlier
-  if (held && m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)
-  {
-    // Release rigid body
-    std::cout << "Left Mouse released\n";
-    held = false;
-  }
-
-  // On mouse motion, if a rigid body is held, move it around
-  if (held && m_event->type == SDL_MOUSEMOTION)
-  {
-    // Move rigid body
-    std::cout << "Mouse is being dragged\n";
-  }
-
 }
 
 void Graphics::Render()
