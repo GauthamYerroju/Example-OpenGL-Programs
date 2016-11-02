@@ -69,7 +69,7 @@ bool Graphics::Initialize(int width, int height, char **argv)
       board = new PhysicsObject( modelFile.c_str() );
 
       //if( !board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ) )
-      if( !board->Initialize(PhysicsObject::TRIANGLE_MESH, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ) )
+      if( !board->Initialize(PhysicsObject::TRIANGLE_MESH, 0, btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(board->GetRigidBody());
