@@ -65,16 +65,25 @@ bool Graphics::Initialize(int width, int height, char **argv)
       board = new PhysicsObject( modelFile.c_str() );
 
       //if( !board->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ) )
-      if( !board->Initialize(PhysicsObject::TRIANGLE_MESH, 0, btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0) ) )
+      if( !board->Initialize(PhysicsObject::TRIANGLE_MESH, 0, btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(board->GetRigidBody());
+    }
+    else if( label == "Dome")
+    {
+      dome = new PhysicsObject();
+      if( !dome->Initialize(PhysicsObject::STATIC_PLANE_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 2.2, 0.0) ) )
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(dome->GetRigidBody());
     }
     else if( label == "Ball" )
     {
       ball = new PhysicsObject( modelFile.c_str() );
 
-      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
+      //if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.13, 0.0) ) )
+      if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE, 1, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.5, 0.0) ) )
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(ball->GetRigidBody());
@@ -100,14 +109,6 @@ bool Graphics::Initialize(int width, int height, char **argv)
         printf("PhysicsObject failed to initialize\n");
 
       world.AddRigidBody(bumper->GetRigidBody());
-    }
-    else if (label == "Lid")
-    {
-      lid = new PhysicsObject( modelFile.c_str() );
-      if( !lid->Initialize(PhysicsObject::STATIC_PLANE_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 0.0) ) )
-          printf("PhysicsObject failed to initialize\n");
-
-      world.AddRigidBody(lid->GetRigidBody());
     }
   }
 
@@ -229,51 +230,6 @@ void Graphics::Render()
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
 }
-
-void Graphics::RayTest(btVector3 rayFrom, btVector3 rayTo)
-{
-  // Perform ray test and get closest rigid body
-  btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
-  // world.RayTestGetClosest(rayFrom, rayTo, rayCallback);
-  world.GetWorld()->rayTest(rayFrom, rayTo, rayCallback);
-
-  if (rayCallback.hasHit())
-  {
-    std::cout << "Hit!\n";
-    btVector3 pickPos = rayCallback.m_hitPointWorld;
-    btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
-    if (body)
-    {
-      if (!(body->isStaticObject() || body->isKinematicObject()))
-      {
-        std::cout << "Picked a body\n";
-        btRigidBody *m_pickedBody = body;
-        // m_savedState = m_pickedBody->getActivationState();
-        m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
-
-        btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
-        btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
-        world.GetWorld()->addConstraint(p2p, true);
-        // m_pickedConstraint = p2p;
-        btScalar mousePickClamping = 30.f;
-        p2p->m_setting.m_impulseClamp = mousePickClamping;
-        p2p->m_setting.m_tau = 0.001f;
-      } else {
-        std::cout << "Not a dynamic body\n";
-      }
-    } else {
-      std::cout << "No body\n";
-    }
-
-    // m_oldPickingPos = rayTo;
-    // m_hitPos = pickPos;
-    // m_oldPickingDist = (pickPos - rayFrom).length();
-  } else {
-    std::cout << "Not hit\n";
-  }
-}
-
-// TODO: Code to handle picking up the object, moving it around and dropping it.
 
 std::string Graphics::ErrorString(GLenum error)
 {

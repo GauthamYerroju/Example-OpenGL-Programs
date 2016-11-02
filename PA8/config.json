@@ -4,6 +4,10 @@
         "modelFile": "board.obj"
     },
     {
+        "name": "Dome",
+        "modelFile": "none"
+    },
+    {
         "name": "Ball",
         "modelFile": "ball.obj"
     },
@@ -19,6 +23,7 @@
         "name": "Lid",
         "modelFile": "lid.obj"
     }
+    
     
 ]
 

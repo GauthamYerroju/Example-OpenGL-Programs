@@ -1,5 +1,13 @@
 #include "object.hpp"
 
+Object::Object()
+{
+  origin = glm::mat4(1.0f);
+  translationVec = glm::vec3(0.0f);
+  rotationAngle = 0.0f;
+  scaler = 1.0f;
+}
+
 Object::Object(const char *objPath)
 {
 

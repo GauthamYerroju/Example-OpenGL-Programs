@@ -60,3 +60,15 @@ Neptune (with rings)
 Pluto  
 
 To run this project ```cd PA7``` then follow the instructions in the README.md.
+
+##PA8: Bullet
+This is a group project consisting of the following three collaborators:
+
+Kevin Green  
+Husain Tazarvi  
+Gautham Yerroju  
+
+This program implements the bullet physics engine. There is a board with a ball and a paddle to hit the ball into the board walls and a bumper  
+
+To run this project ```cd PA8``` then follow the instructions in the README.md.
+

@@ -1,5 +1,12 @@
 #include "physicsObject.hpp"
 
+PhysicsObject::PhysicsObject()
+{
+	collisionShape = NULL;
+	motionState = NULL;
+	rigidBody = NULL;
+}
+
 
 PhysicsObject::PhysicsObject( const char *objPath ) : Object::Object( objPath )
 {

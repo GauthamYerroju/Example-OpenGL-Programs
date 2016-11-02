@@ -41,7 +41,7 @@ class Graphics
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *bumper;
-    PhysicsObject                         *lid;
+    PhysicsObject                         *dome;
     PhysicsWorld                          world;
 
 };
