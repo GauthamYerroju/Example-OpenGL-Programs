@@ -85,8 +85,12 @@ bool Graphics::Initialize(int width, int height, char **argv)
     {
       paddle = new PhysicsObject( modelFile.c_str() );
 
-      if( !paddle->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 4.84) ) )
+      if( !paddle->Initialize(PhysicsObject::BOX_SHAPE, 10, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 4.84) ) )
         printf("PhysicsObject failed to initialize\n");
+
+      // Constrain linear motion along z axis and disable angular motion
+      paddle->GetRigidBody()->setLinearFactor(btVector3(0, 0, 1));
+      paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
       world.AddRigidBody(paddle->GetRigidBody());
 
@@ -188,17 +192,21 @@ void Graphics::HandleInput(SDL_Event *m_event)
     std::cout << "Left Mouse clicked\n";
     held = true;
 
-    // Perform ray test
-    glm::vec3 rayDir = m_camera->RayCast(m_event->button.x, m_event->button.y);
-    rayDir *= 1.0f;
-    glm::vec3 camPos = m_camera->GetPosition();
-    btVector3 rayFrom = btVector3(camPos.x, camPos.y, camPos.z);
+    if (true)
+    {
+      paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 200) );
+    } else {
+      // // Perform ray test
+      // glm::vec3 rayDir = m_camera->RayCast(m_event->button.x, m_event->button.y);
+      // rayDir *= 1.0f;
+      // glm::vec3 camPos = m_camera->GetPosition();
+      // btVector3 rayFrom = btVector3(camPos.x, camPos.y, camPos.z);
 
-    glm::vec3 tmp = camPos + rayDir;
-    btVector3 rayTo = btVector3(tmp.x, tmp.y, tmp.z);
+      // glm::vec3 tmp = camPos + rayDir;
+      // btVector3 rayTo = btVector3(tmp.x, tmp.y, tmp.z);
 
-
-    RayTest(rayFrom, rayTo);
+      // RayTest(rayFrom, rayTo);
+    }
   }
 
   // On mouse release, release the rigid body if was picked earlier
