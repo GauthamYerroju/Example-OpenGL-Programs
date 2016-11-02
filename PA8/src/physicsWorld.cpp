@@ -35,7 +35,6 @@ PhysicsWorld::~PhysicsWorld()
 	}
 }
 
-
 void PhysicsWorld::Initialize()
 {
 	broadphase = new btDbvtBroadphase();
@@ -67,4 +66,9 @@ void PhysicsWorld::setGravity( glm::vec3 g )
 	}
 	dynamicsWorld->setGravity( btVector3(g.x, g.y, g.z) );
 
+}
+
+btDiscreteDynamicsWorld * PhysicsWorld::GetWorld()
+{
+	return dynamicsWorld;
 }

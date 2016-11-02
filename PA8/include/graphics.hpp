@@ -29,11 +29,8 @@ class Graphics
     bool held; // Temp
 
   private:
-    glm::vec3 GetRayTo(int x, int y);
     std::string ErrorString(GLenum error);
-
-    int m_width;
-    int m_height;
+    void RayTest(btVector3 rayFrom, btVector3 rayTo);
 
     Camera *m_camera;
     Shader *m_shader;

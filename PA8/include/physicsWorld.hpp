@@ -14,6 +14,7 @@ class PhysicsWorld
 		void Update(unsigned int dt);
 
 		void setGravity( glm::vec3 g );
+		btDiscreteDynamicsWorld * GetWorld();
 
 	private:
 		//	Tells bullet how to check for collisions between objects. This will also help eliminate object pairs that should not collide.

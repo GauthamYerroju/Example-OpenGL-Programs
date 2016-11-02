@@ -31,8 +31,6 @@ bool Graphics::Initialize(int width, int height, char **argv)
     }
   #endif
 
-  m_width = width;
-  m_height = height;
   held = false;
 
   // For OpenGL 3
@@ -87,8 +85,12 @@ bool Graphics::Initialize(int width, int height, char **argv)
     {
       paddle = new PhysicsObject( modelFile.c_str() );
 
-      if( !paddle->Initialize(PhysicsObject::BOX_SHAPE, 0, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 4.84) ) )
+      if( !paddle->Initialize(PhysicsObject::BOX_SHAPE, 10, btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 1.0, 4.84) ) )
         printf("PhysicsObject failed to initialize\n");
+
+      // Constrain linear motion along z axis and disable angular motion
+      paddle->GetRigidBody()->setLinearFactor(btVector3(0, 0, 1));
+      paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
       world.AddRigidBody(paddle->GetRigidBody());
 
@@ -190,8 +192,21 @@ void Graphics::HandleInput(SDL_Event *m_event)
     std::cout << "Left Mouse clicked\n";
     held = true;
 
-    glm::vec3 tmp = GetRayTo(m_event->button.x, m_event->button.y);
-    std::cout << glm::to_string(tmp) << std::endl;
+    if (true)
+    {
+      paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 100) );
+    } else {
+      // // Perform ray test
+      // glm::vec3 rayDir = m_camera->RayCast(m_event->button.x, m_event->button.y);
+      // rayDir *= 1.0f;
+      // glm::vec3 camPos = m_camera->GetPosition();
+      // btVector3 rayFrom = btVector3(camPos.x, camPos.y, camPos.z);
+
+      // glm::vec3 tmp = camPos + rayDir;
+      // btVector3 rayTo = btVector3(tmp.x, tmp.y, tmp.z);
+
+      // RayTest(rayFrom, rayTo);
+    }
   }
 
   // On mouse release, release the rigid body if was picked earlier
@@ -243,50 +258,49 @@ void Graphics::Render()
   }
 }
 
-
-glm::vec3 Graphics::GetRayTo(int x, int y)
+void Graphics::RayTest(btVector3 rayFrom, btVector3 rayTo)
 {
-	// Normalized Device Coordinates map 2D coordinate space to a range of [-1, 1]
-	// More info here: https://www.youtube.com/watch?v=Ck1SH7oYRFM
-	// and here: https://capnramses.github.io//opengl/raycasting.html
-	// Ref: http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-a-physics-library/
+  // Perform ray test and get closest rigid body
+  btCollisionWorld::ClosestRayResultCallback rayCallback(rayFrom, rayTo);
+  // world.RayTestGetClosest(rayFrom, rayTo, rayCallback);
+  world.GetWorld()->rayTest(rayFrom, rayTo, rayCallback);
 
-	// Get the start and end ray positions in NDC (easy to get in NDC)
-	glm::vec4 rayStartNDC(
-		( (float)x / (float)m_width - 0.5f ) * 2.0f, // [0, m_width] -> [-1,1]
-		( (float)y / (float)m_height - 0.5f ) * 2.0f, // [0, m_height] -> [-1,1]
-		-1.0, // The near plane maps to Z=-1 in NDC
-		1.0f
-	);
+  if (rayCallback.hasHit())
+  {
+    std::cout << "Hit!\n";
+    btVector3 pickPos = rayCallback.m_hitPointWorld;
+    btRigidBody* body = (btRigidBody*)btRigidBody::upcast(rayCallback.m_collisionObject);
+    if (body)
+    {
+      if (!(body->isStaticObject() || body->isKinematicObject()))
+      {
+        std::cout << "Picked a body\n";
+        btRigidBody *m_pickedBody = body;
+        // m_savedState = m_pickedBody->getActivationState();
+        m_pickedBody->setActivationState(DISABLE_DEACTIVATION);
 
-	glm::vec4 rayEndNDC(
-		( (float)x / (float)m_width - 0.5f ) * 2.0f,
-		( (float)y / (float)m_height - 0.5f ) * 2.0f,
-		0.0,
-		1.0f
-	);
+        btVector3 localPivot = body->getCenterOfMassTransform().inverse() * pickPos;
+        btPoint2PointConstraint* p2p = new btPoint2PointConstraint(*body, localPivot);
+        world.GetWorld()->addConstraint(p2p, true);
+        // m_pickedConstraint = p2p;
+        btScalar mousePickClamping = 30.f;
+        p2p->m_setting.m_impulseClamp = mousePickClamping;
+        p2p->m_setting.m_tau = 0.001f;
+      } else {
+        std::cout << "Not a dynamic body\n";
+      }
+    } else {
+      std::cout << "No body\n";
+    }
 
-  // Convert GLint arrays to a glm::mat4
-  glm::mat4 projectionMatrix = m_camera->GetProjection();
-  glm::mat4 viewMatrix = m_camera->GetView();
-
-	// Convert NDC positions to world space
-	glm::mat4 tmp = glm::inverse(projectionMatrix * viewMatrix);
-
-  glm::vec4 rayStartWorld = tmp * rayStartNDC;
-  rayStartWorld /= rayStartWorld.w;
-
-	glm::vec4 rayEndWorld = tmp * rayEndNDC;
-  rayEndWorld /=rayEndWorld.w;
-
-  // Calculate normalized vector indicating ray direction
-  glm::vec3 rayDirection = glm::vec3(rayEndWorld - rayStartWorld);
-  rayDirection = glm::normalize(rayDirection);
-
-  return rayDirection;
+    // m_oldPickingPos = rayTo;
+    // m_hitPos = pickPos;
+    // m_oldPickingDist = (pickPos - rayFrom).length();
+  } else {
+    std::cout << "Not hit\n";
+  }
 }
 
-// TODO: Do the actual ray casting to determine if an object is clicked.
 // TODO: Code to handle picking up the object, moving it around and dropping it.
 
 std::string Graphics::ErrorString(GLenum error)
