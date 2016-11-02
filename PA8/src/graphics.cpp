@@ -194,7 +194,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
     if (true)
     {
-      paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 200) );
+      paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, 100) );
     } else {
       // // Perform ray test
       // glm::vec3 rayDir = m_camera->RayCast(m_event->button.x, m_event->button.y);

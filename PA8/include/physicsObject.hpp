@@ -10,8 +10,8 @@ class PhysicsObject : public Object
 		PhysicsObject( const char *objPath );
 		~PhysicsObject();
 
-		enum CollisionShapeType 
-		{	
+		enum CollisionShapeType
+		{
 			TRIANGLE_MESH = 1,
 			BOX_SHAPE = 2,
 			SPHERE_SHAPE = 3,
@@ -20,7 +20,7 @@ class PhysicsObject : public Object
 
 		bool Initialize( CollisionShapeType shape, btScalar m, btQuaternion rotation, btVector3 translation );
 		void Update();
-		btTriangleMesh * Get_TriangleMesh(); 
+		btTriangleMesh * Get_TriangleMesh();
 		btTransform GetWorldTransform();
 		btRigidBody * GetRigidBody();
 

@@ -33,7 +33,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 		case BOX_SHAPE:
 			// box primitive around the origin, its sides axis aligned with length specified by half extents, in local shape coordinates
 			// halt extents: btVector3(dx, dy, dz), The full extents of the box will be twice the half extents
-			collisionShape = new btBoxShape(btVector3(0.5, 1.0, 0.2));
+			collisionShape = new btBoxShape(btVector3(1.0, 1.0, 0.2));
 			break;
 		case STATIC_PLANE_SHAPE:
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
