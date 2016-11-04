@@ -1,0 +1,38 @@
+[
+    {
+        "name":             "perVertexLighting",
+        "vertexShader":     "shaders/V_lighting/vShader.vert",
+        "fragmentShader":   "shaders/V_lighting/fShader.frag"
+
+    },
+    {
+        "name":             "perFragmentLighting",
+        "vertexShader":     "shaders/F_lighting/vShader.vert",
+        "fragmentShader":   "shaders/F_lighting/fShader.frag"
+
+    },
+    {
+        "name":             "Board",
+        "modelFile":        "models/board.obj"
+    },
+    {
+        "name":             "Dome",
+        "modelFile":        "none"
+    },
+    {
+        "name":             "Ball",
+        "modelFile":        "models/ball.obj"
+    },
+    {
+        "name":             "Paddle",
+        "modelFile":        "models/paddle.obj"
+    },
+    {
+        "name":             "Bumper",
+        "modelFile":        "models/bumper.obj"
+    }
+        
+]
+
+
+

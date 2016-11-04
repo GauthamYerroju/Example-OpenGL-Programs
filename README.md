@@ -72,3 +72,13 @@ This program implements the bullet physics engine. There is a board with a ball 
 
 To run this project ```cd PA8``` then follow the instructions in the README.md.
 
+## PA9: Lighting
+
+This is a group project consisting of the following three collaborators:
+
+Kevin Green
+Husain Tazarvi
+Gautham Yerroju
+
+To run this project ```cd PA9``` then follow the instructions in the README.md.
+
