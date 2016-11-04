@@ -245,6 +245,18 @@ bool Graphics::SetShader()
     return false;
   }
 
+  // Locate the light position vector
+  m_LightPosition = m_shader->GetUniformLocation("LightPosition");
+  // Locate the ambient product vector
+  m_AmbientProduct = m_shader->GetUniformLocation("AmbientProduct");
+  // Locate the diffuse product vector
+  m_DiffuseProduct = m_shader->GetUniformLocation("DiffuseProduct");
+  // Locate the specular product vector
+  m_SpecularProduct = m_shader->GetUniformLocation("SpecularProduct");
+  // Locate the shininess float
+  m_Shininess = m_shader->GetUniformLocation("Shininess");
+  
+
   return true;
 }
 
@@ -303,6 +315,22 @@ void Graphics::Render()
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+
+  const glm::vec4 white(1);
+  const glm::vec4 black(0);
+  const glm::vec4 ambient( 0.1f, 0.1f, 0.1f, 1.0);
+  const glm::vec4 light_pos( 0.0f, 4.0f, 0.0f, 1.0f);
+
+  // Set the light position
+  glUniform4fv( m_LightPosition, 1, glm::value_ptr(light_pos) );
+  //glUniform4fv( g_uniformLightColor, 1, glm::value_ptr(white) );
+  glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
+
+  // Set material properties.
+  //glUniform4fv( g_uniformMaterialEmissive, 1, glm::value_ptr(black) );
+  glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(white) );
+  glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(white) );
+  glUniform1f( m_Shininess, 50.0f );
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));

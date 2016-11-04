@@ -43,6 +43,12 @@ class Graphics
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
+    GLint m_LightPosition;
+    GLint m_AmbientProduct;
+    GLint m_DiffuseProduct;
+    GLint m_SpecularProduct;
+    GLint m_Shininess;
+
     PhysicsObject                         *board;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
