@@ -255,6 +255,9 @@ bool Graphics::SetShader()
   m_SpecularProduct = m_shader->GetUniformLocation("SpecularProduct");
   // Locate the shininess float
   m_Shininess = m_shader->GetUniformLocation("Shininess");
+
+  //m_SpotLightDirection = m_shader->GetUniformLocation("SpotLightDirection");
+  //m_SpotCutOff = m_shader->GetUniformLocation("SpotCutOff");
   
 
   return true;
@@ -318,8 +321,9 @@ void Graphics::Render()
 
   const glm::vec4 white(1);
   const glm::vec4 black(0);
-  const glm::vec4 ambient( 0.1f, 0.1f, 0.1f, 1.0);
-  const glm::vec4 light_pos( 0.0f, 4.0f, 0.0f, 1.0f);
+  // Ambient Intesnity: r, g, b, a
+  const glm::vec4 ambient( 0.4f, 0.4f, 0.4f, 1.0);
+  const glm::vec4 light_pos( 0.0f, 10.0f, 0.0f, 1.0f);
 
   // Set the light position
   glUniform4fv( m_LightPosition, 1, glm::value_ptr(light_pos) );
@@ -330,7 +334,13 @@ void Graphics::Render()
   //glUniform4fv( g_uniformMaterialEmissive, 1, glm::value_ptr(black) );
   glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(white) );
   glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(white) );
-  glUniform1f( m_Shininess, 50.0f );
+  glUniform1f( m_Shininess, 100.0f ); // higher more concentrated specular reflection
+
+  //glm::mat4 mv = m_camera->GetView()*ball->GetModel();
+  //glm::vec4 spotDIR = mv[3] - light_pos;
+  //glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
+  //glUniform1f( m_SpotCutOff, cos(M_PI/4) );
+
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));

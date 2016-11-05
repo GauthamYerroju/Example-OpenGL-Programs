@@ -22,7 +22,7 @@ void main(void)
 	// Normalize the input lighting vectors
 	vec3 N = normalize(fN);
 	vec3 E = normalize(fE);
-	vec3 L = normalize(fL);
+	vec3 L = normalize(fL); //surface to light
 
 	vec3 H = normalize( L + E );   
 	vec4 ambient = AmbientProduct;

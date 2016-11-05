@@ -19,13 +19,19 @@ uniform mat4 modelMatrix;
 
 void main(void)
 {
-  fN = v_normal;
-  fE = v_position.xyz;
-  fL = LightPosition.xyz;
+  vec3 pos = ((viewMatrix * modelMatrix) * vec4(v_position, 1.0)).xyz;
+
+  //fN = v_normal;
+  fN = ((viewMatrix * modelMatrix) *vec4(v_normal, 0.0)).xyz;
+  //fE = v_position;
+  fE = -pos;
+  fL = LightPosition.xyz; //directional light
     
   if( LightPosition.w != 0.0 ) 
   {
-    fL = LightPosition.xyz - v_position.xyz;
+    //point light
+    //fL = LightPosition.xyz - v_position.xyz;
+    fL = LightPosition.xyz - pos.xyz;
   }
 
   vec4 v = vec4(v_position, 1.0);

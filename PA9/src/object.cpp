@@ -185,7 +185,7 @@ bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
   {
     m_pImage.read( filePath );
     m_pImage.write( &m_Blob, "RGBA" );
-
+    
     glGenTextures(1, &textureID);
 
     // Assign texture to ID

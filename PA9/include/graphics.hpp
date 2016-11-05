@@ -30,7 +30,6 @@ class Graphics
     void HandleInput(SDL_Event *m_event);
     void Render();
 
-
   private:
     std::string ErrorString(GLenum error);
     bool impulseFlag;
@@ -48,6 +47,8 @@ class Graphics
     GLint m_DiffuseProduct;
     GLint m_SpecularProduct;
     GLint m_Shininess;
+    GLint m_SpotLightDirection;
+    GLint m_SpotCutOff;
 
     PhysicsObject                         *board;
     PhysicsObject                         *ball;
