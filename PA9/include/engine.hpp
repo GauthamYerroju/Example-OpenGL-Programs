@@ -35,6 +35,10 @@ class Engine
     unsigned int m_DT;
     long long m_currentTimeMillis;
     bool m_running;
+
+    bool selectAmbient;
+    bool selectDiffuse;
+    bool selectSpecular;
 };
 
 #endif // ENGINE_H

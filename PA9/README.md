@@ -45,7 +45,14 @@ The following keyboard commands are used to interact with the program:
 
 Key          - Event
 
-Esc          - Close program
+Esc          - Close program  
+'1'			 - Change to per-fregment lighting
+'2'			 - Change to per-vertex lighting
+'a'			 - Select ambient scalar
+'d'			 - Select diffuse scalar
+'s'			 - Select specular scalar
+'='			 - Increase currently selected scalar
+'-'			 - Decrease currently selected scalar
 
 ## Mouse Events
 The following mouse commands are used to interact with the program:

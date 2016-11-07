@@ -16,7 +16,7 @@ uniform float Shininess;
 // Light Properties
 uniform vec4 LightPosition;
 uniform vec4 SpotLightDirection;
-uniform float SpotCutOff; //cos of angle from spotDir to CutOff
+uniform float SpotLightCutOffAngle;
 
 
 // MVP matrices
@@ -41,19 +41,20 @@ void main(void)
   vec3 S = normalize(vec3(-SpotLightDirection)); 
 
   float intensity = 0.0;
-  vec4  specular = vec4(0.0);   
+  vec4  specular = vec4(0.0, 0.0, 0.0, 1.0);   
  
   // inside the cone?
-  if (dot(S,L) > l_spotCutOff) 
+  if (dot(S,L) > cos(radians(SpotLightCutOffAngle))) 
   {
     // if 90 degrees: 0 intensity
     // intensity increases as angle decresses to 0
-    intensity = max(dot(n,L), 0.0);  
+    intensity = max(dot(N,L), 0.0);  
  
     if (intensity > 0.0) 
     {
       float Ks = pow( max(dot(N, H), 0.0), Shininess );
       specular = Ks * SpecularProduct;
+      // discard the specular highlight if the light's behind the vertex
       if( dot(L, N) < 0.0 )  specular = vec4(0.0, 0.0, 0.0, 1.0);
 
     }
@@ -63,15 +64,9 @@ void main(void)
   // Compute terms in the illumination equation
   float Kd = max( dot(L, N), 0.0 );
   vec4  diffuse = Kd * DiffuseProduct;
-  float Ks = pow( max(dot(N, H), 0.0), Shininess );
-  vec4  specular = Ks * SpecularProduct;
-  if( dot(L, N) < 0.0 )  specular = vec4(0.0, 0.0, 0.0, 1.0);
   vec4 ambient = AmbientProduct; 
   
-
-  //color = ambient + diffuse + specular;
   color = max(intensity * diffuse + specular, ambient);
-  //color.a = 1.0;
 
   texCoord = v_texCoord;
 

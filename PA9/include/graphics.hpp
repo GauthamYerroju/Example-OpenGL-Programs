@@ -23,9 +23,18 @@ class Graphics
     ~Graphics();
     bool Initialize(int width, int height, char *configFile);
     bool LoadConfig( char *configFile );
+
     bool SetShader();
     void SetPerFragLighting();
     void SetPerVertLighting();
+
+    void SetAmbientScalar(float a_slr);
+    void SetDiffuseScalar(float d_slr); 
+    void SetSpecularScalar(float s_slr);
+    float getAmbientScalar();
+    float getDiffuseScalar();
+    float getSpecularScalar();
+
     void Update(unsigned int dt, SDL_Event *m_event);
     void HandleInput(SDL_Event *m_event);
     void Render();
@@ -49,6 +58,10 @@ class Graphics
     GLint m_Shininess;
     GLint m_SpotLightDirection;
     GLint m_SpotCutOff;
+
+    float amb_Scalar;
+    float diff_Scalar;
+    float spec_Scalar;
 
     PhysicsObject                         *board;
     PhysicsObject                         *ball;

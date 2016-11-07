@@ -30,11 +30,13 @@ void main(void)
   vec3 L = vec3(0);
   if( LightPosition.w != 0.0 )
   {
+    // point light
+    // Unit vector direction from pos to light source
     L = normalize( LightPosition.xyz - pos );
   }
   else
   {
-    // Unit vector direction from pos to light source
+    // Unit vector to light source
     L = normalize(LightPosition.xyz);
   }
   

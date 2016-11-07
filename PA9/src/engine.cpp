@@ -46,6 +46,11 @@ bool Engine::Initialize(char *configFile)
   // Set the time
   m_currentTimeMillis = GetCurrentTimeMillis();
 
+
+  bool selectAmbient = false;
+  bool selectDiffuse = false;
+  bool selectSpecular = false;
+
   // No errors
   return true;
 }
@@ -83,6 +88,8 @@ void Engine::Keyboard()
   }
   else if (m_event.type == SDL_KEYDOWN)
   {
+    float sclStepDown = 0.80;
+    float sclStepUp = 1.25;
     // handle key down events here
     switch(m_event.key.keysym.sym)
     {
@@ -100,6 +107,37 @@ void Engine::Keyboard()
         m_graphics->SetPerVertLighting();
         if (!m_graphics->SetShader())
           printf("Failed to switch shader for per vertex lighting\n");
+        break;
+      case SDLK_a:
+        selectAmbient = true;
+        selectDiffuse = false;
+        selectSpecular = false;
+        break;
+      case SDLK_d:
+        selectAmbient = false;
+        selectDiffuse = true;
+        selectSpecular = false;
+        break;
+      case SDLK_s:
+        selectAmbient = false;
+        selectDiffuse = false;
+        selectSpecular = true;
+        break;       
+      case SDLK_EQUALS:
+        if(selectAmbient)
+          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar()*sclStepUp);
+        else if(selectDiffuse)
+          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepUp);
+        else if(selectSpecular)
+          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepUp);
+        break;
+      case SDLK_MINUS:
+        if(selectAmbient)
+          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar()*sclStepDown);
+        else if(selectDiffuse)
+          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepDown);
+        else if(selectSpecular)
+          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepDown);
         break;
       default:
         break;
