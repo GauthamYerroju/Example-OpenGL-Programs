@@ -1,7 +1,7 @@
 [
     {
         "name":             "perVertexLighting",
-        "vertexShader":     "shaders/V_lighting/vShader.vert",
+        "vertexShader":     "shaders/V_lighting/vShader2.vert",
         "fragmentShader":   "shaders/V_lighting/fShader.frag"
 
     },
