@@ -309,7 +309,7 @@ float Graphics::getDiffuseScalar()
 
 float Graphics::getSpecularScalar()
 {
-  return diff_Scalar;
+  return spec_Scalar;
 }
 
 
@@ -360,7 +360,7 @@ void Graphics::Render()
 
   // Intensity r,g,b,a
   amb_Scalar = 0.4;
-  const glm::vec4 ambient = glm::vec4(1.0*amb_Scalar, 1.0*amb_Scalar, 1.0*amb_Scalar, 0.0);
+  const glm::vec4 ambient = glm::vec4(1.0*amb_Scalar, 1.0*amb_Scalar, 1.0*amb_Scalar, 1.0);
   const glm::vec4 diffuse = glm::vec4(1.0*diff_Scalar, 1.0*diff_Scalar, 1.0*diff_Scalar, 1.0);
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
 
