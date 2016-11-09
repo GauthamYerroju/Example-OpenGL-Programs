@@ -13,7 +13,7 @@
     },
     {
         "name":             "Board",
-        "modelFile":        "models/board.obj"
+        "modelFile":        "models/board2.obj"
     },
     {
         "name":             "Dome",
@@ -31,7 +31,7 @@
         "name":             "Bumper",
         "modelFile":        "models/bumper.obj"
     }
-        
+
 ]
 
 

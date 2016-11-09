@@ -282,19 +282,35 @@ void Graphics::SetPerVertLighting()
 
 void Graphics::SetAmbientScalar(float a_slr)
 {
-  amb_Scalar = a_slr;
+  if (a_slr < 0.0)
+    amb_Scalar = 0.0;
+  else if (a_slr > 2.0)
+    amb_Scalar = 2.0;
+  else
+    amb_Scalar = a_slr;
 }
 
 
 void Graphics::SetDiffuseScalar(float d_slr)
 {
-  diff_Scalar = d_slr;
+  if (d_slr < 0.0)
+    diff_Scalar = 0.0;
+  else if (d_slr > 3.0)
+    diff_Scalar = 3.0;
+  else
+    diff_Scalar = d_slr;
 }
 
 
 void Graphics::SetSpecularScalar(float s_slr)
 {
   spec_Scalar = s_slr;
+  if (s_slr < 0.0)
+    spec_Scalar = 0.0;
+  else if (s_slr > 2.0)
+    spec_Scalar = 2.0;
+  else
+    spec_Scalar = s_slr;
 }
 
 float Graphics::getAmbientScalar()
@@ -317,10 +333,11 @@ float Graphics::getSpecularScalar()
 void Graphics::SetSpotLightAngle(int angle)
 {
   if (angle < 0)
-    angle = 0;
+    spotLightAngle = 0;
   else if (angle > 90)
-    angle = 12;
-  spotLightAngle = angle;
+    spotLightAngle = 12;
+  else
+    spotLightAngle = angle;
 }
 
 int Graphics::getSpotLightAngle()

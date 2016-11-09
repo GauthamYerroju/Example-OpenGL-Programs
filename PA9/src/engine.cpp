@@ -89,8 +89,8 @@ void Engine::Keyboard()
   }
   else if (m_event.type == SDL_KEYDOWN)
   {
-    float sclStepDown = 0.80;
-    float sclStepUp = 1.25;
+    float sclStepDown = 0.1;//0.80;
+    float sclStepUp = 0.1;//1.25;
     // handle key down events here
     switch(m_event.key.keysym.sym)
     {
@@ -135,21 +135,21 @@ void Engine::Keyboard()
         break;
       case SDLK_EQUALS:
         if(selectAmbient)
-          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar()*sclStepUp);
+          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar() + sclStepUp);
         else if(selectDiffuse)
-          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepUp);
+          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar() + sclStepUp);
         else if(selectSpecular)
-          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepUp);
+          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar() + sclStepUp);
         else if (selectSpotLight)
           m_graphics->SetSpotLightAngle(m_graphics->getSpotLightAngle() + 1);
         break;
       case SDLK_MINUS:
         if(selectAmbient)
-          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar()*sclStepDown);
+          m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar() - sclStepDown);
         else if(selectDiffuse)
-          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepDown);
+          m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar() - sclStepDown);
         else if(selectSpecular)
-          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepDown);
+          m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar() - sclStepDown);
         else if (selectSpotLight)
           m_graphics->SetSpotLightAngle(m_graphics->getSpotLightAngle() - 1);
         break;
