@@ -110,7 +110,7 @@ bool Object::Model_Loader(const char *filePath)
 
     // Get vertices, uv coordinates, and normals for the current mesh
     for( unsigned int vert_indx = 0; vert_indx < mesh->mNumVertices; vert_indx++){
-      
+
       Vertex vert(glm::vec3(0.0f), glm::vec2(0.0f), glm::vec3(0.0f));
 
       // Vertex coordinates
@@ -120,8 +120,8 @@ bool Object::Model_Loader(const char *filePath)
         vert.vertex = glm::vec3(v_position.x, v_position.y, v_position.z);
       }
       else
-        printf("%s: Mesh does not have vertices/n", mesh->mName);
-      
+        printf("%s: Mesh does not have vertices/n", mesh->mName.C_Str());
+
       // Normals
       if(mesh->HasNormals())
       {
@@ -129,7 +129,7 @@ bool Object::Model_Loader(const char *filePath)
         vert.normal = glm::vec3(v_normal.x, v_normal.y, v_normal.z);
       }
       else
-        printf("%s: Mesh does not have normals/n", mesh->mName);
+        printf("%s: Mesh does not have normals/n", mesh->mName.C_Str());
 
       // uv coordinates
       if(mesh->HasTextureCoords(0)){
@@ -137,7 +137,7 @@ bool Object::Model_Loader(const char *filePath)
         vert.uv_Coords = glm::vec2( tex_uv.x, tex_uv.y );
       }
       else
-        printf("%s: Mesh does not have texture coordinates/n", mesh->mName);
+        printf("%s: Mesh does not have texture coordinates/n", mesh->mName.C_Str());
 
       tmpMesh->Vertices.push_back(vert);
     }
@@ -185,7 +185,7 @@ bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
   {
     m_pImage.read( filePath );
     m_pImage.write( &m_Blob, "RGBA" );
-    
+
     glGenTextures(1, &textureID);
 
     // Assign texture to ID

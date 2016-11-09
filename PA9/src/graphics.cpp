@@ -55,7 +55,7 @@ bool Graphics::Initialize(int width, int height, char *configFile)
     printf("Graphics: Config File failed to load\n");
     return false;
   }
-  
+
   // Set default lighting to per fragment
   bool perFragmentLighting = true;
 
@@ -99,7 +99,7 @@ bool Graphics::LoadConfig( char *configFile )
     std::string label = objectConfig["name"];
     std::string modelFile;
     //modelFile = "./models/" + modelFile;
-    
+
     if(label == "perVertexLighting")
     {
       perVert_vShaderFile = objectConfig["vertexShader"];
@@ -262,7 +262,7 @@ bool Graphics::SetShader()
 
   m_SpotLightDirection = m_shader->GetUniformLocation("SpotLightDirection");
   m_SpotCutOff = m_shader->GetUniformLocation("SpotLightCutOffAngle");
-  
+
 
   return true;
 }
@@ -359,7 +359,6 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
   // Intensity r,g,b,a
-  amb_Scalar = 0.4;
   const glm::vec4 ambient = glm::vec4(1.0*amb_Scalar, 1.0*amb_Scalar, 1.0*amb_Scalar, 1.0);
   const glm::vec4 diffuse = glm::vec4(1.0*diff_Scalar, 1.0*diff_Scalar, 1.0*diff_Scalar, 1.0);
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
@@ -367,7 +366,7 @@ void Graphics::Render()
   const glm::vec4 light_pos( 0.0f, -5.0f, 0.0f, 1.0f);
   const glm::mat4 mv = m_camera->GetView()*ball->GetModel();
   const glm::vec4 spotDIR = mv[3] - light_pos;
-  
+
    // Set material properties.
   glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
   glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(diffuse) );
@@ -376,12 +375,12 @@ void Graphics::Render()
 
   // Set the light position
   glUniform4fv( m_LightPosition, 1, glm::value_ptr(light_pos) );
-  
+
   // Set spotlight
   glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
   glUniform1f( m_SpotCutOff, 10 ); // angle in degrees
 
- 
+
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
