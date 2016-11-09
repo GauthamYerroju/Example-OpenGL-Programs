@@ -29,11 +29,13 @@ class Graphics
     void SetPerVertLighting();
 
     void SetAmbientScalar(float a_slr);
-    void SetDiffuseScalar(float d_slr); 
+    void SetDiffuseScalar(float d_slr);
     void SetSpecularScalar(float s_slr);
+    void SetSpotLightAngle(int angle);
     float getAmbientScalar();
     float getDiffuseScalar();
     float getSpecularScalar();
+    int getSpotLightAngle();
 
     void Update(unsigned int dt, SDL_Event *m_event);
     void HandleInput(SDL_Event *m_event);
@@ -58,6 +60,8 @@ class Graphics
     GLint m_Shininess;
     GLint m_SpotLightDirection;
     GLint m_SpotCutOff;
+
+    int spotLightAngle;
 
     float amb_Scalar;
     float diff_Scalar;

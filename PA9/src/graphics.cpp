@@ -74,6 +74,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   diff_Scalar = 1.0;
   spec_Scalar = 1.0;
 
+  spotLightAngle = 10;
+
   return true;
 }
 
@@ -312,6 +314,19 @@ float Graphics::getSpecularScalar()
   return spec_Scalar;
 }
 
+void Graphics::SetSpotLightAngle(int angle)
+{
+  if (angle < 0)
+    angle = 0;
+  else if (angle > 90)
+    angle = 12;
+  spotLightAngle = angle;
+}
+
+int Graphics::getSpotLightAngle()
+{
+  return spotLightAngle;
+}
 
 void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 {
@@ -378,7 +393,7 @@ void Graphics::Render()
 
   // Set spotlight
   glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
-  glUniform1f( m_SpotCutOff, 10 ); // angle in degrees
+  glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
 
 
   // Render the object

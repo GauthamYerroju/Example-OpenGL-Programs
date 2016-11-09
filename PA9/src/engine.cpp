@@ -50,6 +50,7 @@ bool Engine::Initialize(char *configFile)
   bool selectAmbient = false;
   bool selectDiffuse = false;
   bool selectSpecular = false;
+  bool selectSpotLight = false;
 
   // No errors
   return true;
@@ -112,17 +113,26 @@ void Engine::Keyboard()
         selectAmbient = true;
         selectDiffuse = false;
         selectSpecular = false;
+        selectSpotLight = false;
         break;
       case SDLK_d:
         selectAmbient = false;
         selectDiffuse = true;
         selectSpecular = false;
+        selectSpotLight = false;
         break;
       case SDLK_s:
         selectAmbient = false;
         selectDiffuse = false;
         selectSpecular = true;
-        break;       
+        selectSpotLight = false;
+        break;
+      case SDLK_c:
+        selectAmbient = false;
+        selectDiffuse = false;
+        selectSpecular = false;
+        selectSpotLight = true;
+        break;
       case SDLK_EQUALS:
         if(selectAmbient)
           m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar()*sclStepUp);
@@ -130,6 +140,8 @@ void Engine::Keyboard()
           m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepUp);
         else if(selectSpecular)
           m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepUp);
+        else if (selectSpotLight)
+          m_graphics->SetSpotLightAngle(m_graphics->getSpotLightAngle() + 1);
         break;
       case SDLK_MINUS:
         if(selectAmbient)
@@ -138,6 +150,8 @@ void Engine::Keyboard()
           m_graphics->SetDiffuseScalar(m_graphics->getDiffuseScalar()*sclStepDown);
         else if(selectSpecular)
           m_graphics->SetSpecularScalar(m_graphics->getSpecularScalar()*sclStepDown);
+        else if (selectSpotLight)
+          m_graphics->SetSpotLightAngle(m_graphics->getSpotLightAngle() - 1);
         break;
       default:
         break;
