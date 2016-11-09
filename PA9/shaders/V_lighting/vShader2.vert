@@ -29,16 +29,18 @@ void main(void)
   // Transform vertex position into eye coordinates
   vec3 pos = ((viewMatrix * modelMatrix) * vec4(v_position, 1.0)).xyz;
   
-  // Unit vector direction from pos to light source
-  vec3 L = normalize( LightPosition.xyz - pos );
-  // Unit vector direction from pos to eye
-  vec3 E = normalize( -pos );
-  // Halfway vector
-  vec3 H = normalize( L + E );
   // Transform vertex normal into eye coordinates
   vec3 N = normalize((viewMatrix * modelMatrix) *vec4(v_normal, 0.0) ).xyz;
+  // Unit vector direction from pos to eye
+  vec3 E = normalize( -pos );
+  // Unit vector direction from pos to light source
+  vec3 L = normalize( LightPosition.xyz - pos );
+  // Halfway vector
+  vec3 H = normalize( L + E );
+ 
   // Reverse the direction of the unit Spot light direction
-  vec3 S = normalize(vec3(-SpotLightDirection)); 
+  //vec3 S = normalize(vec3(-SpotLightDirection)); 
+  vec3 S = normalize(-SpotLightDirection).xyz; 
 
   float intensity = 0.0;
   vec4  specular = vec4(0.0, 0.0, 0.0, 1.0);   
