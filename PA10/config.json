@@ -1,0 +1,66 @@
+[
+    {
+        "name":             "perVertexLighting",
+        "vertexShader":     "shaders/V_lighting/vShader2.vert",
+        "fragmentShader":   "shaders/V_lighting/fShader.frag"
+
+    },
+    {
+        "name":             "perFragmentLighting",
+        "vertexShader":     "shaders/F_lighting/vShader.vert",
+        "fragmentShader":   "shaders/F_lighting/fShader2.frag"
+
+    },
+    {
+        "name":             "Board",
+        "modelFile":        "models/boardC.obj"
+    },
+    {
+        "name":             "LBoard",
+        "modelFile":        "models/leftBoardC.obj"
+    },
+    {
+        "name":             "RBoard",
+        "modelFile":        "models/rightBoardC.obj"
+    },
+    {
+        "name":             "ShootBoard",
+        "modelFile":        "models/shootBoardC.obj"
+    },
+    {
+        "name":             "Dome",
+        "modelFile":        "none"
+    },
+    {
+        "name":             "Ball",
+        "modelFile":        "models/ballC.obj"
+    },
+    {
+        "name":             "Paddle",
+        "modelFile":        "models/paddleC.obj"
+    },
+    {
+        "name":             "LeftFlipper",
+        "modelFile":        "models/l_flipper.obj"
+    },
+    {
+        "name":             "RightFlipper",
+        "modelFile":        "models/r_flipper.obj"
+    },
+    {
+        "name":             "Bumper",
+        "modelFile":        "models/bumper.obj"
+    },
+    {
+        "name":             "TopBumper",
+        "modelFile":        "models/t_bumper.obj"
+    },
+    {
+        "name":             "OuterBumper",
+        "modelFile":        "models/outer_bumper.obj"
+    }
+
+]
+
+
+
