@@ -190,6 +190,8 @@ bool Graphics::LoadConfig( char *configFile )
       paddle->GetRigidBody()->setLinearFactor(btVector3(0, 0, 1));
       paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
+      paddle->GetRigidBody()->setCollisionFlags(paddle->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+
       world.AddRigidBody(paddle->GetRigidBody());
 
     }
@@ -467,11 +469,34 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (!impulseFlag && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
     // Hit the paddle
-    ball->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -25) );
+    //ball->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -25) );
     
-    //const btTransform *worldTrans = new btTransform(btQuaternion(0.0, -1.0, 0.0, 1.0), btVector3(0, 0, 0));
-    //rFlipper->GetRigidBody()->setWorldTransform(*worldTrans);
+    btTransform transf;
 
+    //Paddle
+    float pOffSet = -0.5;
+    transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 + pOffSet) );
+    transf.setRotation(btQuaternion(0,0.0,0,1));   
+    paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+    //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    //paddle->GetRigidBody()->setWorldTransform(transf);
+
+    //Left Flipper
+    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,0.5,0,1));   
+    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    lFlipper->GetRigidBody()->setWorldTransform(transf);
+
+    //Right Flipper
+    transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,-0.5,0,1));
+    rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    rFlipper->GetRigidBody()->setWorldTransform(transf);
+    //rigidBody->getMotionState()->getWorldTransform(trans)
+    //rFlipper->GetRigidBody()->setLinearVelocity( btVector3(0,0,-2));
+    
+    
+    
     impulseFlag = true;
   }
   if (m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)

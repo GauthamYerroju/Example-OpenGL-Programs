@@ -81,6 +81,11 @@ class Graphics
     PhysicsObject                         *dome;
     PhysicsWorld                          world;
 
+    bool lFlipperMove;
+    bool rFlipperMove;
+    float lFlipperStep;
+    float rFlipperStep;
+
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
     std::string perFrag_vShaderFile;
