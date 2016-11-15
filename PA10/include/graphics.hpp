@@ -100,8 +100,12 @@ class Graphics
     float lFlipperStep;
     float rFlipperStep;
 
+
     BumperContactResultCallback *callback;
     bool bumperHit;
+
+    float launcherPower;
+
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
