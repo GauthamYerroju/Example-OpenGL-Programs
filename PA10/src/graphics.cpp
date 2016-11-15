@@ -475,7 +475,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
     //btTransform transf;
 
     //Paddle
-    float pOffSet = -0.5; 
     paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
     //paddle->GetRigidBody()->applyCentralForce( btVector3(0,0,-40));
     //paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -30) );
