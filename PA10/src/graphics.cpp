@@ -519,9 +519,9 @@ void Graphics::HandleInput(SDL_Event *m_event)
       launcherPower += 0.25;
     }
 
-    if (launcherPower > 10.0)
+    if (launcherPower > 15.0)
     {  
-      launcherPower = 10.0;
+      launcherPower = 15.0;
     }
   }
 
@@ -613,7 +613,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
       }
     }  
     transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
-    transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
+    transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     rFlipper->GetRigidBody()->setWorldTransform(transf);
   }
