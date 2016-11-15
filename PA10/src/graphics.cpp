@@ -186,7 +186,7 @@ bool Graphics::LoadConfig( char *configFile )
       // Constrain linear motion along z axis and disable angular motion
       //lFlipper->GetRigidBody()->setLinearFactor(btVector3(0, 0, 1));
       //lFlipper->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
-      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+      
       lFlipper->GetRigidBody()->setCollisionFlags(lFlipper->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
       world.AddRigidBody(lFlipper->GetRigidBody());
 
@@ -485,6 +485,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
     //Left Flipper
     lFlipperMoveUp = true;
+    lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
     
     /*
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
@@ -544,6 +545,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     {
       lFlipperMoveDown = false;
       lFlipperStep = 0.0;
+      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     }
   }
 
