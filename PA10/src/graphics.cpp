@@ -78,6 +78,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   lFlipperMoveDown = false;
   lFlipperStep = 0.0;
 
+  bumperHit = false;
+
   return true;
 }
 
@@ -461,6 +463,14 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   tBumper->Update();
   oBumper->Update();
 
+  callback = new BumperContactResultCallback(&bumperHit);
+  world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper->GetRigidBody(), *callback);
+  if(bumperHit)
+  {
+    std::cout << "HIT" << std::endl;
+    bumperHit = false;
+  }
+
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
@@ -525,6 +535,8 @@ void Graphics::HandleInput(SDL_Event *m_event)
     {
       lFlipperMoveUp = false;
       lFlipperMoveDown = true;
+      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+      paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     }
   }
   else if(lFlipperMoveDown)
@@ -547,10 +559,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     else if(lFlipperStep < 0)
     {
       lFlipperMoveDown = false;
-      lFlipperStep = 0.0;
-      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-
-      paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+      lFlipperStep = 0.0;    
     }
   }
 

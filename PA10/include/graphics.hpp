@@ -66,6 +66,24 @@ class Graphics
     float diff_Scalar;
     float spec_Scalar;
 
+    struct BumperContactResultCallback : public btCollisionWorld::ContactResultCallback
+    {
+        BumperContactResultCallback(bool* ht) : hit(ht) {}
+
+        btScalar addSingleResult(   btManifoldPoint& cp,
+                                    const btCollisionObjectWrapper* colObj0Wrap,
+                                    int partId0,
+                                    int index0,
+                                    const btCollisionObjectWrapper* colObj1Wrap,
+                                    int partId1,
+                                    int index1)
+        {
+            *hit= true;
+        }
+
+        bool* hit;
+    };
+
     PhysicsObject                         *board;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
@@ -81,6 +99,9 @@ class Graphics
     bool rFlipperMove;
     float lFlipperStep;
     float rFlipperStep;
+
+    BumperContactResultCallback *callback;
+    bool bumperHit;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
