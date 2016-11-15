@@ -154,18 +154,18 @@ bool Graphics::LoadConfig( char *configFile )
       paddle = new PhysicsObject( modelFile.c_str() );
 
       if( !paddle->Initialize(PhysicsObject::CYLINDER_SHAPE,  //CollisionShape
-                              1,  //Mass
+                              0,  //Mass
                               btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(3.03191, 0.2289447, 6.91188) ),  //WorldTranformation
-                              0.2,  //Restitution
+                              0.8,  //Restitution
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
 
       // Constrain linear motion along z axis and disable angular motion
-      //paddle->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
-      paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 1));
+      paddle->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
+      //paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 1));
 
-      //paddle->GetRigidBody()->setCollisionFlags(paddle->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+      paddle->GetRigidBody()->setCollisionFlags(paddle->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
 
       world.AddRigidBody(paddle->GetRigidBody());
 
@@ -476,10 +476,10 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
     //Paddle
     float pOffSet = -0.5; 
-    //paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+    paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
     //paddle->GetRigidBody()->applyCentralForce( btVector3(0,0,-40));
-    paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -25) );
-       
+    //paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -30) );
+     
     //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     //paddle->GetRigidBody()->setWorldTransform(transf);
 
@@ -523,6 +523,13 @@ void Graphics::HandleInput(SDL_Event *m_event)
       lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       lFlipper->GetRigidBody()->setWorldTransform(transf);
       lFlipperStep += 0.1;
+
+
+      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
+      transf.setRotation(btQuaternion(0,0,0,1));   
+      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+      paddle->GetRigidBody()->setWorldTransform(transf);
+
     }
     else if(lFlipperStep > 0.5)
     {
@@ -540,12 +547,20 @@ void Graphics::HandleInput(SDL_Event *m_event)
       lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       lFlipper->GetRigidBody()->setWorldTransform(transf);
       lFlipperStep -= 0.1; 
+
+      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
+      transf.setRotation(btQuaternion(0,0,0,1));   
+      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+      paddle->GetRigidBody()->setWorldTransform(transf);
+
     }
     else if(lFlipperStep < 0)
     {
       lFlipperMoveDown = false;
       lFlipperStep = 0.0;
       lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+
+      paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     }
   }
 
