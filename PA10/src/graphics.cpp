@@ -454,9 +454,12 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   // Handle input
   HandleInput(m_event);
 
+  if(bumperHit) 
+    bumperHit = false;
+
   // Step the physics world
   world.Update(dt);
-
+  
   // Update the physics objects
   board->Update();
   ball->Update();
@@ -469,12 +472,10 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 
   callback = new BumperContactResultCallback(&bumperHit);
   world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper->GetRigidBody(), *callback);
+  
   if(bumperHit)
-  {
     std::cout << "HIT" << std::endl;
-    bumperHit = false;
-  }
-
+  
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
@@ -625,6 +626,7 @@ void Graphics::Render()
   glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
   glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
 
+//red 255,0,0
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
@@ -645,8 +647,24 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper->GetModel()));
   bumper->Render();
 
+  //RED GLOW
+  if(bumperHit)
+  {
+    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+  }
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper->GetModel()));
   tBumper->Render();
+
+  //RED GLOW
+  if(bumperHit)
+  {
+    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+  }
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(oBumper->GetModel()));
   oBumper->Render();
