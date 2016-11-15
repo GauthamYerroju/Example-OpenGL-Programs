@@ -78,6 +78,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   lFlipperMoveDown = false;
   lFlipperStep = 0.0;
 
+  launcherPower = 0.0f;
+
   return true;
 }
 
@@ -501,6 +503,26 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   }
 
+  if (m_event->type == SDL_KEYDOWN)
+  {
+    if (m_event->key.keysym.sym == SDLK_DOWN)
+    {
+      if (launcherPower < 15.0)
+      {
+        launcherPower += 0.25;
+        if (launcherPower > 15.0)
+          launcherPower = 15.0;
+      }
+    }
+  }
+  if (m_event->type == SDL_KEYUP)
+  {
+    if (m_event->key.keysym.sym == SDLK_DOWN)
+    {
+      paddle->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -1.0 * launcherPower));
+      launcherPower = 0.0;
+    }
+  }
 
   if(lFlipperMoveUp)
   {

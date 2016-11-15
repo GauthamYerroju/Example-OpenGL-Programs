@@ -82,6 +82,8 @@ class Graphics
     float lFlipperStep;
     float rFlipperStep;
 
+    float launcherPower;
+
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
     std::string perFrag_vShaderFile;
