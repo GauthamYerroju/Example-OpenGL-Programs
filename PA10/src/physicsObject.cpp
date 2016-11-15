@@ -25,7 +25,7 @@ PhysicsObject::~PhysicsObject()
 
 }
 
-bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaternion rotation, btVector3 translation )
+bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btTransform worldTrans, float restitution, float friction )
 {
 	switch(shape)
 	{
@@ -46,6 +46,14 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
 			collisionShape = new btStaticPlaneShape( btVector3(0, -1, 0), 0.5 );
 			break;
+		case CYLINDER_SHAPE:
+			//btVector3(radius, height, radius)
+			//0.2308337m radius on x
+			//0.3063307m radius on y
+			//0.2308337m radius on z
+			//collisionShape = new btCylinderShapeZ( btVector3(0.2308337, 0.2308337, 0.3063307) );
+			collisionShape = new btCylinderShapeZ( btVector3(0.230, 0.230, 0.306) );
+			break;
 		default:
 			printf("collisionShape failed to init\n");
 			return false;
@@ -54,7 +62,7 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 
 	// btTransform: rigid transforms with only translation and rotation
 	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
-	motionState = new btDefaultMotionState( btTransform(rotation, translation) );
+	motionState = new btDefaultMotionState( worldTrans );
 	if( !motionState){
 		printf("motionState failed to init\n");
 		return false;
@@ -67,8 +75,10 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btQuaterni
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
 	// Ratio of relative speed after to the realtive speed bofore the collision
-	constructionInfo.m_restitution = 0.8f;
-	constructionInfo.m_friction = 1.5f;
+	constructionInfo.m_restitution = restitution;
+	constructionInfo.m_friction = friction;
+	//constructionInfo.m_restitution = 0.8f;
+	//constructionInfo.m_friction = 1.5f;
 
 	rigidBody = new btRigidBody( constructionInfo );
 	if( !rigidBody ){

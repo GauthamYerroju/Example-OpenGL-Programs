@@ -13,23 +13,7 @@
     },
     {
         "name":             "Board",
-        "modelFile":        "models/boardC.obj"
-    },
-    {
-        "name":             "LBoard",
-        "modelFile":        "models/leftBoardC.obj"
-    },
-    {
-        "name":             "RBoard",
-        "modelFile":        "models/rightBoardC.obj"
-    },
-    {
-        "name":             "ShootBoard",
-        "modelFile":        "models/shootBoardC.obj"
-    },
-    {
-        "name":             "Dome",
-        "modelFile":        "none"
+        "modelFile":        "models/board.obj"
     },
     {
         "name":             "Ball",

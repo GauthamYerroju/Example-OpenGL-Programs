@@ -68,9 +68,6 @@ class Graphics
     float spec_Scalar;
 
     PhysicsObject                         *board;
-    PhysicsObject                         *Lboard;
-    PhysicsObject                         *Rboard;
-    PhysicsObject                         *Shootboard;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *lFlipper;
@@ -78,10 +75,10 @@ class Graphics
     PhysicsObject                         *bumper;
     PhysicsObject                         *tBumper;
     PhysicsObject                         *oBumper;
-    PhysicsObject                         *dome;
     PhysicsWorld                          world;
 
-    bool lFlipperMove;
+    bool lFlipperMoveUp;
+    bool lFlipperMoveDown;
     bool rFlipperMove;
     float lFlipperStep;
     float rFlipperStep;
