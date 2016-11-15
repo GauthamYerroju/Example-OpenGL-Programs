@@ -47,8 +47,6 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   // Create Physics World
   world.Initialize();
 
-  impulseFlag = false;
-
   // cnfg
   if(!LoadConfig( configFile ))
   {
@@ -120,7 +118,7 @@ bool Graphics::LoadConfig( char *configFile )
     {
       modelFile = objectConfig["modelFile"];
       board = new PhysicsObject( modelFile.c_str() );
-      
+
       if( !board->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
                               0,  //Mass
                               btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, -2.58196) ),  //WorldTranformation
@@ -186,7 +184,7 @@ bool Graphics::LoadConfig( char *configFile )
       // Constrain linear motion along z axis and disable angular motion
       //lFlipper->GetRigidBody()->setLinearFactor(btVector3(0, 0, 1));
       //lFlipper->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
-      
+
       lFlipper->GetRigidBody()->setCollisionFlags(lFlipper->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
       world.AddRigidBody(lFlipper->GetRigidBody());
 
@@ -467,28 +465,28 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 
 void Graphics::HandleInput(SDL_Event *m_event)
 {
-  if (!impulseFlag && m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
+  if (m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
     // Hit the paddle
     //ball->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -25) );
-    
+
     //btTransform transf;
 
     //Paddle
     paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
     //paddle->GetRigidBody()->applyCentralForce( btVector3(0,0,-40));
     //paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -30) );
-     
+
     //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     //paddle->GetRigidBody()->setWorldTransform(transf);
 
     //Left Flipper
     lFlipperMoveUp = true;
     lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
-    
+
     /*
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-    transf.setRotation(btQuaternion(0,0.5,0,1));   
+    transf.setRotation(btQuaternion(0,0.5,0,1));
     lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     lFlipper->GetRigidBody()->setWorldTransform(transf);
 
@@ -500,32 +498,25 @@ void Graphics::HandleInput(SDL_Event *m_event)
     //rigidBody->getMotionState()->getWorldTransform(trans)
     //rFlipper->GetRigidBody()->setLinearVelocity( btVector3(0,0,-2));
     */
-    
-    
-    impulseFlag = true;
-  }
-  if (m_event->type == SDL_MOUSEBUTTONUP && m_event->button.button == SDL_BUTTON_LEFT)
-  {
-    // Reset the impulse flag
-    impulseFlag = false;
+
   }
 
 
   if(lFlipperMoveUp)
   {
-  
+
     if(lFlipperStep <= 0.5)
     {
       btTransform transf;
       transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));   
+      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
       lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       lFlipper->GetRigidBody()->setWorldTransform(transf);
       lFlipperStep += 0.1;
 
 
       transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));   
+      transf.setRotation(btQuaternion(0,0,0,1));
       paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       paddle->GetRigidBody()->setWorldTransform(transf);
 
@@ -533,7 +524,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     else if(lFlipperStep > 0.5)
     {
       lFlipperMoveUp = false;
-      lFlipperMoveDown = true;     
+      lFlipperMoveDown = true;
     }
   }
   else if(lFlipperMoveDown)
@@ -542,13 +533,13 @@ void Graphics::HandleInput(SDL_Event *m_event)
     {
       btTransform transf;
       transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));   
+      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
       lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       lFlipper->GetRigidBody()->setWorldTransform(transf);
-      lFlipperStep -= 0.1; 
+      lFlipperStep -= 0.1;
 
       transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));   
+      transf.setRotation(btQuaternion(0,0,0,1));
       paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
       paddle->GetRigidBody()->setWorldTransform(transf);
 

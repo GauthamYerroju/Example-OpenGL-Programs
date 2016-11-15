@@ -43,7 +43,6 @@ class Graphics
 
   private:
     std::string ErrorString(GLenum error);
-    bool impulseFlag;
     bool perFragmentLighting;
 
     Camera *m_camera;
