@@ -496,7 +496,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
     //paddle->GetRigidBody()->setWorldTransform(transf);
 
     //Left Flipper
-    lFlipperMoveUp = true;
     lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
 
     /*
@@ -516,18 +515,19 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   }
 
-  if (m_event->type == SDL_KEYDOWN)
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_DOWN)
   {
-    if (m_event->key.keysym.sym == SDLK_DOWN)
+    if (launcherPower < 15.0)
     {
-      if (launcherPower < 15.0)
-      {
-        launcherPower += 0.25;
-        if (launcherPower > 15.0)
-          launcherPower = 15.0;
-      }
+      launcherPower += 0.25;
+    }
+
+    if (launcherPower > 15.0)
+    {  
+      launcherPower = 15.0;
     }
   }
+
   if (m_event->type == SDL_KEYUP)
   {
     if (m_event->key.keysym.sym == SDLK_DOWN)
@@ -537,55 +537,33 @@ void Graphics::HandleInput(SDL_Event *m_event)
     }
   }
 
-  if(lFlipperMoveUp)
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_LEFT)
   {
+    btTransform transf;
 
-    if(lFlipperStep <= 0.5)
+    //Left Flipper
+    if (lFlipperStep < 0.5)
     {
-      btTransform transf;
-      transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
-      lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      lFlipper->GetRigidBody()->setWorldTransform(transf);
-      lFlipperStep += 0.1;
-
-
-      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));
-      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      paddle->GetRigidBody()->setWorldTransform(transf);
-
+      lFlipperStep += 0.05;
     }
-    else if(lFlipperStep > 0.5)
-    {
-      lFlipperMoveUp = false;
-      lFlipperMoveDown = true;
-      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-      paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-    }
+    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
+    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-  else if(lFlipperMoveDown)
+
+  if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_LEFT)
   {
-    if(lFlipperStep >= 0)
-    {
-      btTransform transf;
-      transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
-      lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      lFlipper->GetRigidBody()->setWorldTransform(transf);
-      lFlipperStep -= 0.1;
+    btTransform transf;
 
-      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));
-      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      paddle->GetRigidBody()->setWorldTransform(transf);
-
-    }
-    else if(lFlipperStep < 0)
+    if (lFlipperStep > 0.0)
     {
-      lFlipperMoveDown = false;
-      lFlipperStep = 0.0;    
-    }
+      lFlipperStep -= 0.05;
+    }  
+    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
+    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
 
 
