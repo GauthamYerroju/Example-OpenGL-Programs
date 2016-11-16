@@ -59,6 +59,8 @@ The following keyboard commands are used to interact with the program:
 |Down|Activate plunger (hold for more power)|
 |Left|Left flipper|
 |Right|Right flipper|
+|__Camera__|
+|F10|Zoom in/zoom out|
 
 
 ## Mouse Events

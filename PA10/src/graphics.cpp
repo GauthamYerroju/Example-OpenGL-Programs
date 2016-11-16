@@ -141,6 +141,11 @@ bool Graphics::LoadConfig( char *configFile )
 
       world.AddRigidBody(board->GetRigidBody());
     }
+    else if(label == "Backplate")
+    {
+      modelFile = objectConfig["modelFile"];
+      backplate = new PhysicsObject( modelFile.c_str() );
+    }
     else if(label == "Ball")
     {
       modelFile = objectConfig["modelFile"];
@@ -830,6 +835,9 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
 
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backplate->GetModel()));
+  backplate->Render();
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
 
@@ -861,8 +869,8 @@ void Graphics::Render()
   oBumper3->Render();
 
 
-  //RED GLOW
-  if(bumperHit1 || bumperHit2 || bumperHit3)
+  //RED GLOW Bumper 1
+  if(bumperHit1)
   {
     glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
     glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
@@ -872,8 +880,32 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
   tBumper1->Render();
 
+  glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
+  glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(diffuse) );
+  glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(specular) );
+
+  // RED GLOW Bumper 2
+  if(bumperHit2)
+  {
+    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+  }
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper2->GetModel()));
   tBumper2->Render();
+
+  glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
+  glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(diffuse) );
+  glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(specular) );
+
+  // RED GLOW Bumper 3
+  if(bumperHit3)
+  {
+    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+  }
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper3->GetModel()));
   tBumper3->Render();

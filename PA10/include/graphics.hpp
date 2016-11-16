@@ -88,6 +88,7 @@ class Graphics
     void resetBall();
 
     PhysicsObject                         *board;
+    PhysicsObject                         *backplate;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *lFlipper;

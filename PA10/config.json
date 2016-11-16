@@ -16,6 +16,10 @@
         "modelFile":        "models/board.obj"
     },
     {
+        "name":             "Backplate",
+        "modelFile":        "models/backplate.obj"
+    },
+    {
         "name":             "Ball",
         "modelFile":        "models/ballC.obj"
     },
