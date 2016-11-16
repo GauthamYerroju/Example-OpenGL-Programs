@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#define clear() printf("\033[H\033[J")
 
 Graphics::Graphics()
 {
@@ -84,7 +85,7 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   bumperHit3 = false;
 
   launcherPower = 0.0f;
-
+  score = 0;
 
   return true;
 }
@@ -588,13 +589,12 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   callback3 = new BumperContactResultCallback(&bumperHit3);
   world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
-  if(bumperHit1)
-    std::cout << "HIT1" << std::endl;
-  if(bumperHit2)
-    std::cout << "HIT2" << std::endl;
-  if(bumperHit3)
-    std::cout << "HIT3" << std::endl;
-
+  if(bumperHit1 || bumperHit2 || bumperHit3)
+  {
+    clear();
+    score += 10;
+    printf("Score: %i\n", score);    
+  }
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
@@ -830,6 +830,7 @@ void Graphics::Render()
     {
       //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
       //tBumper1->Render();
+
     }
 
     if(bumperHit2)

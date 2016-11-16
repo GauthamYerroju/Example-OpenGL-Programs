@@ -116,6 +116,7 @@ class Graphics
     bool bumperHit3;
 
     float launcherPower;
+    int score;
 
 
     std::string perVert_vShaderFile;
