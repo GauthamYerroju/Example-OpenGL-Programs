@@ -593,34 +593,23 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 
   if(bumperHit1 || bumperHit2 || bumperHit3)
   {
-    clear();
     score += 10;
-    printf("Score: %i\n", score);
+    printToConsole();
   }
 
   if (ball->GetRigidBody()->getCenterOfMassPosition().getX() < 3.0
     && ball->GetRigidBody()->getCenterOfMassPosition().getZ() > 6.5)
   {
     lives -= 1;
-    std::cout << "Life lost. Remaining: " << lives;
 
     if (lives <= 0) {
-      std::cout << "Game over!";
       lives = 0;
     }
     else
     {
-      btTransform transform;
-      btVector3 zeroVector(0,0,0);
-
-      ball->GetRigidBody()->clearForces();
-      ball->GetRigidBody()->setLinearVelocity(zeroVector);
-      ball->GetRigidBody()->setAngularVelocity(zeroVector);
-
-      transform = ball->GetRigidBody()->getCenterOfMassTransform();
-      transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
-      ball->GetRigidBody()->setCenterOfMassTransform(transform);
+      resetBall();
     }
+    printToConsole();
   }
 }
 
@@ -659,18 +648,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_UP)
   {
-    std::cout << "RESET\n";
-
-    btTransform transform;
-    btVector3 zeroVector(0,0,0);
-
-    ball->GetRigidBody()->clearForces();
-    ball->GetRigidBody()->setLinearVelocity(zeroVector);
-    ball->GetRigidBody()->setAngularVelocity(zeroVector);
-
-    transform = ball->GetRigidBody()->getCenterOfMassTransform();
-    transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
-    ball->GetRigidBody()->setCenterOfMassTransform(transform);
+    resetBall();
   }
 
   if (m_event->type == SDL_KEYUP)
@@ -774,6 +752,29 @@ void Graphics::HandleInput(SDL_Event *m_event)
   }
 
 
+}
+
+void Graphics::printToConsole()
+{
+  clear();
+  printf("Score: %i\n", score);
+  printf("Lives: %i\n", lives);
+  if (lives <= 0)
+    printf("Game over!\n");
+}
+
+void Graphics::resetBall()
+{
+  btTransform transform;
+  btVector3 zeroVector(0,0,0);
+
+  ball->GetRigidBody()->clearForces();
+  ball->GetRigidBody()->setLinearVelocity(zeroVector);
+  ball->GetRigidBody()->setAngularVelocity(zeroVector);
+
+  transform = ball->GetRigidBody()->getCenterOfMassTransform();
+  transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
+  ball->GetRigidBody()->setCenterOfMassTransform(transform);
 }
 
 void Graphics::Render()

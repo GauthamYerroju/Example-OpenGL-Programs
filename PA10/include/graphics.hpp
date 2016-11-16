@@ -84,6 +84,9 @@ class Graphics
         bool* hit;
     };
 
+    void printToConsole();
+    void resetBall();
+
     PhysicsObject                         *board;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
