@@ -83,6 +83,7 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   bumperHit1 = false;
   bumperHit2 = false;
   bumperHit3 = false;
+  zoom = false;
 
   launcherPower = 0.0f;
   score = 0;
@@ -617,6 +618,17 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   }
 
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_F10)
+  {
+    if(zoom)
+    {
+      zoom = false;
+    }
+    else
+    {
+      zoom = true;
+    }
+  }
   if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_DOWN)
   {
     if (launcherPower < 15.0)
@@ -760,7 +772,7 @@ void Graphics::Render()
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView(zoom)));
 
   // Intensity r,g,b,a
   const glm::vec4 ambient = glm::vec4(0.4*amb_Scalar, 0.4*amb_Scalar, 0.4*amb_Scalar, 1.0);
@@ -768,7 +780,7 @@ void Graphics::Render()
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
 
   const glm::vec4 light_pos( 0.0f, -5.0f, 0.0f, 1.0f);
-  const glm::mat4 mv = m_camera->GetView()*ball->GetModel();
+  const glm::mat4 mv = m_camera->GetView(zoom)*ball->GetModel();
   const glm::vec4 spotDIR = mv[3] - light_pos;
 
    // Set material properties.

@@ -114,6 +114,7 @@ class Graphics
     bool bumperHit1;
     bool bumperHit2;
     bool bumperHit3;
+    bool zoom;
 
     float launcherPower;
     int score;

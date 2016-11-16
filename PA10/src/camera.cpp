@@ -14,7 +14,7 @@ bool Camera::Initialize(int w, int h)
 {
   width = w;
   height = h;
-  position = glm::vec3(0.0, 15.0/1.5, 16/1.5);
+  position = glm::vec3(0.0, 25.0/1.5, 16/1.5);
   //--Init the view and projection matrices
   view = glm::lookAt( position, //Eye Position
                       glm::vec3(0.0, 0.0, 0.0), //Focus point
@@ -32,13 +32,28 @@ glm::mat4 Camera::GetProjection()
   return projection;
 }
 
-glm::mat4 Camera::GetView()
+glm::mat4 Camera::GetView(bool zoom)
 {
+  if (zoom)
+  {
+    position = glm::vec3(0.0, 25.0/1.5, 16/1.5);
+  }
+
+  else
+  {
+    position = glm::vec3(0.0, 15.0/1.5, 16/1.5);
+  }
+
+  view = glm::lookAt( position, //Eye Position
+                      glm::vec3(0.0, 0.0, 0.0), //Focus point
+                      glm::vec3(0.0, 0.0, -1.0)); //Positive Y is up
+
   return view;
 }
 
 glm::vec3 Camera::GetPosition()
 {
+
   return position;
 }
 
