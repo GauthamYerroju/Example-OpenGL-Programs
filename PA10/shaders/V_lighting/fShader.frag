@@ -10,6 +10,5 @@ uniform sampler2D gSampler;
 void main(void)
 {
 	frag_color = color * texture2D(gSampler, texCoord.st);
-	frag_color.a = 1.0;
              
 }

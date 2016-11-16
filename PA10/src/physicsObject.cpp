@@ -30,9 +30,11 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btTransfor
 	switch(shape)
 	{
 		case TRIANGLE_MESH:
+			//
 			collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
 			break;
 		case SPHERE_SHAPE:
+			// Sphere with radius 0.5
 			collisionShape = new btSphereShape(0.220);
 			break;
 		case BOX_SHAPE:
@@ -45,7 +47,12 @@ bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btTransfor
 			collisionShape = new btStaticPlaneShape( btVector3(0, -1, 0), 0.5 );
 			break;
 		case CYLINDER_SHAPE:
-			collisionShape = new btCylinderShapeZ( btVector3(0.2308337, 0.2308337, 0.3063307 ) );
+			//btVector3(radius, height, radius)
+			//0.2308337m radius on x
+			//0.3063307m radius on y
+			//0.2308337m radius on z
+			//collisionShape = new btCylinderShapeZ( btVector3(0.2308337, 0.2308337, 0.3063307) );
+			collisionShape = new btCylinderShapeZ( btVector3(0.230, 0.230, 0.306) );
 			break;
 		default:
 			printf("collisionShape failed to init\n");

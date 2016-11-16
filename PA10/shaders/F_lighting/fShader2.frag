@@ -35,7 +35,7 @@ void main(void)
   	float intensity = 0.0;
   	vec4  specular = vec4(0.0, 0.0, 0.0, 1.0);  
 
-    // inside the cone?
+	// inside the cone?
   	if (dot(S,L) > cos(radians(SpotLightCutOffAngle))) 
   	{
     	// if 90 degrees: 0 intensity
@@ -51,7 +51,7 @@ void main(void)
 
     	}
   	}
-   
+	  
 	// Compute terms in the illumination equation
   	float Kd = max( dot(L, N), 0.0 );
  	vec4  diffuse = Kd * DiffuseProduct;

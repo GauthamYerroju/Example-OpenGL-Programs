@@ -16,6 +16,10 @@
         "modelFile":        "models/board.obj"
     },
     {
+        "name":             "Backplate",
+        "modelFile":        "models/backplate.obj"
+    },
+    {
         "name":             "Ball",
         "modelFile":        "models/ballC.obj"
     },
@@ -32,18 +36,41 @@
         "modelFile":        "models/r_flipper.obj"
     },
     {
-        "name":             "Bumper",
+        "name":             "Bumper1",
         "modelFile":        "models/bumper.obj"
     },
     {
-        "name":             "TopBumper",
+        "name":             "TopBumper1",
         "modelFile":        "models/t_bumper.obj"
     },
     {
-        "name":             "OuterBumper",
+        "name":             "OuterBumper1",
+        "modelFile":        "models/outer_bumper.obj"
+    },
+    {
+        "name":             "Bumper2",
+        "modelFile":        "models/bumper.obj"
+    },
+    {
+        "name":             "TopBumper2",
+        "modelFile":        "models/t_bumper.obj"
+    },
+    {
+        "name":             "OuterBumper2",
+        "modelFile":        "models/outer_bumper.obj"
+    },
+    {
+        "name":             "Bumper3",
+        "modelFile":        "models/bumper.obj"
+    },
+    {
+        "name":             "TopBumper3",
+        "modelFile":        "models/t_bumper.obj"
+    },
+    {
+        "name":             "OuterBumper3",
         "modelFile":        "models/outer_bumper.obj"
     }
-
 ]
 
 

@@ -84,14 +84,24 @@ class Graphics
         bool* hit;
     };
 
+    void printToConsole();
+    void resetBall();
+
     PhysicsObject                         *board;
+    PhysicsObject                         *backplate;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *lFlipper;
     PhysicsObject                         *rFlipper;
-    PhysicsObject                         *bumper;
-    PhysicsObject                         *tBumper;
-    PhysicsObject                         *oBumper;
+    PhysicsObject                         *bumper1;
+    PhysicsObject                         *tBumper1;
+    PhysicsObject                         *oBumper1;
+    PhysicsObject                         *bumper2;
+    PhysicsObject                         *tBumper2;
+    PhysicsObject                         *oBumper2;
+    PhysicsObject                         *bumper3;
+    PhysicsObject                         *tBumper3;
+    PhysicsObject                         *oBumper3;
     PhysicsWorld                          world;
 
     bool lFlipperMoveUp;
@@ -101,11 +111,19 @@ class Graphics
     float rFlipperStep;
 
 
-    BumperContactResultCallback *callback;
-    bool bumperHit;
+    BumperContactResultCallback *callback1;
+    BumperContactResultCallback *callback2;
+    BumperContactResultCallback *callback3;
+
+    bool bumperHit1;
+    bool bumperHit2;
+    bool bumperHit3;
+    bool zoom;
 
     float launcherPower;
+    int score;
 
+    int lives;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
