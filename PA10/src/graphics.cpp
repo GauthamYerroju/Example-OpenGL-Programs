@@ -720,6 +720,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     }
 */
     lFlipperStep = 0.0;
+    lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
     lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
@@ -765,6 +766,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     }
 */
     rFlipperStep = 0.0;
+    rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
@@ -852,25 +854,6 @@ void Graphics::Render()
     glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
     glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
     glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
-
-    if(bumperHit1)
-    {
-      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
-      //tBumper1->Render();
-
-    }
-
-    if(bumperHit2)
-    {
-      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper2->GetModel()));
-      //tBumper2->Render();
-    }
-
-    if(bumperHit3)
-    {
-      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper3->GetModel()));
-      //tBumper3->Render();
-    }
   }
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
