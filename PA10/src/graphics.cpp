@@ -495,10 +495,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
     //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     //paddle->GetRigidBody()->setWorldTransform(transf);
 
-    //Left Flipper
-    lFlipperMoveUp = true;
-    lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
-
     /*
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,0.5,0,1));
@@ -516,37 +512,35 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   }
 
-  btTransform transform;
-  btVector3 zeroVector(0,0,0);
-
-  if (m_event->type == SDL_KEYDOWN)
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_DOWN)
   {
-    switch(m_event->key.keysym.sym)
+    if (launcherPower < 15.0)
     {
-      case SDLK_DOWN:
-        if (launcherPower < 15.0)
-        {
-          launcherPower += 0.25;
-          if (launcherPower > 15.0)
-            launcherPower = 15.0;
-        }
-        break;
-      case SDLK_UP:
-        std::cout << "RESET\n";
+      launcherPower += 0.25;
+    }
 
-
-        ball->GetRigidBody()->clearForces();
-        ball->GetRigidBody()->setLinearVelocity(zeroVector);
-        ball->GetRigidBody()->setAngularVelocity(zeroVector);
-
-        transform = ball->GetRigidBody()->getCenterOfMassTransform();
-        transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
-        ball->GetRigidBody()->setCenterOfMassTransform(transform);
-        break;
-      default:
-        break;
+    if (launcherPower > 15.0)
+    {
+      launcherPower = 15.0;
     }
   }
+
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_UP)
+  {
+    std::cout << "RESET\n";
+
+    btTransform transform;
+    btVector3 zeroVector(0,0,0);
+
+    ball->GetRigidBody()->clearForces();
+    ball->GetRigidBody()->setLinearVelocity(zeroVector);
+    ball->GetRigidBody()->setAngularVelocity(zeroVector);
+
+    transform = ball->GetRigidBody()->getCenterOfMassTransform();
+    transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
+    ball->GetRigidBody()->setCenterOfMassTransform(transform);
+  }
+
   if (m_event->type == SDL_KEYUP)
   {
     if (m_event->key.keysym.sym == SDLK_DOWN)
@@ -556,55 +550,88 @@ void Graphics::HandleInput(SDL_Event *m_event)
     }
   }
 
-  if(lFlipperMoveUp)
+  //Left Flipper
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_LEFT)
   {
+    btTransform transf;
 
-    if(lFlipperStep <= 0.5)
+    if (lFlipperStep < 0.5)
     {
-      btTransform transf;
-      transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
-      lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      lFlipper->GetRigidBody()->setWorldTransform(transf);
-      lFlipperStep += 0.1;
-
-
-      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));
-      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      paddle->GetRigidBody()->setWorldTransform(transf);
-
+      lFlipperStep += 0.05;
+      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
     }
-    else if(lFlipperStep > 0.5)
+
+    else
     {
-      lFlipperMoveUp = false;
-      lFlipperMoveDown = true;
       lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-      paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     }
+
+    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
+    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-  else if(lFlipperMoveDown)
+
+  if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_LEFT)
   {
-    if(lFlipperStep >= 0)
-    {
-      btTransform transf;
-      transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-      transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
-      lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      lFlipper->GetRigidBody()->setWorldTransform(transf);
-      lFlipperStep -= 0.1;
+    btTransform transf;
 
-      transf.setOrigin( btVector3(3.03191, 0.2289447, 6.91188 - lFlipperStep) );
-      transf.setRotation(btQuaternion(0,0,0,1));
-      paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-      paddle->GetRigidBody()->setWorldTransform(transf);
-
-    }
-    else if(lFlipperStep < 0)
+    if (lFlipperStep > 0.0)
     {
-      lFlipperMoveDown = false;
-      lFlipperStep = 0.0;
+      lFlipperStep -= 0.05;
+      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+
+      if (lFlipperStep < 0.0)
+      {
+        lFlipperStep = 0.0;
+      }
     }
+    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
+    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    lFlipper->GetRigidBody()->setWorldTransform(transf);
+  }
+
+  //Right Flipper
+  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_RIGHT)
+  {
+    btTransform transf;
+
+    if (rFlipperStep > -0.5)
+    {
+      rFlipperStep -= 0.05;
+      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+    }
+
+    else
+    {
+      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+    }
+
+    transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
+    rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    rFlipper->GetRigidBody()->setWorldTransform(transf);
+  }
+
+  if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_RIGHT)
+  {
+    btTransform transf;
+
+    if (rFlipperStep < 0.0)
+    {
+      rFlipperStep += 0.05;
+      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
+
+      if (rFlipperStep < 0.0)
+      {
+        rFlipperStep = 0.0;
+      }
+    }
+    transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
+    transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
+    rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
+    rFlipper->GetRigidBody()->setWorldTransform(transf);
   }
 
 
