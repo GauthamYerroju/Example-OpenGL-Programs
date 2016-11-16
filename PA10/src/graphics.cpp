@@ -79,7 +79,9 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   lFlipperStep = 0.0;
 
 
-  bumperHit = false;
+  bumperHit1 = false;
+  bumperHit2 = false;
+  bumperHit3 = false;
 
   launcherPower = 0.0f;
 
@@ -223,50 +225,140 @@ bool Graphics::LoadConfig( char *configFile )
       // world.GetWorld()->addConstraint(hinge, false);
 
     }
-    else if(label == "Bumper")
+    else if(label == "Bumper1")
     {
       modelFile = objectConfig["modelFile"];
-      bumper = new PhysicsObject( modelFile.c_str() );
+      bumper1 = new PhysicsObject( modelFile.c_str() );
 
-      if( !bumper->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+      if( !bumper1->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
                               0,  //Mass
-                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.5004097, -2.52873) ),  //WorldTranformation
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.5004097, -3.52873) ),  //WorldTranformation
                               0.8,  //Restitution
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      world.AddRigidBody(bumper->GetRigidBody());
+      world.AddRigidBody(bumper1->GetRigidBody());
     }
-    else if(label == "TopBumper")
+    else if(label == "TopBumper1")
     {
       modelFile = objectConfig["modelFile"];
-      tBumper = new PhysicsObject( modelFile.c_str() );
+      tBumper1 = new PhysicsObject( modelFile.c_str() );
 
-      if( !tBumper->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+      if( !tBumper1->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
                               0,  //Mass
-                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.3634913, -2.52873) ),  //WorldTranformation
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.3634913, -3.52873) ),  //WorldTranformation
                               0.8,  //Restitution
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      world.AddRigidBody(tBumper->GetRigidBody());
+      world.AddRigidBody(tBumper1->GetRigidBody());
     }
-    else if(label == "OuterBumper")
+    else if(label == "OuterBumper1")
     {
       modelFile = objectConfig["modelFile"];
-      oBumper = new PhysicsObject( modelFile.c_str() );
+      oBumper1 = new PhysicsObject( modelFile.c_str() );
 
-      if( !oBumper->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+      if( !oBumper1->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
                               0,  //Mass
-                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.2642085, -2.52873) ),  //WorldTranformation
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 0.2642085, -3.52873) ),  //WorldTranformation
                               0.8,  //Restitution
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      world.AddRigidBody(oBumper->GetRigidBody());
+      world.AddRigidBody(oBumper1->GetRigidBody());
+    }
+    else if(label == "Bumper2")
+    {
+      modelFile = objectConfig["modelFile"];
+      bumper2 = new PhysicsObject( modelFile.c_str() );
+
+      if( !bumper2->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(-1.4, 0.5004097, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(bumper2->GetRigidBody());
+    }
+    else if(label == "TopBumper2")
+    {
+      modelFile = objectConfig["modelFile"];
+      tBumper2 = new PhysicsObject( modelFile.c_str() );
+
+      if( !tBumper2->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(-1.4, 0.3634913, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(tBumper2->GetRigidBody());
+    }
+    else if(label == "OuterBumper2")
+    {
+      modelFile = objectConfig["modelFile"];
+      oBumper2 = new PhysicsObject( modelFile.c_str() );
+
+      if( !oBumper2->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(-1.4, 0.2642085, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(oBumper2->GetRigidBody());
+    }
+    else if(label == "Bumper3")
+    {
+      modelFile = objectConfig["modelFile"];
+      bumper3 = new PhysicsObject( modelFile.c_str() );
+
+      if( !bumper3->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(1.4, 0.5004097, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(bumper3->GetRigidBody());
+    }
+    else if(label == "TopBumper3")
+    {
+      modelFile = objectConfig["modelFile"];
+      tBumper3 = new PhysicsObject( modelFile.c_str() );
+
+      if( !tBumper3->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(1.4, 0.3634913, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(tBumper3->GetRigidBody());
+    }
+    else if(label == "OuterBumper3")
+    {
+      modelFile = objectConfig["modelFile"];
+      oBumper3 = new PhysicsObject( modelFile.c_str() );
+
+      if( !oBumper3->Initialize(PhysicsObject::TRIANGLE_MESH,  //CollisionShape
+                              0,  //Mass
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(1.4, 0.2642085, -1.82873) ),  //WorldTranformation
+                              0.8,  //Restitution
+                              1.5   //Friction
+                              ))
+        printf("PhysicsObject failed to initialize\n");
+
+      world.AddRigidBody(oBumper3->GetRigidBody());
     }
     else
     {
@@ -454,8 +546,20 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   // Handle input
   HandleInput(m_event);
 
-  if(bumperHit)
-    bumperHit = false;
+  if(bumperHit1)
+  {
+    bumperHit1 = false;
+  }
+
+  if(bumperHit2)
+  {
+    bumperHit2 = false;
+  }
+
+  if(bumperHit3)
+  {
+    bumperHit3 = false;
+  }
 
   // Step the physics world
   world.Update(dt);
@@ -466,15 +570,30 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   paddle->Update();
   lFlipper->Update();
   rFlipper->Update();
-  bumper->Update();
-  tBumper->Update();
-  oBumper->Update();
+  bumper1->Update();
+  tBumper1->Update();
+  oBumper1->Update();
+  bumper2->Update();
+  tBumper2->Update();
+  oBumper2->Update();
+  bumper3->Update();
+  tBumper3->Update();
+  oBumper3->Update();
 
-  callback = new BumperContactResultCallback(&bumperHit);
-  world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper->GetRigidBody(), *callback);
 
-  if(bumperHit)
-    std::cout << "HIT" << std::endl;
+  callback1 = new BumperContactResultCallback(&bumperHit1);
+  world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper1->GetRigidBody(), *callback1);
+  callback2 = new BumperContactResultCallback(&bumperHit2);
+  world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
+  callback3 = new BumperContactResultCallback(&bumperHit3);
+  world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
+
+  if(bumperHit1)
+    std::cout << "HIT1" << std::endl;
+  if(bumperHit2)
+    std::cout << "HIT2" << std::endl;
+  if(bumperHit3)
+    std::cout << "HIT3" << std::endl;
 
 }
 
@@ -495,20 +614,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
     //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     //paddle->GetRigidBody()->setWorldTransform(transf);
 
-    /*
-    transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
-    transf.setRotation(btQuaternion(0,0.5,0,1));
-    lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-    lFlipper->GetRigidBody()->setWorldTransform(transf);
-
-    //Right Flipper
-    transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
-    transf.setRotation(btQuaternion(0,-0.5,0,1));
-    rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-    rFlipper->GetRigidBody()->setWorldTransform(transf);
-    //rigidBody->getMotionState()->getWorldTransform(trans)
-    //rFlipper->GetRigidBody()->setLinearVelocity( btVector3(0,0,-2));
-    */
 
   }
 
@@ -558,7 +663,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     if (lFlipperStep < 0.5)
     {
       lFlipperStep += 0.05;
-      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-15));
     }
 
     else
@@ -575,7 +680,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_LEFT)
   {
     btTransform transf;
-
+/*
     if (lFlipperStep > 0.0)
     {
       lFlipperStep -= 0.05;
@@ -586,6 +691,8 @@ void Graphics::HandleInput(SDL_Event *m_event)
         lFlipperStep = 0.0;
       }
     }
+*/
+    lFlipperStep = 0.0;
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
     lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
@@ -618,6 +725,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
   {
     btTransform transf;
 
+/*
     if (rFlipperStep < 0.0)
     {
       rFlipperStep += 0.05;
@@ -628,6 +736,8 @@ void Graphics::HandleInput(SDL_Event *m_event)
         rFlipperStep = 0.0;
       }
     }
+*/
+    rFlipperStep = 0.0;
     transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
@@ -651,7 +761,7 @@ void Graphics::Render()
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
   // Intensity r,g,b,a
-  const glm::vec4 ambient = glm::vec4(1.0*amb_Scalar, 1.0*amb_Scalar, 1.0*amb_Scalar, 1.0);
+  const glm::vec4 ambient = glm::vec4(0.4*amb_Scalar, 0.4*amb_Scalar, 0.4*amb_Scalar, 1.0);
   const glm::vec4 diffuse = glm::vec4(1.0*diff_Scalar, 1.0*diff_Scalar, 1.0*diff_Scalar, 1.0);
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
 
@@ -690,30 +800,59 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(rFlipper->GetModel()));
   rFlipper->Render();
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper->GetModel()));
-  bumper->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper1->GetModel()));
+  bumper1->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper2->GetModel()));
+  bumper2->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(bumper3->GetModel()));
+  bumper3->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(oBumper1->GetModel()));
+  oBumper1->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(oBumper2->GetModel()));
+  oBumper2->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(oBumper3->GetModel()));
+  oBumper3->Render();
+
 
   //RED GLOW
-  if(bumperHit)
+  if(bumperHit1 || bumperHit2 || bumperHit3)
   {
     glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
     glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
     glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
+
+    if(bumperHit1)
+    {
+      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
+      //tBumper1->Render();
+    }
+
+    if(bumperHit2)
+    {
+      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper2->GetModel()));
+      //tBumper2->Render();
+    }
+
+    if(bumperHit3)
+    {
+      //glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper3->GetModel()));
+      //tBumper3->Render();
+    }
   }
+    
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
+  tBumper1->Render();
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper->GetModel()));
-  tBumper->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper2->GetModel()));
+  tBumper2->Render();
 
-  //RED GLOW
-  if(bumperHit)
-  {
-    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
-    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
-    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,0,0,1)) );
-  }
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(oBumper->GetModel()));
-  oBumper->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper3->GetModel()));
+  tBumper3->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
