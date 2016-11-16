@@ -43,16 +43,23 @@ make
 ## Keyboard Events
 The following keyboard commands are used to interact with the program:
 
-Key          - Event
+|Key|Event|
+|---|---|
+|Esc|Close program|
+|__Lighting Controls__|
+|1|Change to per-fregment lighting|
+|2|Change to per-vertex lighting|
+|A|Select ambient scalar|
+|D|Select diffuse scalar|
+|S|Select specular scalar|
+|C|Select spotlight angle|
+|=|Increase currently selected scalar|
+|-|Decrease currently selected scalar|
+|__Pinball Controls__|
+|Down|Activate plunger (hold for more power)|
+|Left|Left flipper|
+|Right|Right flipper|
 
-Esc          - Close program  
-'1'			 - Change to per-fregment lighting
-'2'			 - Change to per-vertex lighting
-'a'			 - Select ambient scalar
-'d'			 - Select diffuse scalar
-'s'			 - Select specular scalar
-'='			 - Increase currently selected scalar
-'-'			 - Decrease currently selected scalar
 
 ## Mouse Events
 The following mouse commands are used to interact with the program:
