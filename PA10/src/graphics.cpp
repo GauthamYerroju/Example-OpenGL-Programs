@@ -31,6 +31,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
     }
   #endif
 
+  lives = 3;
+
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -595,6 +597,31 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   if(bumperHit3)
     std::cout << "HIT3" << std::endl;
 
+  if (ball->GetRigidBody()->getCenterOfMassPosition().getX() < 3.0
+    && ball->GetRigidBody()->getCenterOfMassPosition().getZ() > 6.5)
+  {
+    lives -= 1;
+    std::cout << "Life lost. Remaining: " << lives;
+
+    if (lives <= 0) {
+      std::cout << "Game over!";
+      lives = 0;
+    }
+    else
+    {
+      btTransform transform;
+      btVector3 zeroVector(0,0,0);
+
+      ball->GetRigidBody()->clearForces();
+      ball->GetRigidBody()->setLinearVelocity(zeroVector);
+      ball->GetRigidBody()->setAngularVelocity(zeroVector);
+
+      transform = ball->GetRigidBody()->getCenterOfMassTransform();
+      transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
+      ball->GetRigidBody()->setCenterOfMassTransform(transform);
+    }
+  }
+
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
@@ -844,7 +871,7 @@ void Graphics::Render()
       //tBumper3->Render();
     }
   }
-    
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper1->GetModel()));
   tBumper1->Render();
 

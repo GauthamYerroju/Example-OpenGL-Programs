@@ -117,6 +117,7 @@ class Graphics
 
     float launcherPower;
 
+    int lives;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
