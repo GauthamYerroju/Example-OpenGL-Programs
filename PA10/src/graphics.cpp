@@ -133,13 +133,15 @@ bool Graphics::LoadConfig( char *configFile )
                               ))
         printf("PhysicsObject failed to initialize\n");
 
+      board->GetRigidBody()->setCollisionFlags(board->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_STATIC_OBJECT);
+
       world.AddRigidBody(board->GetRigidBody());
     }
     else if(label == "Ball")
     {
       modelFile = objectConfig["modelFile"];
       ball = new PhysicsObject( modelFile.c_str() );
-
+    
       if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE,  //CollisionShape
                               1,  //Mass
                               btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(3.03204, 0.2217404, 6.36945) ),  //WorldTranformation
@@ -149,14 +151,14 @@ bool Graphics::LoadConfig( char *configFile )
         printf("PhysicsObject failed to initialize\n");
 
       ball->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
-
+      
       world.AddRigidBody(ball->GetRigidBody());
     }
     else if(label == "Paddle")
     {
       modelFile = objectConfig["modelFile"];
       paddle = new PhysicsObject( modelFile.c_str() );
-
+ 
       if( !paddle->Initialize(PhysicsObject::CYLINDER_SHAPE,  //CollisionShape
                               0,  //Mass
                               btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(3.03191, 0.2289447, 6.91188) ),  //WorldTranformation
@@ -167,7 +169,7 @@ bool Graphics::LoadConfig( char *configFile )
 
       // Constrain linear motion along z axis and disable angular motion
       paddle->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
-      //paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 1));
+      paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
       paddle->GetRigidBody()->setCollisionFlags(paddle->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
 

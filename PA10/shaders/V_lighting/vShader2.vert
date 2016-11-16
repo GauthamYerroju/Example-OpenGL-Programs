@@ -33,13 +33,22 @@ void main(void)
   vec3 N = normalize((viewMatrix * modelMatrix) *vec4(v_normal, 0.0) ).xyz;
   // Unit vector direction from pos to eye
   vec3 E = normalize( -pos );
-  // Unit vector direction from pos to light source
-  vec3 L = normalize( LightPosition.xyz - pos );
+
+  vec3 L;
+  if( LightPosition.w != 0.0 )
+  {
+    //Point Light
+    L = normalize( LightPosition.xyz - pos );
+  }
+  else
+  {
+    L = normalize( LightPosition.xyz);
+  }
+
   // Halfway vector
   vec3 H = normalize( L + E );
  
   // Reverse the direction of the unit Spot light direction
-  //vec3 S = normalize(vec3(-SpotLightDirection)); 
   vec3 S = normalize(-SpotLightDirection).xyz; 
 
   float intensity = 0.0;
@@ -74,5 +83,5 @@ void main(void)
 
   vec4 v = vec4(v_position, 1.0);
   gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v;
-  
+
 }

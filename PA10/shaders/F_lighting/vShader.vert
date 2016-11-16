@@ -29,7 +29,6 @@ void main(void)
   if( LightPosition.w != 0.0 ) 
   {
     //point light
-    //fL = LightPosition.xyz - v_position.xyz;
     fL = LightPosition.xyz - pos.xyz;
   }
   else
@@ -37,7 +36,9 @@ void main(void)
     fL = LightPosition.xyz;
   }
 
+  texCoord = v_texCoord;
+
   vec4 v = vec4(v_position, 1.0);
   gl_Position = (projectionMatrix * viewMatrix * modelMatrix) * v;
-  texCoord = v_texCoord;
+  
 }
