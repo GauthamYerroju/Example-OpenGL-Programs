@@ -454,12 +454,12 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   // Handle input
   HandleInput(m_event);
 
-  if(bumperHit) 
+  if(bumperHit)
     bumperHit = false;
 
   // Step the physics world
   world.Update(dt);
-  
+
   // Update the physics objects
   board->Update();
   ball->Update();
@@ -472,10 +472,10 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
 
   callback = new BumperContactResultCallback(&bumperHit);
   world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper->GetRigidBody(), *callback);
-  
+
   if(bumperHit)
     std::cout << "HIT" << std::endl;
-  
+
 }
 
 void Graphics::HandleInput(SDL_Event *m_event)
@@ -516,16 +516,35 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   }
 
+  btTransform transform;
+  btVector3 zeroVector(0,0,0);
+
   if (m_event->type == SDL_KEYDOWN)
   {
-    if (m_event->key.keysym.sym == SDLK_DOWN)
+    switch(m_event->key.keysym.sym)
     {
-      if (launcherPower < 15.0)
-      {
-        launcherPower += 0.25;
-        if (launcherPower > 15.0)
-          launcherPower = 15.0;
-      }
+      case SDLK_DOWN:
+        if (launcherPower < 15.0)
+        {
+          launcherPower += 0.25;
+          if (launcherPower > 15.0)
+            launcherPower = 15.0;
+        }
+        break;
+      case SDLK_UP:
+        std::cout << "RESET\n";
+
+
+        ball->GetRigidBody()->clearForces();
+        ball->GetRigidBody()->setLinearVelocity(zeroVector);
+        ball->GetRigidBody()->setAngularVelocity(zeroVector);
+
+        transform = ball->GetRigidBody()->getCenterOfMassTransform();
+        transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
+        ball->GetRigidBody()->setCenterOfMassTransform(transform);
+        break;
+      default:
+        break;
     }
   }
   if (m_event->type == SDL_KEYUP)
@@ -584,7 +603,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
     else if(lFlipperStep < 0)
     {
       lFlipperMoveDown = false;
-      lFlipperStep = 0.0;    
+      lFlipperStep = 0.0;
     }
   }
 
