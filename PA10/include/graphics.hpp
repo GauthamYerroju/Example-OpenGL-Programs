@@ -84,6 +84,9 @@ class Graphics
         bool* hit;
     };
 
+    void printToConsole();
+    void resetBall();
+
     PhysicsObject                         *board;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
@@ -119,6 +122,7 @@ class Graphics
     float launcherPower;
     int score;
 
+    int lives;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
