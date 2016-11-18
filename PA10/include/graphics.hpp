@@ -84,11 +84,19 @@ class Graphics
         bool* hit;
     };
 
+    struct SevenSegment
+    {  
+        Object *A, *B, *C, *D, *E, *F, *G;
+
+        SevenSegment(Object *a, Object *b, Object *c, Object *d, Object *e, Object *f, Object *g) : A(a), B(b), C(c), D(d), E(e), F(f), G(g) {}  
+    };
+
     void printToConsole();
     void resetBall();
 
+    Object                                *frame;
+    std::vector<SevenSegment*>             digit;
     PhysicsObject                         *board;
-    PhysicsObject                         *backplate;
     PhysicsObject                         *ball;
     PhysicsObject                         *paddle;
     PhysicsObject                         *lFlipper;

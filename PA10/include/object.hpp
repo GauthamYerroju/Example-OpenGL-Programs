@@ -15,17 +15,19 @@ class Object
     Object(const char *objPath );
     ~Object();
 
-    void Render();
-    glm::mat4 GetModel();
-    glm::mat4 GetPosition();
-
-    void Update(); 
-    void Set_Origin( glm::mat4 orig ); 
-    void Set_TranslationVec( glm::vec3 tVec );
-    void Set_RotationAngle( float rotAngle );
-    void Set_Scaler( float sclr );
     bool Model_Loader(const char *filePath);
     bool Texture_Loader(const char *filePath, Mesh *mesh);
+
+    void Update();
+    void Render();
+
+    void Set_Origin( glm::mat4 orig ); 
+    void Set_TranslationVec( glm::vec3 tVec );
+    void Set_RotationAngle( float rotAngle, glm::vec3 rotAxis );
+    void Set_Scaler( float sclr );
+
+    glm::mat4 GetModel();
+    glm::mat4 GetPosition();
 
   protected:
 
@@ -36,6 +38,7 @@ class Object
 
     glm::mat4 origin;
     glm::vec3 translationVec;
+    glm::vec3 rotationAxis;
     float rotationAngle;
     float scaler;
 

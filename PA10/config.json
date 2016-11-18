@@ -12,12 +12,16 @@
 
     },
     {
-        "name":             "Board",
-        "modelFile":        "models/board.obj"
+        "name":             "Segment",
+        "modelFile":        "models/segment.obj"
     },
     {
-        "name":             "Backplate",
-        "modelFile":        "models/backplate.obj"
+        "name":             "Frame",
+        "modelFile":        "models/frame.obj"
+    },
+    {
+        "name":             "Board",
+        "modelFile":        "models/board.obj"
     },
     {
         "name":             "Ball",

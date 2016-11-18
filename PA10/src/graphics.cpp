@@ -126,6 +126,67 @@ bool Graphics::LoadConfig( char *configFile )
       perFrag_vShaderFile = objectConfig["vertexShader"];
       perFrag_fShaderFile = objectConfig["fragmentShader"];
     }
+    else if(label == "Segment")
+    {
+      modelFile = objectConfig["modelFile"];
+
+      SevenSegment *dig;
+      float x_offset = 0;
+
+
+      for(int dig_count = 0; dig_count < 3; dig_count++)
+      {
+        dig = new SevenSegment( new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()),
+                                new Object(modelFile.c_str()) 
+                              );
+
+        // y is up and -z is forward
+        dig->A->Set_TranslationVec(glm::vec3(-1.8 + x_offset, 2.72, -8.0));
+        dig->A->Set_RotationAngle(glm::radians(98.421), glm::vec3(0.357, 0.863, 0.357));
+        dig->A->Update();
+
+        dig->B->Set_TranslationVec(glm::vec3(-1.3 + x_offset, 2.37, -7.65));
+        dig->B->Set_RotationAngle(glm::radians(45.0), glm::vec3(1.0, 0.0, 0.0));
+        dig->B->Update();
+
+        dig->C->Set_TranslationVec(glm::vec3(-1.3 + x_offset, 1.72, -7.0));
+        dig->C->Set_RotationAngle(glm::radians(45.0), glm::vec3(1.0, 0.0, 0.0));
+        dig->C->Update();
+
+        dig->D->Set_TranslationVec(glm::vec3(-1.8 + x_offset, 1.38, -6.66));
+        dig->D->Set_RotationAngle(glm::radians(98.421), glm::vec3(0.357, 0.863, 0.357));
+        dig->D->Update();
+
+        dig->E->Set_TranslationVec(glm::vec3(-2.3 + x_offset, 1.72, -7.0));
+        dig->E->Set_RotationAngle(glm::radians(45.0), glm::vec3(1.0, 0.0, 0.0));
+        dig->E->Update();
+
+        dig->F->Set_TranslationVec(glm::vec3(-2.3 + x_offset, 2.37, -7.65));
+        dig->F->Set_RotationAngle(glm::radians(45.0), glm::vec3(1.0, 0.0, 0.0));
+        dig->F->Update();
+
+        dig->G->Set_TranslationVec(glm::vec3(-1.8+ x_offset, 2.05, -7.33));
+        dig->G->Set_RotationAngle(glm::radians(98.421), glm::vec3(0.357, 0.863, 0.357));
+        dig->G->Update();
+
+        x_offset += 1.8;
+
+
+        digit.push_back(dig);
+      }
+    }
+    else if(label == "Frame")
+    {
+      modelFile = objectConfig["modelFile"];
+      frame = new Object(modelFile.c_str());
+
+      frame->Update();
+    }
     else if(label == "Board")
     {
       modelFile = objectConfig["modelFile"];
@@ -141,11 +202,6 @@ bool Graphics::LoadConfig( char *configFile )
 
       world.AddRigidBody(board->GetRigidBody());
     }
-    else if(label == "Backplate")
-    {
-      modelFile = objectConfig["modelFile"];
-      backplate = new PhysicsObject( modelFile.c_str() );
-    }
     else if(label == "Ball")
     {
       modelFile = objectConfig["modelFile"];
@@ -158,6 +214,8 @@ bool Graphics::LoadConfig( char *configFile )
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
+
+      ball->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
 
       ball->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
 
@@ -176,14 +234,13 @@ bool Graphics::LoadConfig( char *configFile )
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      // Constrain linear motion along z axis and disable angular motion
+
+      // Constrain linear motion along y axis
       paddle->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
-      //paddle->GetRigidBody()->setAngularFactor(btVector3(0, 0, 1));
 
       paddle->GetRigidBody()->setCollisionFlags(paddle->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
 
       world.AddRigidBody(paddle->GetRigidBody());
-
     }
     else if(label == "LeftFlipper")
     {
@@ -203,8 +260,8 @@ bool Graphics::LoadConfig( char *configFile )
       //lFlipper->GetRigidBody()->setAngularFactor(btVector3(0, 0, 0));
 
       lFlipper->GetRigidBody()->setCollisionFlags(lFlipper->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+      
       world.AddRigidBody(lFlipper->GetRigidBody());
-
     }
     else if(label == "RightFlipper")
     {
@@ -219,20 +276,9 @@ bool Graphics::LoadConfig( char *configFile )
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      // Constrain linear motion along z axis and disable angular motion
-     //rFlipper->GetRigidBody()->setLinearFactor(btVector3(0, 1, 0));
-      //rFlipper->GetRigidBody()->setAngularFactor(btVector3(0, 1, 0));
-
-       // const btVector3 pivot = btVector3(0.0f, 0.0f, 0.0f);
-       // const btVector3 axis = btVector3(0.0f, 1.0f, 0.0f);
-       // btHingeConstraint *hinge = new btHingeConstraint(*rFlipper->GetRigidBody(),
-       //                                                 pivot,
-       //                                                 axis, true);
-       // hinge->setLimit(0, -54.0);
       rFlipper->GetRigidBody()->setCollisionFlags(rFlipper->GetRigidBody()->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT );
+      
       world.AddRigidBody(rFlipper->GetRigidBody());
-      // world.GetWorld()->addConstraint(hinge, false);
-
     }
     else if(label == "Bumper1")
     {
@@ -247,7 +293,7 @@ bool Graphics::LoadConfig( char *configFile )
                               ))
         printf("PhysicsObject failed to initialize\n");
 
-      world.AddRigidBody(bumper1->GetRigidBody());
+      world.AddRigidBody(bumper1->GetRigidBody()); 
     }
     else if(label == "TopBumper1")
     {
@@ -623,21 +669,10 @@ void Graphics::HandleInput(SDL_Event *m_event)
 {
   if (m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
   {
-    // Hit the paddle
-    //ball->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -25) );
-
-    //btTransform transf;
-
-    //Paddle
-    paddle->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
-    //paddle->GetRigidBody()->applyCentralForce( btVector3(0,0,-40));
-    //paddle->GetRigidBody()->applyCentralImpulse( btVector3(0, 0, -30) );
-
-    //paddle->GetRigidBody()->getMotionState()->setWorldTransform(transf);
-    //paddle->GetRigidBody()->setWorldTransform(transf);
-
-
+    // Possibly could have paddle for left and right mouse here as well
   }
+
+  
 
   if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_F10)
   {
@@ -654,7 +689,8 @@ void Graphics::HandleInput(SDL_Event *m_event)
   {
     if (launcherPower < 15.0)
     {
-      launcherPower += 0.25;
+      //launcherPower += 0.25;
+      launcherPower += 0.50;
     }
 
     if (launcherPower > 15.0)
@@ -702,18 +738,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
   if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_LEFT)
   {
     btTransform transf;
-/*
-    if (lFlipperStep > 0.0)
-    {
-      lFlipperStep -= 0.05;
-      lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
 
-      if (lFlipperStep < 0.0)
-      {
-        lFlipperStep = 0.0;
-      }
-    }
-*/
     lFlipperStep = 0.0;
     lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
@@ -748,18 +773,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
   {
     btTransform transf;
 
-/*
-    if (rFlipperStep < 0.0)
-    {
-      rFlipperStep += 0.05;
-      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
-
-      if (rFlipperStep < 0.0)
-      {
-        rFlipperStep = 0.0;
-      }
-    }
-*/
     rFlipperStep = 0.0;
     rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
@@ -832,11 +845,11 @@ void Graphics::Render()
 //red 255,0,0
 
   // Render the object
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frame->GetModel()));
+  frame->Render();
+
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(board->GetModel()));
   board->Render();
-
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(backplate->GetModel()));
-  backplate->Render();
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
   ball->Render();
@@ -909,6 +922,209 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tBumper3->GetModel()));
   tBumper3->Render();
+
+  glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
+  glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(diffuse) );
+  glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(specular) );
+
+
+  //Render Seven Segment Score
+  int placeValue = 100;
+  int number = 0;
+  for(int dig_count = 0; dig_count < 3; dig_count++)
+  {
+    number = (score/placeValue) % 10;
+    placeValue /= 10;
+
+    //Set Segment Color
+    glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(glm::vec4(255,255,255,1)) );
+    glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(glm::vec4(255,255,255,1)) );
+    glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(glm::vec4(255,255,255,1)) );
+
+    switch(number)
+    {
+      case 0:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->E->GetModel()));
+        digit[dig_count]->E->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        break;
+
+      case 1:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        break;
+
+      case 2:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->E->GetModel()));
+        digit[dig_count]->E->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 3:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 4:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 5:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 6:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->E->GetModel()));
+        digit[dig_count]->E->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 7:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        break;
+
+      case 8:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->D->GetModel()));
+        digit[dig_count]->D->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->E->GetModel()));
+        digit[dig_count]->E->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+
+        break;
+
+      case 9:
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->A->GetModel()));
+        digit[dig_count]->A->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->B->GetModel()));
+        digit[dig_count]->B->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->C->GetModel()));
+        digit[dig_count]->C->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->F->GetModel()));
+        digit[dig_count]->F->Render();
+
+        glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(digit[dig_count]->G->GetModel()));
+        digit[dig_count]->G->Render();
+        break;
+      default:
+        break;
+    }
+
+
+  }
+
+
+
+
 
   // Get any errors from OpenGL
   auto error = glGetError();

@@ -5,6 +5,7 @@ Object::Object()
   origin = glm::mat4(1.0f);
   translationVec = glm::vec3(0.0f);
   rotationAngle = 0.0f;
+  rotationAxis = glm::vec3(0.0f);
   scaler = 1.0f;
 }
 
@@ -23,6 +24,7 @@ Object::Object(const char *objPath)
   origin = glm::mat4(1.0f);
   translationVec = glm::vec3(0.0f);
   rotationAngle = 0.0f;
+  rotationAxis = glm::vec3(1.0f);
   scaler = 1.0f;
 
 }
@@ -34,12 +36,11 @@ Object::~Object()
 void Object::Update()
 {
   translation = glm::translate(origin, translationVec);
-  rotation = glm::rotate(glm::mat4(1.0f), (rotationAngle), glm::vec3(0.0, 1.0, 0.0));
+  rotation = glm::rotate(glm::mat4(1.0f), (rotationAngle), rotationAxis);
   scale = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0) * scaler);
 
   model = translation * rotation * scale;
 }
-
 
 void Object::Set_Origin( glm::mat4 orig )
 {
@@ -53,9 +54,10 @@ void Object::Set_TranslationVec( glm::vec3 tVec )
   translationVec = tVec;
 }
 
-void Object::Set_RotationAngle( float rotAngle )
+void Object::Set_RotationAngle( float rotAngle, glm::vec3 rotAxis )
 {
   rotationAngle = rotAngle;
+  rotationAxis = rotAxis;
 }
 
 
