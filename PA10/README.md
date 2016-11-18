@@ -60,13 +60,13 @@ The following keyboard commands are used to interact with the program:
 |Left|Left flipper|
 |Right|Right flipper|
 |__Camera__|
-|F10|Zoom in/zoom out|
+|F10|Toggle zoom|
 
 
 ## Mouse Events
 The following mouse commands are used to interact with the program:
 
-Left Mouse Click    - move paddle up
+Left Mouse Click    - move plunger up
 
 
 ## Ubuntu.cse.unr.edu
