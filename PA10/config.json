@@ -1,14 +1,14 @@
 [
     {
         "name":             "perVertexLighting",
-        "vertexShader":     "shaders/V_lighting/vShader2.vert",
-        "fragmentShader":   "shaders/V_lighting/fShader.frag"
+        "vertexShader":     "shaders/V_lighting/vShader4.vert",
+        "fragmentShader":   "shaders/V_lighting/fShader4.frag"
 
     },
     {
         "name":             "perFragmentLighting",
-        "vertexShader":     "shaders/F_lighting/vShader.vert",
-        "fragmentShader":   "shaders/F_lighting/fShader2.frag"
+        "vertexShader":     "shaders/F_lighting/vShader4.vert",
+        "fragmentShader":   "shaders/F_lighting/fShader4.frag"
 
     },
     {
