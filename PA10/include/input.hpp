@@ -10,6 +10,8 @@
 class Input
 {
   public:
+    Input();
+    void InitializeCodeList();
     void Update();
     bool KeyPressed(SDL_Keycode);
     bool KeyDown(SDL_Keycode);
