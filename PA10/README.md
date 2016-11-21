@@ -59,9 +59,10 @@ The following keyboard commands are used to interact with the program:
 |Down|Activate plunger (hold for more power)|
 |Left|Left flipper|
 |Right|Right flipper|
-|Up|Reset game (works after game over)|
+|R|Reset game (works after game over)|
+|Shift+R|Force-reset game|
 |__Camera__|
-|F10|Toggle zoom|
+|Z|Toggle zoom|
 
 
 ## Mouse Events

@@ -673,7 +673,7 @@ void Graphics::HandleInput(Input *m_input)
   // }
 
   // Toggle zoom
-  if (m_input->KeyDown(SDLK_F10))
+  if (m_input->KeyDown(SDLK_z))
   {
     zoom = !zoom;
   }
@@ -786,7 +786,7 @@ void Graphics::printToConsole()
   printf("Score: %i\n", score);
   printf("Lives: %i\n", lives);
   if (lives <= 0)
-    printf("Game over!\n");
+    printf("Game over! Press R to reset the game.\n");
 }
 
 void Graphics::resetBall()
