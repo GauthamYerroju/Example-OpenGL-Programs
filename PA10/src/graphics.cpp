@@ -596,10 +596,10 @@ int Graphics::getSpotLightAngle()
   return spotLightAngle;
 }
 
-void Graphics::Update(unsigned int dt, SDL_Event *m_event)
+void Graphics::Update(unsigned int dt, Input *m_input)
 {
   // Handle input
-  HandleInput(m_event);
+  HandleInput(m_input);
 
   if(bumperHit1)
   {
@@ -665,27 +665,21 @@ void Graphics::Update(unsigned int dt, SDL_Event *m_event)
   }
 }
 
-void Graphics::HandleInput(SDL_Event *m_event)
+void Graphics::HandleInput(Input *m_input)
 {
-  if (m_event->type == SDL_MOUSEBUTTONDOWN && m_event->button.button == SDL_BUTTON_LEFT)
+  // if (m_input->type == SDL_MOUSEBUTTONDOWN && m_input->button.button == SDL_BUTTON_LEFT)
+  // {
+  //   // Possibly could have paddle for left and right mouse here as well
+  // }
+
+  // Toggle zoom
+  if (m_input->KeyDown(SDLK_F10))
   {
-    // Possibly could have paddle for left and right mouse here as well
+    zoom = !zoom;
   }
 
-  
-
-  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_F10)
-  {
-    if(zoom)
-    {
-      zoom = false;
-    }
-    else
-    {
-      zoom = true;
-    }
-  }
-  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_DOWN)
+  // Change launcher power
+  if (m_input->KeyPressed(SDLK_DOWN))
   {
     if (launcherPower < 15.0)
     {
@@ -697,10 +691,15 @@ void Graphics::HandleInput(SDL_Event *m_event)
       launcherPower = 15.0;
     }
   }
-
-  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_UP)
+  else if (m_input->KeyUp(SDLK_DOWN))
   {
-    if (lives == 0 || (m_event->key.keysym.mod & KMOD_SHIFT)) {
+    paddle->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -1.0 * launcherPower));
+    launcherPower = 0.0;
+  }
+
+  if (m_input->KeyDown(SDLK_r))
+  {
+    if (lives == 0 || (m_input->GetModState() & KMOD_SHIFT)) {
       lives = 3;
       score = 0;
       resetBall();
@@ -708,17 +707,8 @@ void Graphics::HandleInput(SDL_Event *m_event)
     }
   }
 
-  if (m_event->type == SDL_KEYUP)
-  {
-    if (m_event->key.keysym.sym == SDLK_DOWN)
-    {
-      paddle->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -1.0 * launcherPower));
-      launcherPower = 0.0;
-    }
-  }
-
-  //Left Flipper
-  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_LEFT)
+  // Left Flipper
+  if (m_input->KeyPressed(SDLK_LEFT))
   {
     btTransform transf;
 
@@ -727,7 +717,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
       lFlipperStep += 0.05;
       lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-15));
     }
-
     else
     {
       lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
@@ -738,12 +727,15 @@ void Graphics::HandleInput(SDL_Event *m_event)
     lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-
-  if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_LEFT)
+  else if (m_input->KeyUp(SDLK_LEFT))
   {
     btTransform transf;
 
-    lFlipperStep = 0.0;
+    if (lFlipperStep > 0.0)
+    {
+      lFlipperStep -= 0.05;
+    }
+    
     lFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(-1.17565, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,lFlipperStep,0,1));
@@ -751,17 +743,16 @@ void Graphics::HandleInput(SDL_Event *m_event)
     lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
 
-  //Right Flipper
-  if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_RIGHT)
+  // Right Flipper
+  if (m_input->KeyPressed(SDLK_RIGHT))
   {
     btTransform transf;
 
     if (rFlipperStep > -0.5)
     {
       rFlipperStep -= 0.05;
-      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-10));
+      rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,-15));
     }
-
     else
     {
       rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
@@ -772,20 +763,21 @@ void Graphics::HandleInput(SDL_Event *m_event)
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     rFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-
-  if (m_event->type == SDL_KEYUP && m_event->key.keysym.sym == SDLK_RIGHT)
+  else if (m_input->KeyUp(SDLK_RIGHT))
   {
     btTransform transf;
 
-    rFlipperStep = 0.0;
+    if (rFlipperStep < 0.0)
+    {
+      rFlipperStep += 0.05;
+    }
+
     rFlipper->GetRigidBody()->setLinearVelocity(btVector3(0,0,0));
     transf.setOrigin( btVector3(1.15313, 1.41711, 5.99798) );
     transf.setRotation(btQuaternion(0,rFlipperStep,0,1));
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     rFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-
-
 }
 
 void Graphics::printToConsole()

@@ -8,6 +8,7 @@
 #include "graphics_headers.hpp"
 #include "window.hpp"
 #include "graphics.hpp"
+#include "input.hpp"
 
 class Engine
 {
@@ -29,7 +30,7 @@ class Engine
     int m_WINDOW_WIDTH;
     int m_WINDOW_HEIGHT;
     bool m_FULLSCREEN;
-    SDL_Event m_event;
+    Input *m_input;
 
     Graphics *m_graphics;
     unsigned int m_DT;

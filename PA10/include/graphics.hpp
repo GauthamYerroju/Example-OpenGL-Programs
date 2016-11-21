@@ -11,6 +11,7 @@ using namespace std;
 #include "object.hpp"
 #include "physicsObject.hpp"
 #include "physicsWorld.hpp"
+#include "input.hpp"
 
 // For the config file
 #include "json.hpp"
@@ -37,8 +38,8 @@ class Graphics
     float getSpecularScalar();
     int getSpotLightAngle();
 
-    void Update(unsigned int dt, SDL_Event *m_event);
-    void HandleInput(SDL_Event *m_event);
+    void Update(unsigned int dt, Input *m_input);
+    void HandleInput(Input *m_input);
     void Render();
 
   private:
