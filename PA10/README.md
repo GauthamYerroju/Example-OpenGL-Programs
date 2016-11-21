@@ -5,6 +5,13 @@ Kevin Green,
 Husain Tazarvi,
 Gautham Yerroju
 
+## Changes since 2016-11-16
+- 7-segment score display on back board
+- Implemented Input Manager
+- Improvements to shaders
+- Fixed bug with plunger (velocity not reset after ball is shot out)
+- Flippers behave more naturally
+
 # Dependencies, Building, and Running
 
 ## Dependency Instructions
