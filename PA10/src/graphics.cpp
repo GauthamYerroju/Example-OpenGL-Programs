@@ -689,7 +689,6 @@ void Graphics::HandleInput(SDL_Event *m_event)
   {
     if (launcherPower < 15.0)
     {
-      //launcherPower += 0.25;
       launcherPower += 0.50;
     }
 
@@ -701,7 +700,7 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_UP)
   {
-    if (lives == 0) {
+    if (lives == 0 || (m_event->key.keysym.mod & KMOD_SHIFT)) {
       lives = 3;
       score = 0;
       resetBall();
