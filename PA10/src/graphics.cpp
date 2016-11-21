@@ -727,7 +727,7 @@ void Graphics::HandleInput(Input *m_input)
     lFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     lFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-  else if (m_input->KeyUp(SDLK_LEFT))
+  else
   {
     btTransform transf;
 
@@ -763,7 +763,7 @@ void Graphics::HandleInput(Input *m_input)
     rFlipper->GetRigidBody()->getMotionState()->setWorldTransform(transf);
     rFlipper->GetRigidBody()->setWorldTransform(transf);
   }
-  else if (m_input->KeyUp(SDLK_RIGHT))
+  else
   {
     btTransform transf;
 

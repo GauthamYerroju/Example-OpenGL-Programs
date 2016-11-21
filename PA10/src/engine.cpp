@@ -141,7 +141,7 @@ void Engine::Keyboard()
     }
 
     // Increase or decrease currently selected scalar
-    if (m_input->KeyPressed(SDLK_EQUALS))
+    if (m_input->KeyDown(SDLK_EQUALS))
     {
       if(selectAmbient)
         m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar() + sclStepUp);
@@ -152,7 +152,7 @@ void Engine::Keyboard()
       else if (selectSpotLight)
         m_graphics->SetSpotLightAngle(m_graphics->getSpotLightAngle() + 1);
     }
-    else if (m_input->KeyPressed(SDLK_MINUS))
+    else if (m_input->KeyDown(SDLK_MINUS))
     {
       if(selectAmbient)
         m_graphics->SetAmbientScalar(m_graphics->getAmbientScalar() - sclStepDown);
