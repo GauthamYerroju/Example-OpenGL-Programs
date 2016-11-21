@@ -39,7 +39,7 @@ void main(void)
 	float Ks = pow( max(dot(N, H), 0.0), Shininess );
 	vec4 specular = Ks * SpecularProduct;
 
-	vec4 tmpColor = (ambient + diffuse + specular);
+	frag_color = (ambient + diffuse + specular);
 	
 	// Spotlight
 	float intensity = 0.0;
@@ -53,12 +53,10 @@ void main(void)
     	{
       		// discard the specular highlight if the light's behind the vertex
       		if( dot(L, N) < 0.0 )  specular = vec4(0.0, 0.0, 0.0, 1.0);
-			tmpColor += intensity * (ambient + diffuse + specular) * 0.5;
+			frag_color += (ambient + intensity * diffuse + specular);
     	}
   	}
 	
-	if (dot(S,L) > cos(radians(SpotLightCutOffAngle)))
-	
-	frag_color = tmpColor * texture2D(gSampler, texCoord.st);
+	frag_color = frag_color * texture2D(gSampler, texCoord.st);
     frag_color.a = 1.0;
 }

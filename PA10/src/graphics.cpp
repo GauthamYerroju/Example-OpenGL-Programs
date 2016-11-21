@@ -701,7 +701,12 @@ void Graphics::HandleInput(SDL_Event *m_event)
 
   if (m_event->type == SDL_KEYDOWN && m_event->key.keysym.sym == SDLK_UP)
   {
-    resetBall();
+    if (lives == 0) {
+      lives = 3;
+      score = 0;
+      resetBall();
+      printToConsole();
+    }
   }
 
   if (m_event->type == SDL_KEYUP)

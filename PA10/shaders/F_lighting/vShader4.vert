@@ -23,7 +23,7 @@ void main(void)
   vec3 pos = ((viewMatrix * modelMatrix) * vec4(v_position, 1.0)).xyz;
 
   // Transform vertex normal into view coordinates
-  fN = ((viewMatrix * modelMatrix) *vec4(v_normal, 0.0)).xyz;
+  fN = ((viewMatrix * modelMatrix) * vec4(v_normal, 0.0)).xyz;
   fE = -pos;
      
   if( LightPosition.w != 0.0 ) 
