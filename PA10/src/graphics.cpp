@@ -90,6 +90,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   launcherPower = 0.0f;
   score = 0;
 
+  printToConsole();
+
   return true;
 }
 
@@ -523,12 +525,14 @@ bool Graphics::SetShader()
 void Graphics::SetPerFragLighting()
 {
   perFragmentLighting = true;
+  printToConsole();
 }
 
 
 void Graphics::SetPerVertLighting()
 {
   perFragmentLighting = false;
+  printToConsole();
 }
 
 void Graphics::SetAmbientScalar(float a_slr)
@@ -539,6 +543,7 @@ void Graphics::SetAmbientScalar(float a_slr)
     amb_Scalar = 2.0;
   else
     amb_Scalar = a_slr;
+  printToConsole();
 }
 
 
@@ -550,6 +555,7 @@ void Graphics::SetDiffuseScalar(float d_slr)
     diff_Scalar = 3.0;
   else
     diff_Scalar = d_slr;
+  printToConsole();
 }
 
 
@@ -562,6 +568,7 @@ void Graphics::SetSpecularScalar(float s_slr)
     spec_Scalar = 2.0;
   else
     spec_Scalar = s_slr;
+  printToConsole();
 }
 
 float Graphics::getAmbientScalar()
@@ -589,6 +596,7 @@ void Graphics::SetSpotLightAngle(int angle)
     spotLightAngle = 12;
   else
     spotLightAngle = angle;
+  printToConsole();
 }
 
 int Graphics::getSpotLightAngle()
@@ -690,11 +698,13 @@ void Graphics::HandleInput(Input *m_input)
     {
       launcherPower = 15.0;
     }
+    printToConsole();
   }
   else if (m_input->KeyUp(SDLK_DOWN))
   {
     paddle->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -1.0 * launcherPower));
     launcherPower = 0.0;
+    printToConsole();
   }
 
   if (m_input->KeyDown(SDLK_r))
@@ -783,10 +793,48 @@ void Graphics::HandleInput(Input *m_input)
 void Graphics::printToConsole()
 {
   clear();
-  printf("Score: %i\n", score);
-  printf("Lives: %i\n", lives);
+  printf("\n============ Pinball ============\n");
+  printf("  Launch power: ");
+  for(size_t i = 0; i < round(launcherPower); i++)
+    printf("|");
+  printf("\n  Score: %i\n", score);
   if (lives <= 0)
-    printf("Game over! Press R to reset the game.\n");
+  {
+    printf("Game over! Press R to reset the game.");
+  }
+  else
+  {
+    printf("  Balls left: ");
+    for(size_t i = 0; i < lives; i++)
+      printf("* ");
+  }
+  printf("\n\n------------- Status ------------\n");
+  printf("  Shader: ");
+  if (perFragmentLighting)
+    printf("Per-Fragment\n");
+  else
+    printf("Per-Vertex\n");
+  printf("  Ambient scalar:  %.2f\n", amb_Scalar);
+  printf("  Specular scalar: %.2f\n", spec_Scalar);
+  printf("  Diffuse scalar:  %.2f\n", diff_Scalar);
+  printf("  Spotlight size:  %d degrees\n", spotLightAngle);
+  printf("\n------------ Controls -----------\n");
+  printf("  Pinball Controls:\n");
+  printf("    Down:    Activate plunger (hold for more power)\n");
+  printf("    Left:    Use left and right flippers\n");
+  printf("    Right:   Use left and right flippers\n");
+  printf("    R:       Reset game after game over\n");
+  printf("    Shift+R: Force-reset game\n");
+  printf("    Z:       Change zoom\n");
+  printf("  Lighting Controls:\n");
+  printf("    1:       Change to per-fragment lighting\n");
+  printf("    2:       Change to per-vertex lighting\n");
+  printf("    +:       Increase selected scalar\n");
+  printf("    -:       Decrease selected scalar\n");
+  printf("    A:       Select ambient scalar\n");
+  printf("    S:       Select specular scalar\n");
+  printf("    D:       Select diffuse scalar\n");
+  printf("    C:       Select spotlight radius scalar\n");
 }
 
 void Graphics::resetBall()
@@ -801,6 +849,8 @@ void Graphics::resetBall()
   transform = ball->GetRigidBody()->getCenterOfMassTransform();
   transform.setOrigin( btVector3(3.03204, 0.2217404, 5.36945) );
   ball->GetRigidBody()->setCenterOfMassTransform(transform);
+
+  paddle->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -1.0 * launcherPower));
 }
 
 void Graphics::Render()
