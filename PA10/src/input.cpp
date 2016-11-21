@@ -2,7 +2,12 @@
 
 Input::Input()
 {
-  for(size_t i = 0; i < 400; i++) keysPressed[i] = false;
+  for(size_t i = 0; i < 400; i++)
+  {
+    keysPressed[i] = false;
+    keysDown[i] = false;
+    keysUp[i] = false;
+  }
   modState = KMOD_NONE;
 }
 
@@ -13,25 +18,43 @@ Input::~Input()
 
 void Input::Update()
 {
+  // Reset key down and key up flags
+  for(size_t i = 0; i < 400; i++)
+  {
+    keysDown[i] = false;
+    keysUp[i] = false;
+  }
   // Collect all events and set flags
   while(SDL_PollEvent(&m_event) != 0)
   {
     if (m_event.type == SDL_KEYDOWN)
     {
       keysPressed[m_event.key.keysym.sym] = true;
+      keysDown[m_event.key.keysym.sym] = true;
     }
     if (m_event.type == SDL_KEYUP)
     {
       keysPressed[m_event.key.keysym.sym] = false;
+      keysUp[m_event.key.keysym.sym] = true;
     }
     modState = (SDL_Keymod) ( (int)modState | (int)m_event.key.keysym.mod );
     quit = (m_event.type == SDL_QUIT);
   }
 }
 
-bool Input::Pressed(SDL_Keycode sym)
+bool Input::KeyPressed(SDL_Keycode sym)
 {
   return keysPressed[sym];
+}
+
+bool Input::KeyDown(SDL_Keycode)
+{
+  return keysDown[sym];
+}
+
+bool Input::KeyUp(SDL_Keycode)
+{
+  return keysUp[sym];
 }
 
 SDL_Keymod Input::GetModState()
