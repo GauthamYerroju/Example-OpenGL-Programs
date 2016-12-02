@@ -9,6 +9,7 @@ using namespace std;
 #include "camera.hpp"
 #include "shader.hpp"
 #include "object.hpp"
+#include "object2.hpp"
 #include "physicsObject.hpp"
 #include "physicsWorld.hpp"
 #include "input.hpp"
@@ -96,6 +97,7 @@ class Graphics
     void resetBall();
 
     Object                                *frame;
+    Object2                               *track;
     std::vector<SevenSegment*>             digit;
     PhysicsObject                         *board;
     PhysicsObject                         *ball;

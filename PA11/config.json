@@ -74,8 +74,9 @@
     {
         "name":             "OuterBumper3",
         "modelFile":        "models/outer_bumper.obj"
+    },
+    {
+        "name":             "Track",
+        "modelFile":        "models/Cube.obj"
     }
 ]
-
-
-

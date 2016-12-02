@@ -189,6 +189,13 @@ bool Graphics::LoadConfig( char *configFile )
 
       frame->Update();
     }
+    else if(label == "Track")
+    {
+      modelFile = objectConfig["modelFile"];
+      track = new Object2(modelFile.c_str());
+
+      track->Update();
+    }
     else if(label == "Board")
     {
       modelFile = objectConfig["modelFile"];
@@ -792,6 +799,7 @@ void Graphics::HandleInput(Input *m_input)
 
 void Graphics::printToConsole()
 {
+  return;
   clear();
   printf("\n============ Pinball ============\n");
   printf("  Launch power: ");
@@ -1164,7 +1172,6 @@ void Graphics::Render()
       default:
         break;
     }
-
 
   }
 
