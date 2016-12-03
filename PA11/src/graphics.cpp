@@ -348,6 +348,20 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   // world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
   // callback3 = new BumperContactResultCallback(&bumperHit3);
   // world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
+  
+  m_camera->SetPosition(glm::vec3(
+    ball->GetRigidBody()->getCenterOfMassPosition().getX(),
+    ball->GetRigidBody()->getCenterOfMassPosition().getY() + 4.0,
+    ball->GetRigidBody()->getCenterOfMassPosition().getZ() + 15.0
+  ));
+
+  m_camera->SetFocusPoint(glm::vec3(
+    ball->GetRigidBody()->getCenterOfMassPosition().getX(),
+    ball->GetRigidBody()->getCenterOfMassPosition().getY(),
+    ball->GetRigidBody()->getCenterOfMassPosition().getZ()
+  ));
+
+  m_camera->Update(zoom);
 }
 
 void Graphics::HandleInput(Input *m_input)
@@ -470,7 +484,7 @@ void Graphics::Render()
 
   // Send in the projection and view to the shader
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
-  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView(zoom)));
+  glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
   // Intensity r,g,b,a
   const glm::vec4 ambient = glm::vec4(0.4*amb_Scalar, 0.4*amb_Scalar, 0.4*amb_Scalar, 1.0);
@@ -482,7 +496,7 @@ void Graphics::Render()
     3.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getY(),
     0.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getZ(),
     1.0f);
-  const glm::mat4 mv = m_camera->GetView(zoom)*ball->GetModel();
+  const glm::mat4 mv = m_camera->GetView()*ball->GetModel();
   const glm::vec4 spotDIR = mv[3] - light_pos;
 
 

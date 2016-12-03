@@ -15,9 +15,10 @@ bool Camera::Initialize(int w, int h)
   width = w;
   height = h;
   position = glm::vec3(0.0, 25.0/1.5, 16/1.5);
+  focusPoint = glm::vec3(0.0, 0.0, 0.0);
   //--Init the view and projection matrices
   view = glm::lookAt( position, //Eye Position
-                      glm::vec3(0.0, 0.0, 0.0), //Focus point
+                      focusPoint, //Focus point
                       glm::vec3(0.0, 0.0, -1.0)); //Positive Y is up
 
   projection = glm::perspective( 45.0f, //the FoV typically 90 degrees is good which is what this is set to
@@ -32,21 +33,35 @@ glm::mat4 Camera::GetProjection()
   return projection;
 }
 
-glm::mat4 Camera::GetView(bool zoom)
+void Camera::Update(bool zoom)
 {
-  if (zoom)
-  {
-    position = glm::vec3(0.0, 25.0/1.5, 16/1.5);
-  }
+  view = glm::lookAt(
+    (zoom ? position + (focusPoint - position)*0.5f : position), // Eye Position
+    focusPoint, //Focus point
+    glm::vec3(0.0, 0.0, -1.0)); //Positive Y is up
+}
 
-  else
-  {
-    position = glm::vec3(0.0, 15.0/1.5, 16/1.5);
-  }
-
-  view = glm::lookAt( position, //Eye Position
-                      glm::vec3(0.0, 0.0, 0.0), //Focus point
-                      glm::vec3(0.0, 0.0, -1.0)); //Positive Y is up
-
+glm::mat4 Camera::GetView()
+{
   return view;
+}
+
+glm::vec3 Camera::GetPosition()
+{
+  return position;
+}
+
+void Camera::SetPosition(glm::vec3 value)
+{
+  position = value;
+}
+
+glm::vec3 Camera::GetFocusPoint()
+{
+  return focusPoint;
+}
+
+void Camera::SetFocusPoint(glm::vec3 value)
+{
+  focusPoint = value;
 }
