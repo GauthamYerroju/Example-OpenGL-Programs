@@ -12,7 +12,6 @@ class Camera
     glm::mat4 GetProjection();
     glm::mat4 GetView(bool zoom);
     glm::vec3 GetPosition();
-    glm::vec3 RayCast(int x, int y);
 
   private:
     glm::mat4 projection;

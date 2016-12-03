@@ -50,23 +50,3 @@ glm::mat4 Camera::GetView(bool zoom)
 
   return view;
 }
-
-glm::vec3 Camera::GetPosition()
-{
-
-  return position;
-}
-
-glm::vec3 Camera::RayCast(int x, int y)
-{
-  float mouseX = (float)x / ((float)width  * 0.5f) - 1.0f;
-  float mouseY = (float)x / ((float)height * 0.5f) - 1.0f;
-
-  glm::mat4 invVP = glm::inverse(projection * view);
-  glm::vec4 screenPos = glm::vec4(mouseX, -mouseY, 1.0f, 1.0f);
-  glm::vec4 worldPos = invVP * screenPos;
-
-  glm::vec3 dir = glm::normalize(glm::vec3(worldPos));
-
-  return dir;
-}
