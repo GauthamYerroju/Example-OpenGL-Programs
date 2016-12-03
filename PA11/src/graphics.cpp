@@ -351,8 +351,8 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   
   m_camera->SetPosition(glm::vec3(
     ball->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getY() + 4.0,
-    ball->GetRigidBody()->getCenterOfMassPosition().getZ() + 15.0
+    ball->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
+    ball->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
   ));
 
   m_camera->SetFocusPoint(glm::vec3(

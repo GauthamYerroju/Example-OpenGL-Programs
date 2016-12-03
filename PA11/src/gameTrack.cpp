@@ -31,7 +31,7 @@ bool GameTrack::generateLevel(const char *filePath)
 
 	// Level gen loop
 	int lastLength[7] = {0, 0, 0, 0, 0, 0, 0};
-	float cubeLength = 5.0f;
+	float cubeLength = 9.0f;
 
 	for(unsigned int lvi = 0; lvi < 7; lvi++) {
 		for(unsigned int lvj = 0; lvj < 4; lvj++) {
