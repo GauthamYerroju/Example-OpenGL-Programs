@@ -26,16 +26,14 @@ class PhysicsObject : public Object
 		btTransform GetWorldTransform();
 		btRigidBody * GetRigidBody();
 
-	private:
-		btCollisionShape 		*collisionShape;
+	protected:
 		btDefaultMotionState	*motionState;
+		btCollisionShape 		*collisionShape;
 		btRigidBody				*rigidBody;
 
 		btScalar				mass;
 		btVector3				inertia;
-
-
-
+	
 };
 
 #endif /* PHYSICCSOBJECT_H */
