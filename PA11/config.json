@@ -12,68 +12,8 @@
 
     },
     {
-        "name":             "Segment",
-        "modelFile":        "models/segment.obj"
-    },
-    {
-        "name":             "Frame",
-        "modelFile":        "models/frame.obj"
-    },
-    {
-        "name":             "Board",
-        "modelFile":        "models/board.obj"
-    },
-    {
         "name":             "Ball",
-        "modelFile":        "models/ballC.obj"
-    },
-    {
-        "name":             "Paddle",
-        "modelFile":        "models/paddleC.obj"
-    },
-    {
-        "name":             "LeftFlipper",
-        "modelFile":        "models/l_flipper.obj"
-    },
-    {
-        "name":             "RightFlipper",
-        "modelFile":        "models/r_flipper.obj"
-    },
-    {
-        "name":             "Bumper1",
-        "modelFile":        "models/bumper.obj"
-    },
-    {
-        "name":             "TopBumper1",
-        "modelFile":        "models/t_bumper.obj"
-    },
-    {
-        "name":             "OuterBumper1",
-        "modelFile":        "models/outer_bumper.obj"
-    },
-    {
-        "name":             "Bumper2",
-        "modelFile":        "models/bumper.obj"
-    },
-    {
-        "name":             "TopBumper2",
-        "modelFile":        "models/t_bumper.obj"
-    },
-    {
-        "name":             "OuterBumper2",
-        "modelFile":        "models/outer_bumper.obj"
-    },
-    {
-        "name":             "Bumper3",
-        "modelFile":        "models/bumper.obj"
-    },
-    {
-        "name":             "TopBumper3",
-        "modelFile":        "models/t_bumper.obj"
-    },
-    {
-        "name":             "OuterBumper3",
-        "modelFile":        "models/outer_bumper.obj"
+        "modelFile":        "models/Ship.obj"
     },
     {
         "name":             "Track",

@@ -31,7 +31,7 @@ bool GameTrack::generateLevel(const char *filePath)
 
 	// Level gen loop
 	int lastLength[7] = {0, 0, 0, 0, 0, 0, 0};
-	float cubeLength = 2.0f;
+	float cubeLength = 5.0f;
 
 	for(unsigned int lvi = 0; lvi < 7; lvi++) {
 		for(unsigned int lvj = 0; lvj < 4; lvj++) {
@@ -53,7 +53,7 @@ bool GameTrack::generateLevel(const char *filePath)
 					// Scale along z
 					vert.vertex.z = vert.vertex.z * scale;
 					// Offset z by half of cube length (bring it to start line)
-					vert.vertex.z -= lastLength[lvi] + (cubeLength * scale / 2.0f) - 1.0f;
+					vert.vertex.z -= lastLength[lvi] + (cubeLength * scale / 2.0f);
 					// Offset x by lane number
 					vert.vertex.x += ( (float)lvi - 3.0f ) * (cubeLength);
 					// Offset y by constant amount
@@ -65,7 +65,7 @@ bool GameTrack::generateLevel(const char *filePath)
 				btTransform localTransform = btTransform( btQuaternion(0, 0, 0, 1), btVector3(
 					( (float)lvi - 3.0f ) * (cubeLength),
 					0.0,
-					-(lastLength[lvi] + (cubeLength * scale / 2.0f) - 1.0f)
+					-(lastLength[lvi] + (cubeLength * scale / 2.0f))
 				));
 				btCollisionShape *block = new btBoxShape( btVector3(cubeLength/2, cubeLength/2, cubeLength/2 * scale) );
 				
@@ -138,7 +138,7 @@ Mesh* GameTrack::loadMesh(const char *filePath)
       }
       else
 	  {
-        printf("%s: Mesh does not have vertices/n", mesh->mName.C_Str());
+        printf("%s: Mesh does not have vertices\n", mesh->mName.C_Str());
 	  }
 
       // Normals
@@ -149,7 +149,7 @@ Mesh* GameTrack::loadMesh(const char *filePath)
       }
       else
 	  {
-        printf("%s: Mesh does not have normals/n", mesh->mName.C_Str());
+        printf("%s: Mesh does not have normals\n", mesh->mName.C_Str());
 	  }
 
       // UV coordinates
@@ -159,7 +159,7 @@ Mesh* GameTrack::loadMesh(const char *filePath)
       }
       else
 	  {
-        printf("%s: Mesh does not have texture coordinates/n", mesh->mName.C_Str());
+        printf("%s: Mesh does not have texture coordinates\n", mesh->mName.C_Str());
 	  }
 
       tmpMesh->Vertices.push_back(vert);

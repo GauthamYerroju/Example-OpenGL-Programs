@@ -146,8 +146,6 @@ bool Graphics::LoadConfig( char *configFile )
 
       ball->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
 
-      ball->GetRigidBody()->setLinearFactor(btVector3(1, 0, 1));
-
       world.AddRigidBody(ball->GetRigidBody());
     }
     else
@@ -354,6 +352,33 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
 void Graphics::HandleInput(Input *m_input)
 {
+  // NOTE!!! This is just placeholder code,
+  //  should be replaced by flags for movement, like pinball flippers
+  
+  // Movement: left and right (set velocity)
+  // Key Down
+  if (m_input->KeyDown(SDLK_LEFT))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(-3, 0, 0));
+  else if (m_input->KeyDown(SDLK_RIGHT))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(3, 0, 0));
+  // Key Up
+  if (m_input->KeyUp(SDLK_LEFT))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+  else if (m_input->KeyUp(SDLK_RIGHT))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+  
+  // Movement: up and down (set velocity)
+  // Key Down
+  else if (m_input->KeyDown(SDLK_UP))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -3));
+  else if (m_input->KeyDown(SDLK_DOWN))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 3));
+  // Key Up
+  if (m_input->KeyUp(SDLK_UP))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+  else if (m_input->KeyUp(SDLK_DOWN))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+  
   // Change zoom
   if (m_input->KeyDown(SDLK_z))
   {
