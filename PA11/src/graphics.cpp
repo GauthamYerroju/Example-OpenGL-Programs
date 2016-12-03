@@ -138,13 +138,14 @@ bool Graphics::LoadConfig( char *configFile )
 
       if( !ball->Initialize(PhysicsObject::SPHERE_SHAPE,  //CollisionShape
                               1,  //Mass
-                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 5.0, 0.0) ),  //WorldTranformation
+                              btTransform( btQuaternion(0.0, 0.0, 0.0, 1.0), btVector3(0.0, 5.0, -2.0) ),  //WorldTranformation
                               0.8,  //Restitution
                               1.5   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
 
       ball->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
+      ball->GetRigidBody()->setDamping(0.5, 0.5);
 
       world.AddRigidBody(ball->GetRigidBody());
     }
@@ -370,28 +371,29 @@ void Graphics::HandleInput(Input *m_input)
   //  should be replaced by flags for movement, like pinball flippers
   
   // Movement: left and right (set velocity)
+  btVector3 shipVelocity = ball->GetRigidBody()->getLinearVelocity();
   // Key Down
   if (m_input->KeyDown(SDLK_LEFT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(-3, 0, 0));
-  else if (m_input->KeyDown(SDLK_RIGHT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(3, 0, 0));
+  {
+    ball->GetRigidBody()->setLinearVelocity(btVector3(-10, shipVelocity.y(), shipVelocity.z()));
+  }
+  if (m_input->KeyDown(SDLK_RIGHT))
+    ball->GetRigidBody()->setLinearVelocity(btVector3(10, shipVelocity.y(), shipVelocity.z()));
   // Key Up
   if (m_input->KeyUp(SDLK_LEFT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
   else if (m_input->KeyUp(SDLK_RIGHT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+    ball->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
   
   // Movement: up and down (set velocity)
   // Key Down
-  else if (m_input->KeyDown(SDLK_UP))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, -3));
-  else if (m_input->KeyDown(SDLK_DOWN))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 3));
-  // Key Up
-  if (m_input->KeyUp(SDLK_UP))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
-  else if (m_input->KeyUp(SDLK_DOWN))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+  else if (m_input->KeyPressed(SDLK_UP))
+  {
+    if (shipVelocity.z() > -25.0)
+      ball->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -25));
+  }
+  else if (m_input->KeyPressed(SDLK_DOWN))
+    ball->GetRigidBody()->applyDamping(0.1);
   
   // Change zoom
   if (m_input->KeyDown(SDLK_z))
@@ -469,7 +471,7 @@ void Graphics::resetBall()
   ball->GetRigidBody()->setAngularVelocity(zeroVector);
 
   transform = ball->GetRigidBody()->getCenterOfMassTransform();
-  transform.setOrigin( btVector3(0.0, 5.0, 0.0) );
+  transform.setOrigin( btVector3(0.0, 5.0, -2.0) );
   ball->GetRigidBody()->setCenterOfMassTransform(transform);
 }
 
