@@ -192,9 +192,13 @@ bool Graphics::LoadConfig( char *configFile )
     else if(label == "Track")
     {
       modelFile = objectConfig["modelFile"];
-      track = new Object2(modelFile.c_str());
+      track = new GameTrack( modelFile.c_str() );
 
-      track->Update();
+      if (!track->Initialize(
+        btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
+      )) {
+        printf("GameTrack failed to initialize\n");
+      }
     }
     else if(label == "Board")
     {
@@ -635,6 +639,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   world.Update(dt);
 
   // Update the physics objects
+  track->Update();
   board->Update();
   ball->Update();
   paddle->Update();
