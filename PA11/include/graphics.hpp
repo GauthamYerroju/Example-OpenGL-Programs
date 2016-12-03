@@ -46,6 +46,7 @@ class Graphics
   private:
     std::string ErrorString(GLenum error);
     bool perFragmentLighting;
+    bool zoom;
 
     Camera *m_camera;
     Shader *m_shader;
@@ -68,72 +69,36 @@ class Graphics
     float diff_Scalar;
     float spec_Scalar;
 
-    struct BumperContactResultCallback : public btCollisionWorld::ContactResultCallback
-    {
-        BumperContactResultCallback(bool* ht) : hit(ht) {}
+    // struct BumperContactResultCallback : public btCollisionWorld::ContactResultCallback
+    // {
+    //     BumperContactResultCallback(bool* ht) : hit(ht) {}
 
-        btScalar addSingleResult(   btManifoldPoint& cp,
-                                    const btCollisionObjectWrapper* colObj0Wrap,
-                                    int partId0,
-                                    int index0,
-                                    const btCollisionObjectWrapper* colObj1Wrap,
-                                    int partId1,
-                                    int index1)
-        {
-            *hit= true;
-        }
+    //     btScalar addSingleResult(   btManifoldPoint& cp,
+    //                                 const btCollisionObjectWrapper* colObj0Wrap,
+    //                                 int partId0,
+    //                                 int index0,
+    //                                 const btCollisionObjectWrapper* colObj1Wrap,
+    //                                 int partId1,
+    //                                 int index1)
+    //     {
+    //         *hit= true;
+    //     }
 
-        bool* hit;
-    };
-
-    struct SevenSegment
-    {  
-        Object *A, *B, *C, *D, *E, *F, *G;
-
-        SevenSegment(Object *a, Object *b, Object *c, Object *d, Object *e, Object *f, Object *g) : A(a), B(b), C(c), D(d), E(e), F(f), G(g) {}  
-    };
+    //     bool* hit;
+    // };
 
     void printToConsole();
     void resetBall();
 
-    Object                                *frame;
     GameTrack                             *track;
-    std::vector<SevenSegment*>             digit;
-    PhysicsObject                         *board;
     PhysicsObject                         *ball;
-    PhysicsObject                         *paddle;
-    PhysicsObject                         *lFlipper;
-    PhysicsObject                         *rFlipper;
-    PhysicsObject                         *bumper1;
-    PhysicsObject                         *tBumper1;
-    PhysicsObject                         *oBumper1;
-    PhysicsObject                         *bumper2;
-    PhysicsObject                         *tBumper2;
-    PhysicsObject                         *oBumper2;
-    PhysicsObject                         *bumper3;
-    PhysicsObject                         *tBumper3;
-    PhysicsObject                         *oBumper3;
     PhysicsWorld                          world;
 
-    bool lFlipperMoveUp;
-    bool lFlipperMoveDown;
-    bool rFlipperMove;
-    float lFlipperStep;
-    float rFlipperStep;
+    // BumperContactResultCallback *callback1;
+    // BumperContactResultCallback *callback2;
+    // BumperContactResultCallback *callback3;
 
-
-    BumperContactResultCallback *callback1;
-    BumperContactResultCallback *callback2;
-    BumperContactResultCallback *callback3;
-
-    bool bumperHit1;
-    bool bumperHit2;
-    bool bumperHit3;
-    bool zoom;
-
-    float launcherPower;
     int score;
-
     int lives;
 
     std::string perVert_vShaderFile;
