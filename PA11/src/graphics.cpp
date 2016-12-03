@@ -896,7 +896,11 @@ void Graphics::Render()
   glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
   glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
 
-//red 255,0,0
+  //red 255,0,0
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetModel()));
+  track->Render();
+  
+  return;
 
   // Render the object
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(frame->GetModel()));
