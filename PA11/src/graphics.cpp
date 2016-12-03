@@ -478,12 +478,13 @@ void Graphics::Render()
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
 
   const glm::vec4 light_pos(
-    ball->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getY(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getZ(),
+    0.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getX(),
+    3.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getY(),
+    0.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getZ(),
     1.0f);
   const glm::mat4 mv = m_camera->GetView(zoom)*ball->GetModel();
   const glm::vec4 spotDIR = mv[3] - light_pos;
+
 
    // Set material properties.
   glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
