@@ -12,6 +12,7 @@ class Window
     ~Window();
     bool Initialize(const string &name, int* width, int* height);
     void Swap();
+    SDL_Window* getWindow();
 
   private:
     SDL_Window* gWindow;

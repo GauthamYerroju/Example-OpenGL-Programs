@@ -71,3 +71,8 @@ void Window::Swap()
 {
   SDL_GL_SwapWindow(gWindow);
 }
+
+SDL_Window* Window::getWindow()
+{
+  return gWindow;
+}

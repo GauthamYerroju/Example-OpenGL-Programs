@@ -41,6 +41,9 @@ class Engine
     bool selectDiffuse;
     bool selectSpecular;
     bool selectSpotLight;
+
+    short unsigned int fps_msCount = 0;
+    short unsigned int fps_frameCount = 0;
 };
 
 #endif // ENGINE_H

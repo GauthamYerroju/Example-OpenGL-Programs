@@ -7,6 +7,8 @@ Engine::Engine(string name, int width, int height)
   m_WINDOW_WIDTH = width;
   m_WINDOW_HEIGHT = height;
   m_FULLSCREEN = false;
+  fps_frameCount = 0;
+  fps_msCount = 0;
 }
 
 Engine::Engine(string name)
@@ -15,6 +17,8 @@ Engine::Engine(string name)
   m_WINDOW_HEIGHT = 0;
   m_WINDOW_WIDTH = 0;
   m_FULLSCREEN = true;
+  fps_frameCount = 0;
+  fps_msCount = 0;
 }
 
 Engine::~Engine()
@@ -69,6 +73,15 @@ void Engine::Run()
     // Update the DT
     m_DT = getDT();
 
+    // Update FPS if one second has passed
+    fps_msCount += m_DT;
+    if (fps_msCount >= 1000)
+    {
+      SDL_SetWindowTitle(m_window->getWindow(), (m_WINDOW_NAME + " (FPS: "+ to_string(fps_frameCount) +")").c_str() );
+      fps_msCount = 0;
+      fps_frameCount = 0;
+    }
+
     // Check the keyboard input
     m_input->Update();
     Keyboard();
@@ -80,6 +93,8 @@ void Engine::Run()
 
     // Swap to the Window
     m_window->Swap();
+
+    fps_frameCount++;
   }
 }
 
