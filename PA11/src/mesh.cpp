@@ -6,12 +6,6 @@ Mesh::Mesh()
   std::vector<unsigned int> Indices;
 }
 
-Mesh::Mesh(Mesh *orig)
-{
-  std::vector<Vertex> Vertices(orig->Vertices);
-  std::vector<unsigned int> Indices(orig->Indices);
-}
-
 void Mesh::Initialize()
 {
   glGenBuffers(1, &VB);

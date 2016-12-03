@@ -11,7 +11,6 @@ class Mesh
 {
   public:
     Mesh();
-    Mesh(Mesh *orig);
     ~Mesh();
     void Initialize();
     void Render();
