@@ -65,7 +65,7 @@ bool GameTrack::generateLevel(const char *filePath)
 				btTransform localTransform = btTransform( btQuaternion(0, 0, 0, 1), btVector3(
 					( (float)lvi - 3.0f ) * (cubeLength),
 					0.0,
-					lastLength[lvi] + (cubeLength * scale / 2.0f) - 1.0f
+					-(lastLength[lvi] + (cubeLength * scale / 2.0f) - 1.0f)
 				));
 				btCollisionShape *block = new btBoxShape( btVector3(cubeLength/2, cubeLength/2, cubeLength/2 * scale) );
 				
