@@ -5,10 +5,10 @@ GameTrack::GameTrack(const char *lvlPath) : PhysicsObject()
 	levelFile = lvlPath;
 }
 
-GameTrack::~GameTrack()
-{
-	// delete terrainMeshes;
-}
+// GameTrack::~GameTrack()
+// {
+// 	// delete terrainMeshes;
+// }
 
 bool GameTrack::generateLevel(const char *filePath)
 {
@@ -33,8 +33,6 @@ bool GameTrack::generateLevel(const char *filePath)
 	int lastLength[7] = {0, 0, 0, 0, 0, 0, 0};
 	float cubeLength = 2.0f;
 
-	btCollisionShape *cubeShape = new btBoxShape(btVector3(cubeLength/2, cubeLength/2, cubeLength/2));
-
 	for(unsigned int lvi = 0; lvi < 7; lvi++) {
 		for(unsigned int lvj = 0; lvj < 4; lvj++) {
 			if (lData[lvi][lvj] == -1)
@@ -45,12 +43,12 @@ bool GameTrack::generateLevel(const char *filePath)
 			while (terrain >= 10) {
 				terrain -= 10;
 			}
-			printf("\n[%d, %d, %d]: Scale: %f, terrain: %d\t", lvi, lvj, lData[lvi][lvj], scale, terrain);
 			// Create mesh only if terrain exists here
 			if (terrain > 0) {
-				Mesh segment = getTerrainMesh(terrain);
+				// Create a copy of the terrain's template mesh
+				Mesh *segment = getTerrainMesh(terrain);
 				// Transform the vertices of the mesh
-				for(auto & vert : segment.Vertices)
+				for(auto & vert : segment->Vertices)
 				{
 					// Scale along z
 					vert.vertex.z = vert.vertex.z * scale;
@@ -61,8 +59,7 @@ bool GameTrack::generateLevel(const char *filePath)
 					// Offset y by constant amount
 					// vert.vertex.y += 0.0f;
 				}
-				meshes.push_back(segment);
-				printf("Mesh added for [%d, %d]\n", lvi, lvj);
+				meshes.push_back(*segment);
 
 				// Create corresponding collision shape
 				btTransform localTransform = btTransform( btQuaternion(0, 0, 0, 1), btVector3(
@@ -78,13 +75,19 @@ bool GameTrack::generateLevel(const char *filePath)
 			lastLength[lvi] += cubeLength * scale;
 		}
 	}
+	for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
+	{
+		meshes[MeshIndx].Initialize();
+	}
+
 	return true;
 }
 
-Mesh GameTrack::getTerrainMesh(int terrainId)
+Mesh* GameTrack::getTerrainMesh(int terrainId)
 {
 	// Load the mesh for selected terrain if it isn't already
-	if ( terrainMeshes[terrainId] == NULL )
+	// if ( terrainMeshes[terrainId] == NULL )
+	if (true)
 	{
 		const char *terrainModel;
 		switch (terrainId) {
@@ -98,9 +101,7 @@ Mesh GameTrack::getTerrainMesh(int terrainId)
 		terrainMeshes[terrainId] = loadMesh(terrainModel);
 	}
 
-	// Create a copy of the base mesh and return it
-	Mesh segment = new Mesh( terrainMeshes[terrainId] );
-	return segment;
+	return terrainMeshes[terrainId];
 }
 
 Mesh* GameTrack::loadMesh(const char *filePath)

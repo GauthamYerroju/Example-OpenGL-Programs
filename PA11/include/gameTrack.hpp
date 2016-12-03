@@ -9,7 +9,7 @@ class GameTrack : public PhysicsObject
   public:
     // GameTrack();
     GameTrack(const char *lvlPath);
-    ~GameTrack();
+    // ~GameTrack();
 
     bool Initialize( btTransform worldTrans );
 
@@ -20,7 +20,7 @@ class GameTrack : public PhysicsObject
     
     bool generateLevel(const char *filePath);
     Mesh* loadMesh(const char *filePath);
-    Mesh getTerrainMesh(int terrainId);
+    Mesh* getTerrainMesh(int terrainId);
 };
 
 #endif /* GAME_TRACK */
