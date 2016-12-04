@@ -91,7 +91,7 @@ class Graphics
     void resetBall();
 
     GameTrack                             *track;
-    PhysicsObject                         *ball;
+    PhysicsObject                         *ship;
     PhysicsWorld                          world;
 
     // BumperContactResultCallback *callback1;
