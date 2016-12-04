@@ -1,5 +1,5 @@
 # Blender MTL File: 'Ship.blend'
-# Material Count: 6
+# Material Count: 14
 
 newmtl Body
 Ns 96.078431
@@ -10,7 +10,18 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd  High-Res-Brushed-Metal-Silver-Texture.jpg
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
+
+newmtl Body_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
 
 newmtl Cockpit
 Ns 96.078431
@@ -21,7 +32,51 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd  wing_connector.jpg
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
+
+newmtl Cockpit_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/wing_connector.jpg
+
+newmtl Engine
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/chrome_wing.jpg
+
+newmtl Engine_Cowl
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/wing_connector.jpg
+
+newmtl Engine_Cowl_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/wing_connector.jpg
 
 newmtl Grill
 Ns 96.078431
@@ -32,6 +87,29 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
+
+newmtl Grill_body.jpg
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/High-Res-Brushed-Metal-Silver-Texture.jpg
+
+newmtl Undercarroiage
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
 
 newmtl Wing
 Ns 96.078431
@@ -42,7 +120,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd  chrome_wing.jpg
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
 
 newmtl Wing_Connectgors
 Ns 96.078431
@@ -53,7 +131,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd  wing_connector.jpg
+map_Kd ../models/wing_connector.jpg
 
 newmtl Wing_plating
 Ns 96.078431
@@ -64,4 +142,15 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 0
-map_Kd  bumpy-blue-plastic-texture.jpg
+map_Kd ../models/bumpy-blue-plastic-texture.jpg
+
+newmtl Wing_plating_NONE
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 0
+map_Kd ../models/High-Res-Brushed-Metal-Silver-Texture.jpg
