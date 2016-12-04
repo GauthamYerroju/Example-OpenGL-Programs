@@ -398,7 +398,11 @@ void Graphics::HandleInput(Input *m_input)
   // Change zoom
   if (m_input->KeyDown(SDLK_z))
   {
-    zoom = !zoom;
+    if(ball->GetRigidBody()->getCenterOfMassPosition().getY() < 5.51 &&
+              ball->GetRigidBody()->getCenterOfMassPosition().getY() > 5.49)
+    {
+      ball->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
+    }
   }
 
   // Reset the ball
