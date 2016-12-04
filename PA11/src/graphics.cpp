@@ -139,7 +139,7 @@ bool Graphics::LoadConfig( char *configFile )
       if( !ball->Initialize(PhysicsObject::BOX_SHAPE,  //CollisionShape
                               1,  //Mass
                               btTransform( btQuaternion(0.0, 1.59, 0.0, 0), btVector3(0.0, 5.0, -4.0) ),  //WorldTranformation
-                              0.8,  //Restitution
+                              0.0,  //Restitution
                               0.0   //Friction
                               ))
         printf("PhysicsObject failed to initialize\n");
