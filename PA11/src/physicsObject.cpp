@@ -25,64 +25,167 @@ PhysicsObject::~PhysicsObject()
 
 }
 
-bool PhysicsObject::Initialize( CollisionShapeType shape, btScalar m, btTransform worldTrans, float restitution, float friction )
+
+/**
+ * Initialize a Tirangle Mesh physics object (STATIC)
+ * @param  _worldTrans  Rigid transforms from origin with only translation and rotation
+						Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        Mass coefficient of object
+ * @param  _restitution Ratio of relative velocity after collision to relative velocity before collision
+ *                      The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    Friction coefficient of object 
+ *                      In the range of [0,1]:[no friction, high friction]
+ * @return              True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Init_TriMesh(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction)
 {
-	switch(shape)
+	btCollisionShape *tmp_collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
+
+	if( !tmp_collisionShape )
 	{
-		case TRIANGLE_MESH:
-			//
-			collisionShape = new btBvhTriangleMeshShape(Get_TriangleMesh(), true);
-			break;
-		case SPHERE_SHAPE:
-			// Sphere with radius 0.5
-			collisionShape = new btSphereShape(0.220);
-			break;
-		case BOX_SHAPE:
-			// box primitive around the origin, its sides axis aligned with length specified by half extents, in local shape coordinates
-			// halt extents: btVector3(dx, dy, dz), The full extents of the box will be twice the half extents
-			collisionShape = new btBoxShape(btVector3(1, 1 ,1));
-			break;
-		case STATIC_PLANE_SHAPE:
-			// Static Plane with normal (0, 1, 0) and planeConstant of 0.5
-			collisionShape = new btStaticPlaneShape( btVector3(0, -1, 0), 0.5 );
-			break;
-		case CYLINDER_SHAPE:
-			//btVector3(radius, height, radius)
-			//0.2308337m radius on x
-			//0.3063307m radius on y
-			//0.2308337m radius on z
-			//collisionShape = new btCylinderShapeZ( btVector3(0.2308337, 0.2308337, 0.3063307) );
-			collisionShape = new btCylinderShapeZ( btVector3(0.230, 0.230, 0.306) );
-			break;
-		default:
-			printf("collisionShape failed to init\n");
-			return false;
-	}
-
-
-	// btTransform: rigid transforms with only translation and rotation
-	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
-	motionState = new btDefaultMotionState( worldTrans );
-	if( !motionState){
-		printf("motionState failed to init\n");
+		printf("collisionShape failed to initialize\n");
 		return false;
 	}
 
-	mass = m;
+	return Initialize( tmp_collisionShape, _worldTrans, _mass, _restitution, _friction );
+}
+
+/**
+ * Initialize a Sphere physics object
+ * @param  _worldTrans  Rigid transforms from origin with only translation and rotation
+						Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        Mass coefficient of object
+ * @param  _restitution Ratio of relative velocity after collision to relative velocity before collision
+ *                      The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    Friction coefficient of object 
+ *                      In the range of [0,1]:[no friction, high friction]
+ * @param  _radius      Radius of sphere
+ * @return              True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Init_Sphere(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, float _radius)
+{
+	btCollisionShape *tmp_collisionShape = new btSphereShape(_radius);
+
+	if( !tmp_collisionShape )
+	{
+		printf("collisionShape failed to initialize\n");
+		return false;
+	}
+
+	return Initialize( tmp_collisionShape, _worldTrans, _mass, _restitution, _friction );
+
+}
+
+/**
+ * Initialize a Box physics object
+ * @param  _worldTrans  Rigid transforms from origin with only translation and rotation
+						Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        Mass coefficient of object
+ * @param  _restitution Ratio of relative velocity after collision to relative velocity before collision
+ *                      The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    Friction coefficient of object 
+ *                      In the range of [0,1]:[no friction, high friction]
+ * @param  _halfExtents half extents: btVector3(dx, dy, dz), The full extents of the box will be twice the half extents
+ * @return              True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Init_Box(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _halfExtents)
+{
+	btCollisionShape *tmp_collisionShape = new btBoxShape(_halfExtents);
+
+	if( !tmp_collisionShape )
+	{
+		printf("collisionShape failed to initialize\n");
+		return false;
+	}
+
+	return Initialize( tmp_collisionShape, _worldTrans, _mass, _restitution, _friction );
+}
+
+/**
+ * Initialize a Cylinder physics object
+ * @param  _worldTrans  Rigid transforms from origin with only translation and rotation
+						Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        Mass coefficient of object
+ * @param  _restitution Ratio of relative velocity after collision to relative velocity before collision
+ *                      The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    Friction coefficient of object 
+ *                      In the range of [0,1]:[no friction, high friction]
+ * @param  _halfExtents half extents: btVector3(radius, radius, height). The full extents of the cylinder will be twice the half extents
+ * @return              True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Init_Cylinder(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _halfExtents)
+{
+	btCollisionShape *tmp_collisionShape = new btCylinderShapeZ(_halfExtents);
+
+	if( !tmp_collisionShape )
+	{
+		printf("collisionShape failed to initialize\n");
+		return false;
+	}
+
+	return Initialize( tmp_collisionShape, _worldTrans, _mass, _restitution, _friction );
+}
+
+/**
+ * Initialize a StaticPlane physics object
+ * @param  _worldTrans  Rigid transforms from origin with only translation and rotation
+						Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        Mass coefficient of object
+ * @param  _restitution Ratio of relative velocity after collision to relative velocity before collision
+ *                      The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    Friction coefficient of object 
+ *                      In the range of [0,1]:[no friction, high friction]
+ * @param  _normal      positive direction of the plane
+ * @param  _constant    constant with which to project the plane
+ * @return              True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Init_StaticPlane(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _normal, float _constant)
+{
+	btCollisionShape *tmp_collisionShape = new btStaticPlaneShape(_normal, _constant);
+
+	if( !tmp_collisionShape )
+	{
+		printf("collisionShape failed to initialize\n");
+		return false;
+	}
+
+	return Initialize( tmp_collisionShape, _worldTrans, _mass, _restitution, _friction );
+}
+
+/**
+ * Initialize a physics object with given collisionShape
+ * @param  _collisionShape  A physics collision shape to initialize the phyisics object to
+ * @param  _worldTrans  	Rigid transforms from origin with only translation and rotation
+							Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
+ * @param  _mass        	Mass coefficient of object
+ * @param  _restitution 	Ratio of relative velocity after collision to relative velocity before collision
+ *                       	The coefficient of restitution is in the range [0,1]:[inelastic collision, elastic collision]
+ * @param  _friction    	Friction coefficient of object 
+ *                       	In the range of [0,1]:[no friction, high friction]
+ * @return                 	True if physics object succefully created, false otherwise.
+ */
+bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
+{	
+	collisionShape = _collisionShape;
+	motionState = new btDefaultMotionState( _worldTrans );
+	if( !motionState){
+		printf("motionState failed to initialize\n");
+		return false;
+	}
+
+	mass = _mass;
 	inertia = btVector3(0, 0, 0);
 
 	collisionShape->calculateLocalInertia( mass, inertia );
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
 	// Ratio of relative speed after to the realtive speed bofore the collision
-	constructionInfo.m_restitution = restitution;
-	constructionInfo.m_friction = friction;
-	//constructionInfo.m_restitution = 0.8f;
-	//constructionInfo.m_friction = 1.5f;
+	constructionInfo.m_restitution = _restitution;
+	constructionInfo.m_friction = _friction;
 
 	rigidBody = new btRigidBody( constructionInfo );
 	if( !rigidBody ){
-		printf("rigidBody failed to init\n");
+		printf("rigidBody failed to initialize\n");
 		return false;
 	}
 
