@@ -7,7 +7,7 @@
 class GameTrack
 {
   public:
-    GameTrack(const char *lvlPath);
+    GameTrack(btTransform *worldTrans, const char *lvlPath);
     ~GameTrack();
     void Update();
     bool collideCheckObstacle(PhysicsObject *ship);
@@ -34,9 +34,13 @@ class GameTrack
     };
 
     const char *levelFile;
+    btTransform *worldTransform;
     PhysicsObject *trackBase;
     PhysicsObject *trackObstacles;
     std::vector<PhysicsObject> trackObjects;
+
+    btCompoundShape *shapeBase;
+    btCompoundShape *shapeObstacles;
     
     bool Initialize();
     bool generateLevel(const char *filePath);

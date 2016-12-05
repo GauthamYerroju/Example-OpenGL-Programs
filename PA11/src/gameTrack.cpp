@@ -1,16 +1,21 @@
 #include "gameTrack.hpp"
 
-GameTrack::GameTrack(const char *lvlPath)
+GameTrack::GameTrack(btTransform *worldTrans, const char *lvlPath)
 {
 	levelFile = lvlPath;
+	worldTransform = worldTrans;
 	trackBase = new PhysicsObject();
-	trackObstacles = new PhysicsObject();	
+	trackObstacles = new PhysicsObject();
+	shapeBase = new btCompoundShape();
+	shapeObstacles = new btCompoundShape();
 }
 
 GameTrack::~GameTrack()
 {
 	delete trackBase;
 	delete trackObstacles;
+	delete shapeBase;
+	delete shapeObstacles;
 }
 
 bool GameTrack::generateLevel(const char *filePath)
@@ -91,24 +96,22 @@ bool GameTrack::generateLevel(const char *filePath)
 
 		if (tile.layer == BASE) {
 			trackBase->addMesh(segment);
-			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
-			trackBase->GetShape()->addChildShape( localTransform, block );
+			btCollisionShape *block = new btBoxShape( btVector3(layerSize.x * modScale.x, layerSize.y * modScale.y, layerSize.z * modScale.z) );
+			shapeBase->addChildShape( localTransform, block );
 		}
 		else if (tile.layer == OBSTACLE) {
 			trackObstacles->addMesh(segment);
 			// Mesh shape
-			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
-			trackBase->GetShape()->addChildShape( localTransform, block );
+			btCollisionShape *block = new btBoxShape( btVector3(layerSize.x * modScale.x, layerSize.y * modScale.y, layerSize.z * modScale.z) );
+			shapeObstacles->addChildShape( localTransform, block );
 		}
 		else if (tile.layer == OBJECT)
 		{
 			PhysicsObject *obj = new PhysicsObject();
-
 			obj->addMesh(segment);
-			// Mesh/sphere shape
-			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
-			obj->GetShape()->addChildShape( localTransform, block );
-			
+			obj->Init_Box(*worldTransform, 0, 0.0, 0.0,
+				btVector3(layerSize.x * modScale.x / 2, layerSize.y * modScale.y / 2, layerSize.z * modScale.z / 2)
+			);
 			trackObjects.push_back(*obj);
 		}
 	}
@@ -235,12 +238,8 @@ bool GameTrack::Initialize()
 		printf("Could not generate level\n");
 		return false;
 	}
-	// trackBase->Initialize();
-	// trackObstacles->Initialize();
-	for( auto & obj : trackObjects )
-	{
-		// obj.Initialize();
-	}
+	trackBase->InitializeWithCompoundShape(shapeBase, *worldTransform, 0, 0.8f, 1.5f);
+	trackObstacles->InitializeWithCompoundShape(shapeObstacles, *worldTransform, 0, 0.8f, 1.5f);
 
 	return true;
 }

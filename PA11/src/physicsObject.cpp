@@ -192,6 +192,34 @@ bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _
 	return true;
 }
 
+bool PhysicsObject::Initialize( btCompoundShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
+{	
+	collisionShape = _collisionShape;
+	motionState = new btDefaultMotionState( _worldTrans );
+	if( !motionState){
+		printf("motionState failed to initialize\n");
+		return false;
+	}
+
+	mass = _mass;
+	inertia = btVector3(0, 0, 0);
+
+	collisionShape->calculateLocalInertia( mass, inertia );
+	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
+
+	// Ratio of relative speed after to the realtive speed bofore the collision
+	constructionInfo.m_restitution = _restitution;
+	constructionInfo.m_friction = _friction;
+
+	rigidBody = new btRigidBody( constructionInfo );
+	if( !rigidBody ){
+		printf("rigidBody failed to initialize\n");
+		return false;
+	}
+
+	return true;
+}
+
 
 
 btTriangleMesh * PhysicsObject::Get_TriangleMesh()

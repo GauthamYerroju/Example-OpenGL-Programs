@@ -26,6 +26,7 @@ class PhysicsObject : public Object
 		bool Init_Cylinder(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _halfExtents);
 		bool Init_StaticPlane(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _normal, float _constant);
 		bool Initialize( btCollisionShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction );
+		bool InitializeWithCompoundShape( btCompoundShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction );
 		void Update();
 		btTriangleMesh * Get_TriangleMesh();
 		btTransform GetWorldTransform();
