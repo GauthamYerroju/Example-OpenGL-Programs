@@ -23,14 +23,14 @@ Object::Object(const char *objPath)
     std::cout << "FAILED TO LOAD OBJECT" << std::endl;
   }
 
-  Initialize();
+  InitializeMeshes();
 }
 
 Object::~Object()
 {
 }
 
-bool Object::Initialize()
+bool Object::InitializeMeshes()
 {
   for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
   {
@@ -58,7 +58,7 @@ void Object::Render()
 
 void Object::addMesh(Mesh *msh)
 {
-  meshes.push_back(msh);
+  meshes.push_back(*msh);
   if (initialized)
     msh->Initialize();
 }

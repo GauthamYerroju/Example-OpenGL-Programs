@@ -16,7 +16,6 @@ PhysicsObject::PhysicsObject( const char *objPath ) : Object::Object( objPath )
 
 }
 
-
 PhysicsObject::~PhysicsObject()
 {
 	delete collisionShape;
@@ -192,7 +191,7 @@ bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _
 	return true;
 }
 
-bool PhysicsObject::Initialize( btCompoundShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
+bool PhysicsObject::InitializeWithCompoundShape( btCompoundShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
 {	
 	collisionShape = _collisionShape;
 	motionState = new btDefaultMotionState( _worldTrans );

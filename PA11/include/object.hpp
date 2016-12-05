@@ -15,7 +15,7 @@ class Object
     Object(const char *objPath);
     ~Object();
 
-    bool Initialize();
+    bool InitializeMeshes();
     void Update();
     void Render();
     void addMesh(Mesh *mesh);

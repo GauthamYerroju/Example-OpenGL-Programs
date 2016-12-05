@@ -238,6 +238,14 @@ bool GameTrack::Initialize()
 		printf("Could not generate level\n");
 		return false;
 	}
+	// Initialize meshes in objects
+	trackBase->InitializeMeshes();
+	trackObstacles->InitializeMeshes();
+	for(auto & obj : trackObjects)
+	{
+		obj.InitializeMeshes();
+	}
+	// Initialize Physics shapes
 	trackBase->InitializeWithCompoundShape(shapeBase, *worldTransform, 0, 0.8f, 1.5f);
 	trackObstacles->InitializeWithCompoundShape(shapeObstacles, *worldTransform, 0, 0.8f, 1.5f);
 
@@ -252,4 +260,27 @@ void GameTrack::Update()
 	{
 		obj.Update();
 	}
+}
+
+void GameTrack::addToWorld(PhysicsWorld *world)
+{
+	world->AddRigidBody(trackBase->GetRigidBody());
+	world->AddRigidBody(trackObstacles->GetRigidBody());
+	for(auto & obj : trackObjects)
+	{
+		world->AddRigidBody(obj.GetRigidBody());
+	}
+}
+
+PhysicsObject* GameTrack::GetBase()
+{
+	return trackBase;
+}
+PhysicsObject* GameTrack::GetObstacles()
+{
+	return trackObstacles;
+}
+std::vector<PhysicsObject> GameTrack::GetObjects()
+{
+	return trackObjects;
 }

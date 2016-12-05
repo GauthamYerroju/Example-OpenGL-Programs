@@ -3,13 +3,22 @@
 
 #include "graphics_headers.hpp"
 #include "physicsObject.hpp"
+#include "physicsWorld.hpp"
 
 class GameTrack
 {
   public:
     GameTrack(btTransform *worldTrans, const char *lvlPath);
     ~GameTrack();
+    bool Initialize();
     void Update();
+    void Render();
+    
+    void addToWorld(PhysicsWorld *world);
+    PhysicsObject* GetBase();
+    PhysicsObject* GetObstacles();
+    std::vector<PhysicsObject> GetObjects();
+
     bool collideCheckObstacle(PhysicsObject *ship);
     PhysicsObject* collideCheckObject(PhysicsObject *ship);
 
@@ -42,7 +51,6 @@ class GameTrack
     btCompoundShape *shapeBase;
     btCompoundShape *shapeObstacles;
     
-    bool Initialize();
     bool generateLevel(const char *filePath);
     Mesh* loadMesh(const char *filePath);
     Mesh* getTerrainMesh(short unsigned int terrainId);

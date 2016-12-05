@@ -121,15 +121,17 @@ bool Graphics::LoadConfig( char *configFile )
     else if(label == "Track")
     {
       modelFile = objectConfig["modelFile"];
-      track = new GameTrack( modelFile.c_str() );
 
-      if (!track->Initialize(
-        btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
-      )) {
+      track = new GameTrack(
+        new btTransform( btQuaternion(0.0, 0.0, 0.0, 0.0), btVector3(0.0, 0.0, -4.0) ), // World tranform
+        modelFile.c_str()
+      );
+
+      if (!track->Initialize()) {
         printf("GameTrack failed to initialize\n");
       }
 
-      world.AddRigidBody(track->GetRigidBody());
+      track->addToWorld(&world);
     }
     else if(label == "Ship")
     {
@@ -522,8 +524,21 @@ void Graphics::Render()
   glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
 
   // Render the objects
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetModel()));
-  track->Render();
+  PhysicsObject *tmpPhysObj;
+
+  tmpPhysObj = track->GetBase();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tmpPhysObj->GetModel()));
+  tmpPhysObj->Render();
+
+  tmpPhysObj = track->GetObstacles();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tmpPhysObj->GetModel()));
+  tmpPhysObj->Render();
+
+  for(auto & trackObj : track->GetObjects())
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(trackObj.GetModel()));
+    trackObj.Render();
+  }
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ship->GetModel()));
   ship->Render();
