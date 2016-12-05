@@ -25,6 +25,7 @@ class PhysicsObject : public Object
 		btTriangleMesh * Get_TriangleMesh();
 		btTransform GetWorldTransform();
 		btRigidBody * GetRigidBody();
+		btCollisionShape * GetShape();
 
 	protected:
 		btDefaultMotionState	*motionState;

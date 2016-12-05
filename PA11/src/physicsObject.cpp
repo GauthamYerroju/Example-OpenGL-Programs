@@ -144,3 +144,8 @@ btRigidBody * PhysicsObject::GetRigidBody()
 {
 	return rigidBody;
 }
+
+btCollisionShape * PhysicsObject::GetShape()
+{
+	return collisionShape;
+}
