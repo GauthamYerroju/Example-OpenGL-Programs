@@ -27,13 +27,13 @@ bool GameTrack::generateLevel(const char *filePath)
 	};
 
 	// Level gen loop
-	tileSize = glm::vec3(9, 3, 9);
-	obstacleSize: glm::vec3(9, 9, 9);
-	objectSize: glm::vec3(9, 9, 9);
+	glm::vec3 tileSize = glm::vec3(9, 3, 9);
+	glm::vec3 obstacleSize = glm::vec3(9, 9, 9);
+	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
 	for(unsigned int tileId = 0; tileId < 7; tileId++)
 	{
-		tile = lData[tileId];
+		Tile tile = tiles[tileId];
 		glm::vec3 layerSize;
 		if			(tile.layer == BASE)			layerSize = tileSize;
 		else if (tile.layer == OBSTACLE)	layerSize = obstacleSize;
@@ -54,7 +54,7 @@ bool GameTrack::generateLevel(const char *filePath)
 		modScale.z *= scaleZ;
 		// Calculate position offsets
 		modPosition.x += layerSize.x * tile.start.x;
-		modPosition.z += layerSize.z * tile.start.z;
+		modPosition.z += layerSize.z * tile.start.y; // start is a vec2, z is stored in vec2.y
 		// Center along x (assumes 7 lanes)
 		modPosition.x -= (tile.start.x - 3.0) * layerSize.x;
 		switch(tile.layer)
@@ -87,54 +87,50 @@ bool GameTrack::generateLevel(const char *filePath)
 		btTransform localTransform = btTransform(
 			btQuaternion(0, 0, 0, 1), // No rotation
 			btVector3(modPosition.x, modPosition.y, -modPosition.z) // Invert z
-		));
+		);
 
 		if (tile.layer == BASE) {
-			trackBase.addMesh(*segment);
+			trackBase->addMesh(segment);
 			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
 			trackBase->GetShape()->addChildShape( localTransform, block );
 		}
-		else if (track.layer == OBSTACLE) {
-			trackObstacles.addMesh(*segment);
+		else if (tile.layer == OBSTACLE) {
+			trackObstacles->addMesh(segment);
 			// Mesh shape
 			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
 			trackBase->GetShape()->addChildShape( localTransform, block );
 		}
 		else if (tile.layer == OBJECT)
 		{
-			PhysicsObject obj = new PhysicsObject();
+			PhysicsObject *obj = new PhysicsObject();
 
-			obj.addMesh(*segment);
+			obj->addMesh(segment);
 			// Mesh/sphere shape
 			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
 			obj->GetShape()->addChildShape( localTransform, block );
 			
-			trackObjects.push_back(obj);
+			trackObjects.push_back(*obj);
 		}
 	}
 
 	return true;
 }
 
-Mesh* GameTrack::getTerrainMesh(int terrainId)
+Mesh* GameTrack::getTerrainMesh(short unsigned int terrainId)
 {
 	// Load the mesh for selected terrain if it isn't already
-	// if ( terrainMeshes[terrainId] == NULL )
-	if (true)
-	{
-		const char *terrainModel;
-		switch (terrainId) {
-			case 1:
-				terrainModel = "models/terrainCube.obj";
-				break;
-			default:
-				terrainModel = "models/terrainCube.obj";
-				break;
-		}
-		terrainMeshes[terrainId] = loadMesh(terrainModel);
+	const char *terrainModel;
+	switch (terrainId) {
+		case 1:
+			terrainModel = "models/terrainCube.obj";
+			break;
+		default:
+			terrainModel = "models/terrainCube.obj";
+			break;
 	}
+	Mesh *terrainMesh = loadMesh(terrainModel);
 
-	return terrainMeshes[terrainId];
+	return terrainMesh;
 }
 
 Mesh* GameTrack::loadMesh(const char *filePath)
@@ -236,11 +232,11 @@ bool GameTrack::Initialize()
 		printf("Could not generate level\n");
 		return false;
 	}
-	trackBase->Initialize();
-	trackObstacles->Inistalize();
+	// trackBase->Initialize();
+	// trackObstacles->Initialize();
 	for( auto & obj : trackObjects )
 	{
-		obj.Initialize();
+		// obj.Initialize();
 	}
 
 	return true;
