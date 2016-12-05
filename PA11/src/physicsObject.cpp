@@ -3,6 +3,7 @@
 PhysicsObject::PhysicsObject()
 {
 	collisionShape = NULL;
+	compoundShape = NULL;
 	motionState = NULL;
 	rigidBody = NULL;
 }
@@ -11,17 +12,17 @@ PhysicsObject::PhysicsObject()
 PhysicsObject::PhysicsObject( const char *objPath ) : Object::Object( objPath )
 {
 	collisionShape = NULL;
+	compoundShape = NULL;
 	motionState = NULL;
 	rigidBody = NULL;
-
 }
 
 PhysicsObject::~PhysicsObject()
 {
+	
 	delete collisionShape;
 	delete motionState;
 	delete rigidBody;
-
 }
 
 
@@ -164,7 +165,7 @@ bool PhysicsObject::Init_StaticPlane(btTransform _worldTrans, btScalar _mass, fl
  * @return                 	True if physics object succefully created, false otherwise.
  */
 bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
-{	
+{
 	collisionShape = _collisionShape;
 	motionState = new btDefaultMotionState( _worldTrans );
 	if( !motionState){
@@ -191,11 +192,11 @@ bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _
 	return true;
 }
 
-bool PhysicsObject::InitializeWithCompoundShape( btCompoundShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
-{	
-	collisionShape = _collisionShape;
+bool PhysicsObject::InitializeWithCompoundShape( btCompoundShape *_compoundShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
+{
+	compoundShape = _compoundShape;
 	motionState = new btDefaultMotionState( _worldTrans );
-	if( !motionState){
+	if( !motionState ){
 		printf("motionState failed to initialize\n");
 		return false;
 	}
@@ -203,8 +204,8 @@ bool PhysicsObject::InitializeWithCompoundShape( btCompoundShape *_collisionShap
 	mass = _mass;
 	inertia = btVector3(0, 0, 0);
 
-	collisionShape->calculateLocalInertia( mass, inertia );
-	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
+	compoundShape->calculateLocalInertia( mass, inertia );
+	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, compoundShape, inertia );
 
 	// Ratio of relative speed after to the realtive speed bofore the collision
 	constructionInfo.m_restitution = _restitution;

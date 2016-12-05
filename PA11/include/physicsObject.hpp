@@ -35,6 +35,7 @@ class PhysicsObject : public Object
 	protected:
 		btDefaultMotionState	*motionState;
 		btCollisionShape 		*collisionShape;
+		btCompoundShape 		*compoundShape;
 		btRigidBody				*rigidBody;
 
 		btScalar				mass;

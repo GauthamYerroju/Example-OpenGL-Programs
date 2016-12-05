@@ -1,6 +1,6 @@
 #include "gameTrack.hpp"
 
-GameTrack::GameTrack(btTransform *worldTrans, const char *lvlPath)
+GameTrack::GameTrack(btTransform worldTrans, const char *lvlPath)
 {
 	levelFile = lvlPath;
 	worldTransform = worldTrans;
@@ -16,6 +16,27 @@ GameTrack::~GameTrack()
 	delete trackObstacles;
 	delete shapeBase;
 	delete shapeObstacles;
+}
+
+bool GameTrack::Initialize()
+{
+	if ( !generateLevel( levelFile ) )
+	{
+		printf("Could not generate level\n");
+		return false;
+	}
+	// Initialize meshes in objects
+	trackBase->InitializeMeshes();
+	trackObstacles->InitializeMeshes();
+	for(auto & obj : trackObjects)
+	{
+		obj.InitializeMeshes();
+	}
+	// Initialize Physics shapes
+	trackBase->InitializeWithCompoundShape(shapeBase, worldTransform, 0, 0.8f, 1.5f);
+	trackObstacles->InitializeWithCompoundShape(shapeObstacles, worldTransform, 0, 0.8f, 1.5f);
+
+	return true;
 }
 
 bool GameTrack::generateLevel(const char *filePath)
@@ -44,7 +65,8 @@ bool GameTrack::generateLevel(const char *filePath)
 		else if (tile.layer == OBSTACLE)	layerSize = obstacleSize;
 		else if (tile.layer == OBJECT)		layerSize = objectSize;
 		else															layerSize = tileSize;
-		// Get the scale along the x ans z axes
+		printf("Processing tile %d...\n", tileId);
+		// Get the scale along the x and z axes
 		float scaleX = tile.stop.x - tile.start.x + 1;
 		float scaleZ = tile.stop.y - tile.start.y + 1;
 
@@ -58,10 +80,8 @@ bool GameTrack::generateLevel(const char *filePath)
 		modScale.x *= scaleX;
 		modScale.z *= scaleZ;
 		// Calculate position offsets
-		modPosition.x += layerSize.x * tile.start.x;
-		modPosition.z += layerSize.z * tile.start.y; // start is a vec2, z is stored in vec2.y
-		// Center along x (assumes 7 lanes)
-		modPosition.x -= (tile.start.x - 3.0) * layerSize.x;
+		modPosition.x += (tile.start.x - 3.0) * layerSize.x;
+		modPosition.z -= layerSize.z * tile.start.y; // start is a vec2, z is stored in vec2.y
 		switch(tile.layer)
 		{
 			case BASE:
@@ -90,27 +110,27 @@ bool GameTrack::generateLevel(const char *filePath)
 
 		// Create corresponding collision shape
 		btTransform localTransform = btTransform(
-			btQuaternion(0, 0, 0, 1), // No rotation
+			btQuaternion(0, 0, 0, 0), // No rotation
 			btVector3(modPosition.x, modPosition.y, -modPosition.z) // Invert z
 		);
 
 		if (tile.layer == BASE) {
 			trackBase->addMesh(segment);
-			btCollisionShape *block = new btBoxShape( btVector3(layerSize.x * modScale.x, layerSize.y * modScale.y, layerSize.z * modScale.z) );
+			btCollisionShape *block = new btBoxShape( btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2) );
 			shapeBase->addChildShape( localTransform, block );
 		}
 		else if (tile.layer == OBSTACLE) {
 			trackObstacles->addMesh(segment);
 			// Mesh shape
-			btCollisionShape *block = new btBoxShape( btVector3(layerSize.x * modScale.x, layerSize.y * modScale.y, layerSize.z * modScale.z) );
+			btCollisionShape *block = new btBoxShape( btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2) );
 			shapeObstacles->addChildShape( localTransform, block );
 		}
 		else if (tile.layer == OBJECT)
 		{
 			PhysicsObject *obj = new PhysicsObject();
 			obj->addMesh(segment);
-			obj->Init_Box(*worldTransform, 0, 0.0, 0.0,
-				btVector3(layerSize.x * modScale.x / 2, layerSize.y * modScale.y / 2, layerSize.z * modScale.z / 2)
+			obj->Init_Box(localTransform, 0, 0.0, 0.0,
+				btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2)
 			);
 			trackObjects.push_back(*obj);
 		}
@@ -229,27 +249,6 @@ Mesh* GameTrack::loadMesh(const char *filePath)
 
 	delete tmpObj;
   return NULL;
-}
-
-bool GameTrack::Initialize()
-{
-	if ( !generateLevel( levelFile ) )
-	{
-		printf("Could not generate level\n");
-		return false;
-	}
-	// Initialize meshes in objects
-	trackBase->InitializeMeshes();
-	trackObstacles->InitializeMeshes();
-	for(auto & obj : trackObjects)
-	{
-		obj.InitializeMeshes();
-	}
-	// Initialize Physics shapes
-	trackBase->InitializeWithCompoundShape(shapeBase, *worldTransform, 0, 0.8f, 1.5f);
-	trackObstacles->InitializeWithCompoundShape(shapeObstacles, *worldTransform, 0, 0.8f, 1.5f);
-
-	return true;
 }
 
 void GameTrack::Update()

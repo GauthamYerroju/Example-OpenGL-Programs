@@ -8,7 +8,7 @@
 class GameTrack
 {
   public:
-    GameTrack(btTransform *worldTrans, const char *lvlPath);
+    GameTrack(btTransform worldTrans, const char *lvlPath);
     ~GameTrack();
     bool Initialize();
     void Update();
@@ -18,9 +18,6 @@ class GameTrack
     PhysicsObject* GetBase();
     PhysicsObject* GetObstacles();
     std::vector<PhysicsObject> GetObjects();
-
-    bool collideCheckObstacle(PhysicsObject *ship);
-    PhysicsObject* collideCheckObject(PhysicsObject *ship);
 
   private:
     enum Layer
@@ -43,7 +40,7 @@ class GameTrack
     };
 
     const char *levelFile;
-    btTransform *worldTransform;
+    btTransform worldTransform;
     PhysicsObject *trackBase;
     PhysicsObject *trackObstacles;
     std::vector<PhysicsObject> trackObjects;

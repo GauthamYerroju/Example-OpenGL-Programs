@@ -123,7 +123,7 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
 
       track = new GameTrack(
-        new btTransform( btQuaternion(0.0, 0.0, 0.0, 0.0), btVector3(0.0, 0.0, -4.0) ), // World tranform
+        btTransform( btQuaternion(0.0, 0.0, 0.0, 0), btVector3(0.0, 0.0, 0.0) ), // World tranform
         modelFile.c_str()
       );
 
