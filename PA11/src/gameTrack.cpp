@@ -94,7 +94,6 @@ bool GameTrack::generateLevel(const char *filePath)
 				modPosition.y = layerSize.y * (tile.hOffset + 0.5);
 				break;
 		}
-		printf("Position: %s\n", glm::to_string(modPosition).c_str());
 
 		// Create a copy of the terrain's template mesh
 		Mesh *segment = getTerrainMesh(tile.terrainId);
