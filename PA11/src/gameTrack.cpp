@@ -42,14 +42,18 @@ bool GameTrack::Initialize()
 bool GameTrack::generateLevel(const char *filePath)
 {
 	// Level data
-	Tile tiles[7] = {
+	Tile tiles[10] = {
 		{ glm::vec2(0, 0), glm::vec2(0, 6), 1, BASE, 0 },
 		{ glm::vec2(1, 2), glm::vec2(1, 3), 1, BASE, 0 },
 		{ glm::vec2(1, 5), glm::vec2(1, 6), 1, BASE, 0 },
 		{ glm::vec2(2, 0), glm::vec2(4, 6), 1, BASE, 0 },
 		{ glm::vec2(5, 1), glm::vec2(5, 2), 1, BASE, 0 },
 		{ glm::vec2(5, 4), glm::vec2(5, 5), 1, BASE, 0 },
-		{ glm::vec2(6, 0), glm::vec2(6, 6), 1, BASE, 0 }
+		{ glm::vec2(6, 0), glm::vec2(6, 6), 1, BASE, 0 },
+		
+		{ glm::vec2(2, 5), glm::vec2(4, 5), 1, OBSTACLE, 0 },
+		{ glm::vec2(5, 4), glm::vec2(5, 4), 1, OBSTACLE, 0 },
+		{ glm::vec2(0, 3), glm::vec2(0, 3), 1, OBSTACLE, 0 }
 	};
 
 	// Level gen loop
@@ -57,7 +61,7 @@ bool GameTrack::generateLevel(const char *filePath)
 	glm::vec3 obstacleSize = glm::vec3(9, 9, 9);
 	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
-	for(unsigned int tileId = 0; tileId < 7; tileId++)
+	for(unsigned int tileId = 0; tileId < 10; tileId++)
 	{
 		Tile tile = tiles[tileId];
 		glm::vec3 layerSize;
@@ -84,17 +88,10 @@ bool GameTrack::generateLevel(const char *filePath)
 		switch(tile.layer)
 		{
 			case BASE:
-				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2);
-				break;
-			case OBSTACLE:
-				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
-				break;
-			case OBJECT:
-				// TODO: Position depends on object dimensions
-				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
+				modPosition.y = tileSize.y * (tile.hOffset - 0.5);
 				break;
 			default:
-				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
+				modPosition.y = layerSize.y * (tile.hOffset + 0.5);
 				break;
 		}
 		printf("Position: %s\n", glm::to_string(modPosition).c_str());
