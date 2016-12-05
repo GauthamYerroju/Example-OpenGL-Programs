@@ -179,7 +179,7 @@ bool PhysicsObject::Initialize( btCollisionShape *_collisionShape, btTransform _
 	collisionShape->calculateLocalInertia( mass, inertia );
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
 
-	// Ratio of relative speed after to the realtive speed bofore the collision
+	// Ratio of relative speed after to the realtive speed before the collision
 	constructionInfo.m_restitution = _restitution;
 	constructionInfo.m_friction = _friction;
 
@@ -207,7 +207,7 @@ bool PhysicsObject::InitializeWithCompoundShape( btCompoundShape *_compoundShape
 	compoundShape->calculateLocalInertia( mass, inertia );
 	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, compoundShape, inertia );
 
-	// Ratio of relative speed after to the realtive speed bofore the collision
+	// Ratio of relative speed after to the realtive speed before the collision
 	constructionInfo.m_restitution = _restitution;
 	constructionInfo.m_friction = _friction;
 

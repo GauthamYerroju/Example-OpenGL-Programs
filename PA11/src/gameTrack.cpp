@@ -81,7 +81,7 @@ bool GameTrack::generateLevel(const char *filePath)
 		modScale.z *= scaleZ;
 		// Calculate position offsets
 		modPosition.x += (tile.start.x - 3.0) * layerSize.x;
-		modPosition.z -= layerSize.z * tile.start.y; // start is a vec2, z is stored in vec2.y
+		modPosition.z -= (tile.start.y - 0.5) * layerSize.z; // start is a vec2, z is stored in vec2.y
 		switch(tile.layer)
 		{
 			case BASE:
