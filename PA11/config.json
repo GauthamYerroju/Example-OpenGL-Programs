@@ -12,7 +12,7 @@
 
     },
     {
-        "name":             "Ball",
+        "name":             "Ship",
         "modelFile":        "models/Ship.obj"
     },
     {

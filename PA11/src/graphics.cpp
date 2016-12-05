@@ -131,23 +131,25 @@ bool Graphics::LoadConfig( char *configFile )
 
       world.AddRigidBody(track->GetRigidBody());
     }
-    else if(label == "Ball")
+    else if(label == "Ship")
     {
-      modelFile = objectConfig["modelFile"];
-      ball = new PhysicsObject( modelFile.c_str() );
 
-      if( !ball->Initialize(PhysicsObject::BOX_SHAPE,  //CollisionShape
-                              1,  //Mass
-                              btTransform( btQuaternion(0.0, 1.59, 0.0, 0), btVector3(0.0, 5.0, -4.0) ),  //WorldTranformation
-                              0.0,  //Restitution
-                              0.0   //Friction
-                              ))
+      modelFile = objectConfig["modelFile"];
+      ship = new PhysicsObject( modelFile.c_str() );
+
+      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 1.59, 0.0, 0), btVector3(0.0, 5.0, -4.0) ),  //WorldTranformation
+                          1,  //Mass
+                          0.0,  //Restitution
+                          0.0,   //Friction
+                          btVector3(4.969, 1.405, 6.384)  //Box half extents
+                          )
+      )
         printf("PhysicsObject failed to initialize\n");
 
-      ball->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
-      ball->GetRigidBody()->setDamping(0.5, 30);
+      ship->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
+      ship->GetRigidBody()->setDamping(0.5, 30);
 
-      world.AddRigidBody(ball->GetRigidBody());
+      world.AddRigidBody(ship->GetRigidBody());
     }
     else
     {
@@ -341,25 +343,25 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
   // Update the physics objects
   track->Update();
-  ball->Update();
+  ship->Update();
 
   // callback1 = new BumperContactResultCallback(&bumperHit1);
-  // world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper1->GetRigidBody(), *callback1);
+  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper1->GetRigidBody(), *callback1);
   // callback2 = new BumperContactResultCallback(&bumperHit2);
-  // world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
+  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
   // callback3 = new BumperContactResultCallback(&bumperHit3);
-  // world.GetWorld()->contactPairTest(ball->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
+  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
   m_camera->SetPosition(glm::vec3(
-    ball->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
-    ball->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
+    ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
+    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
   ));
 
   m_camera->SetFocusPoint(glm::vec3(
-    ball->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getY(),
-    ball->GetRigidBody()->getCenterOfMassPosition().getZ()
+    ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+    ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+    ship->GetRigidBody()->getCenterOfMassPosition().getZ()
   ));
 
   m_camera->Update(zoom);
@@ -368,44 +370,44 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 void Graphics::HandleInput(Input *m_input)
 {
   // NOTE!!! This is just placeholder code,
-  //  should be replaced by flags for movement, like pinball flippers
+  //  should be replaced by flags for movement, like pinship flippers
 
   // Movement: left and right (set velocity)
-  btVector3 shipVelocity = ball->GetRigidBody()->getLinearVelocity();
+  btVector3 shipVelocity = ship->GetRigidBody()->getLinearVelocity();
   // Key Down
   if (m_input->KeyDown(SDLK_LEFT))
   {
-    ball->GetRigidBody()->setLinearVelocity(btVector3(-10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(-10, shipVelocity.y(), shipVelocity.z()));
   }
   if (m_input->KeyDown(SDLK_RIGHT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(10, shipVelocity.y(), shipVelocity.z()));
   // Key Up
   if (m_input->KeyUp(SDLK_LEFT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
   else if (m_input->KeyUp(SDLK_RIGHT))
-    ball->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
 
   // Movement: up and down (set velocity)
   // Key Down
   else if (m_input->KeyPressed(SDLK_UP))
   {
     if (shipVelocity.z() > -25.0)
-      ball->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -25));
+      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -25));
   }
   else if (m_input->KeyPressed(SDLK_DOWN))
-    ball->GetRigidBody()->applyDamping(0.1);
+    ship->GetRigidBody()->applyDamping(0.1);
 
   // Change zoom
   if (m_input->KeyDown(SDLK_z))
   {
-    if(ball->GetRigidBody()->getCenterOfMassPosition().getY() < 5.51 &&
-              ball->GetRigidBody()->getCenterOfMassPosition().getY() > 5.49)
+    if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < 5.51 &&
+              ship->GetRigidBody()->getCenterOfMassPosition().getY() > 5.49)
     {
-      ball->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
+      ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
     }
   }
 
-  // Reset the ball
+  // Reset the ship
   if (m_input->KeyDown(SDLK_r))
   {
     if (lives == 0 || (m_input->GetModState() & KMOD_SHIFT)) {
@@ -470,13 +472,13 @@ void Graphics::resetBall()
   btTransform transform;
   btVector3 zeroVector(0,0,0);
 
-  ball->GetRigidBody()->clearForces();
-  ball->GetRigidBody()->setLinearVelocity(zeroVector);
-  ball->GetRigidBody()->setAngularVelocity(zeroVector);
+  ship->GetRigidBody()->clearForces();
+  ship->GetRigidBody()->setLinearVelocity(zeroVector);
+  ship->GetRigidBody()->setAngularVelocity(zeroVector);
 
-  transform = ball->GetRigidBody()->getCenterOfMassTransform();
+  transform = ship->GetRigidBody()->getCenterOfMassTransform();
   transform.setOrigin( btVector3(0.0, 5.0, -2.0) );
-  ball->GetRigidBody()->setCenterOfMassTransform(transform);
+  ship->GetRigidBody()->setCenterOfMassTransform(transform);
 }
 
 void Graphics::Render()
@@ -498,11 +500,11 @@ void Graphics::Render()
   const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
 
   const glm::vec4 light_pos(
-    0.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getX(),
-    3.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getY(),
-    0.0f, // ball->GetRigidBody()->getCenterOfMassPosition().getZ(),
+    0.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+    3.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+    0.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getZ(),
     1.0f);
-  const glm::mat4 mv = m_camera->GetView()*ball->GetModel();
+  const glm::mat4 mv = m_camera->GetView()*ship->GetModel();
   const glm::vec4 spotDIR = mv[3] - light_pos;
 
 
@@ -523,8 +525,8 @@ void Graphics::Render()
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetModel()));
   track->Render();
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ball->GetModel()));
-  ball->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ship->GetModel()));
+  ship->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();
