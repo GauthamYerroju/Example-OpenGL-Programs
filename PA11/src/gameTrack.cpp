@@ -110,7 +110,7 @@ bool GameTrack::generateLevel(const char *filePath)
 
 		// Create corresponding collision shape
 		btTransform localTransform = btTransform(
-			btQuaternion(0, 0, 0, 0), // No rotation
+			btQuaternion(0, 0, 0, 1), // No rotation
 			btVector3(modPosition.x, modPosition.y, -modPosition.z) // Invert z
 		);
 

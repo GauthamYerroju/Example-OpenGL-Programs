@@ -123,7 +123,7 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
 
       track = new GameTrack(
-        btTransform( btQuaternion(0.0, 0.0, 0.0, 0), btVector3(0.0, 0.0, 0.0) ), // World tranform
+        btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ), // World tranform
         modelFile.c_str()
       );
 
@@ -139,7 +139,7 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
       ship = new PhysicsObject( modelFile.c_str() );
 
-      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 1.59, 0.0, 0), btVector3(0.0, 5.0, -4.0) ),  //WorldTranformation
+      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 5.0, -2.0) ),  //WorldTranformation
                           1,  //Mass
                           0.0,  //Restitution
                           0.0,   //Friction
@@ -356,8 +356,8 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
   m_camera->SetPosition(glm::vec3(
     ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
-    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
+    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 26.0,
+    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 60.0
   ));
 
   m_camera->SetFocusPoint(glm::vec3(
@@ -524,15 +524,11 @@ void Graphics::Render()
   glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
 
   // Render the objects
-  PhysicsObject *tmpPhysObj;
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetBase()->GetModel()));
+  track->GetBase()->Render();
 
-  tmpPhysObj = track->GetBase();
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tmpPhysObj->GetModel()));
-  tmpPhysObj->Render();
-
-  tmpPhysObj = track->GetObstacles();
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(tmpPhysObj->GetModel()));
-  tmpPhysObj->Render();
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetObstacles()->GetModel()));
+  track->GetObstacles()->Render();
 
   for(auto & trackObj : track->GetObjects())
   {
