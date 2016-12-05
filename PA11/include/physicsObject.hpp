@@ -20,7 +20,12 @@ class PhysicsObject : public Object
 			STATIC_PLANE_SHAPE = 5
 		};
 
-		bool Initialize( CollisionShapeType shape, btScalar m, btTransform worldTrans, float restitution, float friction );
+		bool Init_TriMesh(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction);
+		bool Init_Sphere(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, float _radius);
+		bool Init_Box(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _halfExtents);
+		bool Init_Cylinder(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _halfExtents);
+		bool Init_StaticPlane(btTransform _worldTrans, btScalar _mass, float _restitution, float _friction, btVector3 _normal, float _constant);
+		bool Initialize( btCollisionShape *_collisionShape, btTransform _worldTrans, btScalar _mass, float _restitution, float _friction )
 		void Update();
 		btTriangleMesh * Get_TriangleMesh();
 		btTransform GetWorldTransform();
