@@ -2,6 +2,7 @@
 
 Object::Object()
 {
+  initialized = false;
   origin = glm::mat4(1.0f);
   translationVec = glm::vec3(0.0f);
   rotationAngle = 0.0f;
@@ -11,26 +12,31 @@ Object::Object()
 
 Object::Object(const char *objPath)
 {
-
-  if(!Model_Loader(objPath)){
-    std::cout << "FAILED TO LOAD OBJECT" << std::endl;
-  }
-
-  for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
-  {
-    meshes[MeshIndx].Initialize();
-  }
-
+  initialized = false;
   origin = glm::mat4(1.0f);
   translationVec = glm::vec3(0.0f);
   rotationAngle = 0.0f;
   rotationAxis = glm::vec3(1.0f);
   scaler = 1.0f;
 
+  if(!Model_Loader(objPath)){
+    std::cout << "FAILED TO LOAD OBJECT" << std::endl;
+  }
+
+  Initialize();
 }
 
 Object::~Object()
 {
+}
+
+bool Object::Initialize()
+{
+  for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
+  {
+    meshes[MeshIndx].Initialize();
+  }
+  initialized = true;
 }
 
 void Object::Update()
@@ -42,15 +48,28 @@ void Object::Update()
   model = translation * rotation * scale;
 }
 
+void Object::Render()
+{
+  for( unsigned int meshIndx = 0; meshIndx < meshes.size(); meshIndx++ )
+  {
+    meshes[meshIndx].Render();
+  }
+}
+
+void Object::addMesh(Mesh *msh)
+{
+  meshes.push_back(msh);
+  if (initialized)
+    msh->Initialize();
+}
+
 void Object::Set_Origin( glm::mat4 orig )
 {
   origin = orig;
 }
 
-
 void Object::Set_TranslationVec( glm::vec3 tVec )
 {
-
   translationVec = tVec;
 }
 
@@ -60,33 +79,20 @@ void Object::Set_RotationAngle( float rotAngle, glm::vec3 rotAxis )
   rotationAxis = rotAxis;
 }
 
-
 void Object::Set_Scaler( float sclr )
 {
   scaler = sclr;
 }
-
 
 glm::mat4 Object::GetModel()
 {
   return model;
 }
 
-
 glm::mat4 Object::GetPosition()
 {
   return translation;
 }
-
-
-void Object::Render()
-{
-  for( unsigned int meshIndx = 0; meshIndx < meshes.size(); meshIndx++ )
-  {
-    meshes[meshIndx].Render();
-  }
-}
-
 
 bool Object::Model_Loader(const char *filePath)
 {
@@ -174,7 +180,6 @@ bool Object::Model_Loader(const char *filePath)
 
   return true;
 }
-
 
 bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
 {

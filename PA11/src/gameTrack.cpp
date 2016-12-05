@@ -1,83 +1,116 @@
 #include "gameTrack.hpp"
 
-GameTrack::GameTrack(const char *lvlPath) : PhysicsObject()
+GameTrack::GameTrack(const char *lvlPath)
 {
 	levelFile = lvlPath;
+	trackBase = new PhysicsObject();
+	trackObstacles = new PhysicsObject();	
 }
 
-// GameTrack::~GameTrack()
-// {
-// 	// delete terrainMeshes;
-// }
+GameTrack::~GameTrack()
+{
+	delete trackBase;
+	delete trackObstacles;
+}
 
 bool GameTrack::generateLevel(const char *filePath)
 {
 	// Level data
-	// Row: Lane
-	// Column: length and terrain type of tile
-	// 			10s place: length
-	//			 1s place: terrain ID
-	//		TODO: Improve specification(into array) for more than 10 terrain types
-	// -1: end of data, like \0 in strings
-	int lData[7][4] = {
-		{71, -1, -1, -1},
-		{20, 11, 20, 11},
-		{71, -1, -1, -1},
-		{71, -1, -1, -1},
-		{71, -1, -1, -1},
-		{20, 11, 20, 11},
-		{71, -1, -1, -1}
+	Tile tiles[7] = {
+		{ glm::vec2(0, 0), glm::vec2(0, 7), 1, BASE, 0 },
+		{ glm::vec2(1, 2), glm::vec2(1, 3), 1, BASE, 0 },
+		{ glm::vec2(1, 5), glm::vec2(1, 6), 1, BASE, 0 },
+		{ glm::vec2(2, 0), glm::vec2(4, 7), 1, BASE, 0 },
+		{ glm::vec2(5, 2), glm::vec2(5, 3), 1, BASE, 0 },
+		{ glm::vec2(5, 5), glm::vec2(5, 6), 1, BASE, 0 },
+		{ glm::vec2(6, 0), glm::vec2(6, 7), 1, BASE, 0 }
 	};
 
 	// Level gen loop
-	int lastLength[7] = {0, 0, 0, 0, 0, 0, 0};
-	float cubeLength = 9.0f;
+	tileSize = glm::vec3(9, 3, 9);
+	obstacleSize: glm::vec3(9, 9, 9);
+	objectSize: glm::vec3(9, 9, 9);
 
-	for(unsigned int lvi = 0; lvi < 7; lvi++) {
-		for(unsigned int lvj = 0; lvj < 4; lvj++) {
-			if (lData[lvi][lvj] == -1)
-				break;
-				
-			float scale = (float) ( lData[lvi][lvj] / 10 );
-			int terrain = lData[lvi][lvj];
-			while (terrain >= 10) {
-				terrain -= 10;
-			}
-			// Create mesh only if terrain exists here
-			if (terrain > 0) {
-				// Create a copy of the terrain's template mesh
-				Mesh *segment = getTerrainMesh(terrain);
-				// Transform the vertices of the mesh
-				for(auto & vert : segment->Vertices)
-				{
-					// Scale along z
-					vert.vertex.z = vert.vertex.z * scale;
-					// Offset z by half of cube length (bring it to start line)
-					vert.vertex.z -= lastLength[lvi] + (cubeLength * scale / 2.0f);
-					// Offset x by lane number
-					vert.vertex.x += ( (float)lvi - 3.0f ) * (cubeLength);
-					// Offset y by constant amount
-					// vert.vertex.y += 0.0f;
-				}
-				meshes.push_back(*segment);
-
-				// Create corresponding collision shape
-				btTransform localTransform = btTransform( btQuaternion(0, 0, 0, 1), btVector3(
-					( (float)lvi - 3.0f ) * (cubeLength),
-					0.0,
-					-(lastLength[lvi] + (cubeLength * scale / 2.0f))
-				));
-				btCollisionShape *block = new btBoxShape( btVector3(cubeLength/2, cubeLength/2, cubeLength/2 * scale) );
-				
-				collisionShape->addChildShape( localTransform, block );
-			}
-			// Update last length = last length + scaled cube length of current block
-			lastLength[lvi] += cubeLength * scale;
-		}
-	}
-	for( unsigned int MeshIndx = 0; MeshIndx < meshes.size(); MeshIndx++ )
+	for(unsigned int tileId = 0; tileId < 7; tileId++)
 	{
-		meshes[MeshIndx].Initialize();
+		tile = lData[tileId];
+		glm::vec3 layerSize;
+		if			(tile.layer == BASE)			layerSize = tileSize;
+		else if (tile.layer == OBSTACLE)	layerSize = obstacleSize;
+		else if (tile.layer == OBJECT)		layerSize = objectSize;
+		else															layerSize = tileSize;
+		// Get the scale along the x ans z axes
+		float scaleX = tile.stop.x - tile.start.x + 1;
+		float scaleZ = tile.stop.y - tile.start.y + 1;
+
+		// Calculate the scale and position modifiers for current tile
+
+		glm::vec3 modScale(1.0f, 1.0f, 1.0f);
+		glm::vec3 modPosition(0.0f, 0.0f, 0.0f);
+		// First, scale unit cube to tile size
+		modScale *= layerSize;
+		// Scale along xz axis (the ground plane)
+		modScale.x *= scaleX;
+		modScale.z *= scaleZ;
+		// Calculate position offsets
+		modPosition.x += layerSize.x * tile.start.x;
+		modPosition.z += layerSize.z * tile.start.z;
+		// Center along x (assumes 7 lanes)
+		modPosition.x -= (tile.start.x - 3.0) * layerSize.x;
+		switch(tile.layer)
+		{
+			case BASE:
+				modPosition.y += tile.hOffset - (tileSize.y / 2);
+				break;
+			case OBSTACLE:
+				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				break;
+			case OBJECT:
+				// TODO: Position depends on object dimensions
+				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				break;
+			default:
+				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				break;
+		}
+
+		// Create a copy of the terrain's template mesh
+		Mesh *segment = getTerrainMesh(tile.terrainId);
+		// Apply scale and position modifiers to vertices
+		for(auto & vert : segment->Vertices)
+		{
+			vert.vertex *= modScale;
+			vert.vertex += modPosition;
+		}
+
+		// Create corresponding collision shape
+		btTransform localTransform = btTransform(
+			btQuaternion(0, 0, 0, 1), // No rotation
+			btVector3(modPosition.x, modPosition.y, -modPosition.z) // Invert z
+		));
+
+		if (tile.layer == BASE) {
+			trackBase.addMesh(*segment);
+			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
+			trackBase->GetShape()->addChildShape( localTransform, block );
+		}
+		else if (track.layer == OBSTACLE) {
+			trackObstacles.addMesh(*segment);
+			// Mesh shape
+			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
+			trackBase->GetShape()->addChildShape( localTransform, block );
+		}
+		else if (tile.layer == OBJECT)
+		{
+			PhysicsObject obj = new PhysicsObject();
+
+			obj.addMesh(*segment);
+			// Mesh/sphere shape
+			btCollisionShape *block = new btBoxShape( btVector3(modScale.x, modScale.y, modScale.z) );
+			obj->GetShape()->addChildShape( localTransform, block );
+			
+			trackObjects.push_back(obj);
+		}
 	}
 
 	return true;
@@ -196,41 +229,29 @@ Mesh* GameTrack::loadMesh(const char *filePath)
   return NULL;
 }
 
-bool GameTrack::Initialize( btTransform worldTrans )
+bool GameTrack::Initialize()
 {
-
-	collisionShape = new btCompoundShape();
-
 	if ( !generateLevel( levelFile ) )
 	{
 		printf("Could not generate level\n");
-	}
-
-	// btTransform: rigid transforms with only translation and rotation
-	// Rotation: btQuaternion(x, y, z, w), Translation: btVector3(x, y, z)
-	motionState = new btDefaultMotionState( worldTrans );
-	if( !motionState){
-		printf("motionState failed to init\n");
 		return false;
 	}
-
-	mass = 0;
-	inertia = btVector3(0, 0, 0);
-	btScalar restitution = 0.8;
-	btScalar friction = 1.5;
-
-	collisionShape->calculateLocalInertia( mass, inertia );
-	btRigidBody::btRigidBodyConstructionInfo constructionInfo( mass, motionState, collisionShape, inertia );
-
-	// Ratio of relative speed after to the realtive speed before the collision
-	constructionInfo.m_restitution = restitution;
-	constructionInfo.m_friction = friction;
-
-	rigidBody = new btRigidBody( constructionInfo );
-	if( !rigidBody ){
-		printf("rigidBody failed to init\n");
-		return false;
+	trackBase->Initialize();
+	trackObstacles->Inistalize();
+	for( auto & obj : trackObjects )
+	{
+		obj.Initialize();
 	}
 
 	return true;
+}
+
+void GameTrack::Update()
+{
+	trackBase->Update();
+	trackObstacles->Update();
+	for( auto & obj : trackObjects )
+	{
+		obj.Update();
+	}
 }

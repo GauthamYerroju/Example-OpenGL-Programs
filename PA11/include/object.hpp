@@ -12,24 +12,27 @@ class Object
 {
   public:
     Object();
-    Object(const char *objPath );
+    Object(const char *objPath);
     ~Object();
 
-    bool Model_Loader(const char *filePath);
-    bool Texture_Loader(const char *filePath, Mesh *mesh);
-
+    bool Initialize();
     void Update();
     void Render();
+    void addMesh(Mesh *mesh);
 
     void Set_Origin( glm::mat4 orig ); 
     void Set_TranslationVec( glm::vec3 tVec );
     void Set_RotationAngle( float rotAngle, glm::vec3 rotAxis );
     void Set_Scaler( float sclr );
+    
+    bool Model_Loader(const char *filePath);
+    bool Texture_Loader(const char *filePath, Mesh *mesh);
 
     glm::mat4 GetModel();
     glm::mat4 GetPosition();
 
   protected:
+    bool initialized;
 
     glm::mat4 model;
     glm::mat4 translation;
@@ -43,7 +46,6 @@ class Object
     float scaler;
 
     std::vector<Mesh> meshes;
-
 };
 
 #endif /* OBJECT_H */
