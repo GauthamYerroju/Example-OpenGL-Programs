@@ -43,13 +43,13 @@ bool GameTrack::generateLevel(const char *filePath)
 {
 	// Level data
 	Tile tiles[7] = {
-		{ glm::vec2(0, 0), glm::vec2(0, 7), 1, BASE, 0 },
+		{ glm::vec2(0, 0), glm::vec2(0, 6), 1, BASE, 0 },
 		{ glm::vec2(1, 2), glm::vec2(1, 3), 1, BASE, 0 },
 		{ glm::vec2(1, 5), glm::vec2(1, 6), 1, BASE, 0 },
-		{ glm::vec2(2, 0), glm::vec2(4, 7), 1, BASE, 0 },
-		{ glm::vec2(5, 2), glm::vec2(5, 3), 1, BASE, 0 },
-		{ glm::vec2(5, 5), glm::vec2(5, 6), 1, BASE, 0 },
-		{ glm::vec2(6, 0), glm::vec2(6, 7), 1, BASE, 0 }
+		{ glm::vec2(2, 0), glm::vec2(4, 6), 1, BASE, 0 },
+		{ glm::vec2(5, 1), glm::vec2(5, 2), 1, BASE, 0 },
+		{ glm::vec2(5, 4), glm::vec2(5, 5), 1, BASE, 0 },
+		{ glm::vec2(6, 0), glm::vec2(6, 6), 1, BASE, 0 }
 	};
 
 	// Level gen loop
@@ -65,39 +65,39 @@ bool GameTrack::generateLevel(const char *filePath)
 		else if (tile.layer == OBSTACLE)	layerSize = obstacleSize;
 		else if (tile.layer == OBJECT)		layerSize = objectSize;
 		else															layerSize = tileSize;
-		printf("Processing tile %d...\n", tileId);
+
 		// Get the scale along the x and z axes
 		float scaleX = tile.stop.x - tile.start.x + 1;
 		float scaleZ = tile.stop.y - tile.start.y + 1;
 
 		// Calculate the scale and position modifiers for current tile
 
-		glm::vec3 modScale(1.0f, 1.0f, 1.0f);
-		glm::vec3 modPosition(0.0f, 0.0f, 0.0f);
+		glm::vec3 modScale;
+		glm::vec3 modPosition;
 		// First, scale unit cube to tile size
-		modScale *= layerSize;
-		// Scale along xz axis (the ground plane)
-		modScale.x *= scaleX;
-		modScale.z *= scaleZ;
+		modScale.x = layerSize.x * scaleX;
+		modScale.y = layerSize.y;
+		modScale.z = layerSize.z * scaleZ;
 		// Calculate position offsets
-		modPosition.x += (tile.start.x - 3.0) * layerSize.x;
-		modPosition.z -= (tile.start.y - 0.5) * layerSize.z; // start is a vec2, z is stored in vec2.y
+		modPosition.x = layerSize.x * (scaleX * 0.5 + tile.start.x - 3.5);
+		modPosition.z = -( layerSize.z * (scaleZ * 0.5 + tile.start.y) ); // start is a vec2, z is stored in vec2.y
 		switch(tile.layer)
 		{
 			case BASE:
-				modPosition.y += tile.hOffset - (tileSize.y / 2);
+				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2);
 				break;
 			case OBSTACLE:
-				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
 				break;
 			case OBJECT:
 				// TODO: Position depends on object dimensions
-				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
 				break;
 			default:
-				modPosition.y += tile.hOffset - (tileSize.y / 2) + (obstacleSize.y / 2);
+				modPosition.y = tile.hOffset * layerSize.y - (tileSize.y / 2) + (obstacleSize.y / 2);
 				break;
 		}
+		printf("Position: %s\n", glm::to_string(modPosition).c_str());
 
 		// Create a copy of the terrain's template mesh
 		Mesh *segment = getTerrainMesh(tile.terrainId);
@@ -111,7 +111,7 @@ bool GameTrack::generateLevel(const char *filePath)
 		// Create corresponding collision shape
 		btTransform localTransform = btTransform(
 			btQuaternion(0, 0, 0, 1), // No rotation
-			btVector3(modPosition.x, modPosition.y, -modPosition.z) // Invert z
+			btVector3(modPosition.x, modPosition.y, modPosition.z)
 		);
 
 		if (tile.layer == BASE) {
