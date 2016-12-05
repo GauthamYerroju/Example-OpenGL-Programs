@@ -354,10 +354,10 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   // callback3 = new BumperContactResultCallback(&bumperHit3);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
-  m_camera->SetPosition(glm::vec3(
+  m_camera->SetPosition(glm::vec3( 
     ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 26.0,
-    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 60.0
+    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
+    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
   ));
 
   m_camera->SetFocusPoint(glm::vec3(
