@@ -136,6 +136,8 @@ Mesh* GameTrack::getTerrainMesh(short unsigned int terrainId)
 Mesh* GameTrack::loadMesh(const char *filePath)
 {
   Assimp::Importer importer;
+	// Temporary Object for using Texture_Loader
+	Object *tmpObj = new Object();
 
   const aiScene *scene = importer.ReadFile( filePath, aiProcessPreset_TargetRealtime_Fast | aiProcess_Triangulate );
   if( !scene )
@@ -212,16 +214,17 @@ Mesh* GameTrack::loadMesh(const char *filePath)
       if ( mtl->GetTexture(aiTextureType_DIFFUSE, 0, &tFileName, NULL, NULL, NULL, NULL, NULL) == AI_SUCCESS )
       {
         tPath = "models/" + std::string( tFileName.data );
-        if ( !Texture_Loader(tPath.c_str(), tmpMesh ) )
+        if ( !tmpObj->Texture_Loader(tPath.c_str(), tmpMesh ) )
         {
           printf("Failed to load diffuse texture #%d for '%s'\n", mtl->GetTextureCount(aiTextureType_DIFFUSE), mesh->mName.C_Str() );
         }
       }
     }
-
+		delete tmpObj;
     return tmpMesh;
   }
 
+	delete tmpObj;
   return NULL;
 }
 
