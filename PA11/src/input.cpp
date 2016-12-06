@@ -14,13 +14,15 @@ void Input::Update()
   {
     if (m_event.type == SDL_KEYDOWN)
     {
+      if (keysPressed[m_event.key.keysym.sym] != true)
+        keysDown[m_event.key.keysym.sym] = true;
       keysPressed[m_event.key.keysym.sym] = true;
-      keysDown[m_event.key.keysym.sym] = true;
     }
     if (m_event.type == SDL_KEYUP)
     {
+      if (keysPressed[m_event.key.keysym.sym] != false) {}
+        keysUp[m_event.key.keysym.sym] = true;
       keysPressed[m_event.key.keysym.sym] = false;
-      keysUp[m_event.key.keysym.sym] = true;
     }
     quit = (m_event.type == SDL_QUIT);
   }
