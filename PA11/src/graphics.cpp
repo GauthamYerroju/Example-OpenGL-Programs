@@ -79,6 +79,7 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   spotLightAngle = 10;
 
   score = 0;
+  jumping = false;
 
   printToConsole();
 
@@ -347,8 +348,24 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   track->Update();
   ship->Update();
 
-  // callback1 = new BumperContactResultCallback(&bumperHit1);
-  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper1->GetRigidBody(), *callback1);
+  // Update collision flags
+  bool groundHitTest;
+  bool obstacleHitTest;
+  CollisionCallback *collTest;
+
+  collTest = new CollisionCallback(&groundHitTest);
+  world.GetWorld()->contactPairTest(ship->GetRigidBody(), track->GetBase()->GetRigidBody(), *collTest);
+  delete collTest;
+
+  collTest = new CollisionCallback(&obstacleHitTest);
+  world.GetWorld()->contactPairTest(ship->GetRigidBody(), track->GetObstacles()->GetRigidBody(), *collTest);
+  delete collTest;
+
+  if (groundHitTest || obstacleHitTest)
+    jumping = false;
+
+  if (obstacleHitTest)
+    printf("Hit an obstacle at speed: %f\n", ship->GetRigidBody()->getLinearVelocity().getZ());
   // callback2 = new BumperContactResultCallback(&bumperHit2);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
   // callback3 = new BumperContactResultCallback(&bumperHit3);
@@ -399,14 +416,11 @@ void Graphics::HandleInput(Input *m_input)
   else if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
 
-  // Change zoom
-  if (m_input->KeyDown(SDLK_z))
+  // Jump
+  if (!jumping && m_input->KeyDown(SDLK_z))
   {
-    if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < 1.5 &&
-              ship->GetRigidBody()->getCenterOfMassPosition().getY() > 1.4)
-    {
-      ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
-    }
+    ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
+    jumping = true;
   }
 
   // Reset the ship
@@ -415,7 +429,7 @@ void Graphics::HandleInput(Input *m_input)
     if (lives == 0 || (m_input->GetModState() & KMOD_SHIFT)) {
       lives = 3;
       score = 0;
-      resetBall();
+      resetShip();
       printToConsole();
     }
   }
@@ -469,7 +483,7 @@ void Graphics::printToConsole()
   // printf("    C:       Select spotlight radius scalar\n");
 }
 
-void Graphics::resetBall()
+void Graphics::resetShip()
 {
   btTransform transform;
   btVector3 zeroVector(0,0,0);

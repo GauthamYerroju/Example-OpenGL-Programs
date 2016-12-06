@@ -69,30 +69,29 @@ class Graphics
     float diff_Scalar;
     float spec_Scalar;
 
-    // struct BumperContactResultCallback : public btCollisionWorld::ContactResultCallback
-    // {
-    //     BumperContactResultCallback(bool* ht) : hit(ht) {}
-
-    //     btScalar addSingleResult(   btManifoldPoint& cp,
-    //                                 const btCollisionObjectWrapper* colObj0Wrap,
-    //                                 int partId0,
-    //                                 int index0,
-    //                                 const btCollisionObjectWrapper* colObj1Wrap,
-    //                                 int partId1,
-    //                                 int index1)
-    //     {
-    //         *hit= true;
-    //     }
-
-    //     bool* hit;
-    // };
-
     void printToConsole();
-    void resetBall();
+    void resetShip();
 
     GameTrack                             *track;
     PhysicsObject                         *ship;
     PhysicsWorld                          world;
+
+    struct CollisionCallback : public btCollisionWorld::ContactResultCallback
+    {
+        CollisionCallback(bool* ht) : hit(ht) {}
+        btScalar addSingleResult(   btManifoldPoint& cp,
+            const btCollisionObjectWrapper* colObj0Wrap,
+            int partId0,
+            int index0,
+            const btCollisionObjectWrapper* colObj1Wrap,
+            int partId1,
+            int index1)
+        {
+            *hit= true;
+        }
+
+        bool* hit;
+    };
 
     // BumperContactResultCallback *callback1;
     // BumperContactResultCallback *callback2;
@@ -100,6 +99,7 @@ class Graphics
 
     int score;
     int lives;
+    bool jumping;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
