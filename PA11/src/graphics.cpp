@@ -402,8 +402,8 @@ void Graphics::HandleInput(Input *m_input)
   // Change zoom
   if (m_input->KeyDown(SDLK_z))
   {
-    if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < 5.51 &&
-              ship->GetRigidBody()->getCenterOfMassPosition().getY() > 5.49)
+    if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < 1.5 &&
+              ship->GetRigidBody()->getCenterOfMassPosition().getY() > 1.4)
     {
       ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
     }
