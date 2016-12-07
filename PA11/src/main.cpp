@@ -12,20 +12,20 @@ int main(int argc, char **argv)
   if( argc < 2 ){
     printf( "ERROR: Incorrect command line arguments (MISSING ARGUMENT)\n" );
     printf("\n Usage : <exe-filename> <config-filepath>\n");
-    printf("\n Example : ./PA9 ../config.json\n");
+    printf("\n Example : ./PA11 ../config.json\n");
     return 1;
   }
   if( argc > 2 ){
     printf( "ERROR: Incorrect command line arguments (TOO MANY ARGUMENTS)\n" );
     printf("\n Usage : <exe-filename> <config-filepath>\n");
-    printf("\n Example : ./PA9 ../config.json\n");
+    printf("\n Example : ./PA11 ../config.json\n");
     return 1;
   }
 
   /******************************************/
 
   // Start an engine and run it then cleanup after
-  Engine *engine = new Engine("Bullet Physics", 1024, 768);
+  Engine *engine = new Engine("SkyRoads", 1024, 768);
   // Engine *engine = new Engine("Bullet Physics");
   if(!engine->Initialize(argv[1]))
   {
