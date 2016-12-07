@@ -34,6 +34,7 @@
 #include <btBulletDynamicsCommon.h>
 
 #include <math.h>
+#include <vector>
 
 #define INVALID_UNIFORM_LOCATION 0x7fffffff
 
@@ -47,6 +48,55 @@ struct Vertex
 
   Vertex(glm::vec3 v, glm::vec2 uv, glm::vec3 n): vertex(v), uv_Coords(uv), normal(n) {}
 };
+
+
+struct Lights
+{
+	struct DirLight 
+	{
+	    glm::vec3 direction;
+		
+	    glm::vec3 ambient;
+	    glm::vec3 diffuse;
+	    glm::vec3 specular;
+	};
+
+	struct PointLight 
+	{
+	    glm::vec3 position;
+	    
+	    // Used for attenuation
+	    float constant;
+	    float linear;
+	    float quadratic;
+
+	    glm::vec3 ambient;
+	    glm::vec3 diffuse;
+	    glm::vec3 specular;
+	};
+
+	struct SpotLight 
+	{
+	    glm::vec3 position;
+	    glm::vec3 direction;
+	    float cutOffAngle;
+	  
+	    // Used for attenuation
+	    float constant;
+	    float linear;
+	    float quadratic;
+	  
+	    glm::vec3 ambient;
+	    glm::vec3 diffuse;
+	    glm::vec3 specular;       
+	};
+
+	std::vector<DirLight> dirLights;
+	std::vector<PointLight> pointLights;
+	std::vector<SpotLight> spotLights;
+
+};
+
 
 
 #endif /* GRAPHICS_HEADERS_H */

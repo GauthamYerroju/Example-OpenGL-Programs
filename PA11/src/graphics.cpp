@@ -241,20 +241,6 @@ bool Graphics::SetShader()
     return false;
   }
 
-  // Locate the light position vector
-  m_LightPosition = m_shader->GetUniformLocation("LightPosition");
-  // Locate the ambient product vector
-  m_AmbientProduct = m_shader->GetUniformLocation("AmbientProduct");
-  // Locate the diffuse product vector
-  m_DiffuseProduct = m_shader->GetUniformLocation("DiffuseProduct");
-  // Locate the specular product vector
-  m_SpecularProduct = m_shader->GetUniformLocation("SpecularProduct");
-  // Locate the shininess float
-  m_Shininess = m_shader->GetUniformLocation("Shininess");
-
-  m_SpotLightDirection = m_shader->GetUniformLocation("SpotLightDirection");
-  m_SpotCutOff = m_shader->GetUniformLocation("SpotLightCutOffAngle");
-
 
   return true;
 }
@@ -510,32 +496,105 @@ void Graphics::Render()
   glUniformMatrix4fv(m_projectionMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetProjection()));
   glUniformMatrix4fv(m_viewMatrix, 1, GL_FALSE, glm::value_ptr(m_camera->GetView()));
 
-  // Intensity r,g,b,a
-  const glm::vec4 ambient = glm::vec4(0.4*amb_Scalar, 0.4*amb_Scalar, 0.4*amb_Scalar, 1.0);
-  const glm::vec4 diffuse = glm::vec4(1.0*diff_Scalar, 1.0*diff_Scalar, 1.0*diff_Scalar, 1.0);
-  const glm::vec4 specular = glm::vec4(1.0*spec_Scalar, 1.0*spec_Scalar, 1.0*spec_Scalar, 1.0);
-
-  const glm::vec4 light_pos(
-    0.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-    3.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-    0.0f, // ship->GetRigidBody()->getCenterOfMassPosition().getZ(),
-    1.0f);
+  // Ship coordinates in view space
   const glm::mat4 mv = m_camera->GetView()*ship->GetModel();
-  const glm::vec4 spotDIR = mv[3] - light_pos;
+
+  // Lights
+  Lights::DirLight _dirLight;
+  Lights::PointLight _pointLight;
+  Lights::SpotLight _spotLight;
+
+  //Directional Light
+  _dirLight.direction = glm::vec3(0.0);
+  _dirLight.ambient = glm::vec3(0.0);
+  _dirLight.diffuse = glm::vec3(0.0);
+  _dirLight.specular = glm::vec3(0.0);
+
+  lights.dirLights.push_back(_dirLight);
+
+  //Point Light
+  _pointLight.position = glm::vec3(mv[3][0], mv[3][1] + 3.0, mv[3][2]);
+  _pointLight.ambient = glm::vec3(amb_Scalar * 0.4, amb_Scalar * 0.4, amb_Scalar * 0.4);
+  _pointLight.diffuse = glm::vec3(diff_Scalar * 1.0, diff_Scalar * 1.0, diff_Scalar * 1.0);
+  _pointLight.specular = glm::vec3(spec_Scalar * 1.0, spec_Scalar * 1.0, spec_Scalar * 1.0);
+
+  // Attenuation (constant = 1.0, linear and quadratic = 0.0 -> No Attenuation)
+  _pointLight.constant = 1.0;
+  _pointLight.linear = 0.0;
+  _pointLight.quadratic = 0.0;
+
+  lights.pointLights.push_back(_pointLight);
+
+    //Spot Light #1 (Top light)
+  _spotLight.position = glm::vec3(mv[3][0], mv[3][1] + 3.0, mv[3][2]);
+  _spotLight.direction = glm::vec3(mv[3][0], mv[3][1], mv[3][2]) - _spotLight.position;
+  _spotLight.cutOffAngle = 50;
+  _spotLight.ambient = glm::vec3(0.4, 0.4, 0.4);
+  _spotLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
+  _spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
+
+  // Attenuation (constant = 1.0, linear and quadratic = 0.0 -> No Attenuation)
+  _spotLight.constant = 1.0;
+  _spotLight.linear = 0.0;
+  _spotLight.quadratic = 0.0;
+
+  lights.spotLights.push_back(_spotLight);
+
+  // Spot Light #2 (Forward Light)
+  _spotLight.position = glm::vec3(mv[3][0], mv[3][1], mv[3][2]);
+  _spotLight.direction = glm::vec3(0,0,-1);
+  _spotLight.cutOffAngle = 50;
+  _spotLight.ambient = glm::vec3(0.4, 0.4, 0.4);
+  _spotLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
+  _spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
+
+  // Attenuation
+  _spotLight.constant = 1.0;
+  _spotLight.linear = 0.09;
+  _spotLight.quadratic = 0.032;
+
+  lights.spotLights.push_back(_spotLight);
 
 
-   // Set material properties.
-  glUniform4fv( m_AmbientProduct, 1, glm::value_ptr(ambient) );
-  glUniform4fv( m_DiffuseProduct, 1, glm::value_ptr(diffuse) );
-  glUniform4fv( m_SpecularProduct, 1, glm::value_ptr(specular) );
-  glUniform1f( m_Shininess, 50.0f ); // higher more concentrated specular reflection
+  // Directional Lights
+  glUniform3fv(m_shader->GetUniformLocation("dirLights[0].direction"), 1, glm::value_ptr(lights.dirLights[0].direction));
+  glUniform3fv(m_shader->GetUniformLocation("dirLights[0].ambient"), 1, glm::value_ptr(lights.dirLights[0].ambient));
+  glUniform3fv(m_shader->GetUniformLocation("dirLights[0].diffuse"), 1, glm::value_ptr(lights.dirLights[0].diffuse));
+  glUniform3fv(m_shader->GetUniformLocation("dirLights[0].specular"), 1, glm::value_ptr(lights.dirLights[0].specular));
 
-  // Set the light position
-  glUniform4fv( m_LightPosition, 1, glm::value_ptr(light_pos) );
+  // Point Lights
+  glUniform3fv(m_shader->GetUniformLocation("pointLights[0].position"), 1, glm::value_ptr(lights.pointLights[0].position));
+  glUniform3fv(m_shader->GetUniformLocation("pointLights[0].ambient"), 1, glm::value_ptr(lights.pointLights[0].ambient));
+  glUniform3fv(m_shader->GetUniformLocation("pointLights[0].diffuse"), 1, glm::value_ptr(lights.pointLights[0].diffuse));
+  glUniform3fv(m_shader->GetUniformLocation("pointLights[0].specular"), 1, glm::value_ptr(lights.pointLights[0].specular));
+  glUniform1fv(m_shader->GetUniformLocation("pointLights[0].constant"), 1, reinterpret_cast<GLfloat *>(&lights.pointLights[0].constant));
+  glUniform1fv(m_shader->GetUniformLocation("pointLights[0].linear"), 1,  reinterpret_cast<GLfloat *>(&lights.pointLights[0].linear));
+  glUniform1fv(m_shader->GetUniformLocation("pointLights[0].quadratic"), 1, reinterpret_cast<GLfloat *>(&lights.pointLights[0].quadratic));
 
-  // Set spotlight
-  glUniform4fv( m_SpotLightDirection, 1, glm::value_ptr(spotDIR));
-  glUniform1f( m_SpotCutOff, spotLightAngle ); // angle in degrees
+  // Spot Lights
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[0].position"), 1, glm::value_ptr(lights.spotLights[0].position));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[0].direction"), 1, glm::value_ptr(lights.spotLights[0].direction));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[0].cutOffAngle"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[0].cutOffAngle));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[0].ambient"), 1, glm::value_ptr(lights.spotLights[0].ambient));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[0].diffuse"), 1, glm::value_ptr(lights.spotLights[0].diffuse));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[0].specular"), 1, glm::value_ptr(lights.spotLights[0].specular));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[0].constant"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[0].constant));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[0].linear"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[0].linear));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[0].quadratic"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[0].quadratic));
+
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[1].position"), 1, glm::value_ptr(lights.spotLights[1].position));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[1].direction"), 1, glm::value_ptr(lights.spotLights[1].direction));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[1].cutOffAngle"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[1].cutOffAngle));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[1].ambient"), 1, glm::value_ptr(lights.spotLights[1].ambient));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[1].diffuse"), 1, glm::value_ptr(lights.spotLights[1].diffuse));
+  glUniform3fv(m_shader->GetUniformLocation("spotLights[1].specular"), 1, glm::value_ptr(lights.spotLights[1].specular));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[1].constant"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[1].constant));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[1].linear"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[1].linear));
+  glUniform1fv(m_shader->GetUniformLocation("spotLights[1].quadratic"), 1, reinterpret_cast<GLfloat *>(&lights.spotLights[1].quadratic));
+
+  // Material
+  glUniform1f( m_shader->GetUniformLocation("shininess"), 50.0f ); // higher more concentrated specular reflection
+
 
   // Render the objects
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetBase()->GetModel()));

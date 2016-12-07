@@ -50,18 +50,12 @@ class Graphics
 
     Camera *m_camera;
     Shader *m_shader;
-
+    
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
 
-    GLint m_LightPosition;
-    GLint m_AmbientProduct;
-    GLint m_DiffuseProduct;
-    GLint m_SpecularProduct;
-    GLint m_Shininess;
-    GLint m_SpotLightDirection;
-    GLint m_SpotCutOff;
+    Lights lights;
 
     int spotLightAngle;
 

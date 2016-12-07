@@ -7,8 +7,8 @@
     },
     {
         "name":             "perFragmentLighting",
-        "vertexShader":     "shaders/F_lighting/vShader4.vert",
-        "fragmentShader":   "shaders/F_lighting/fShader4.frag"
+        "vertexShader":     "shaders/F_lighting/vShader_v1.vert",
+        "fragmentShader":   "shaders/F_lighting/fShader_v1.frag"
 
     },
     {

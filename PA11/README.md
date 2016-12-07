@@ -1,16 +1,9 @@
-# PA10: PinBall
+# PA11: SkyRoads
 Collaborators:
 
 Kevin Green,
 Husain Tazarvi,
 Gautham Yerroju
-
-## Changes since 2016-11-16
-- 7-segment score display on back board
-- Implemented Input Manager
-- Improvements to shaders
-- Fixed bug with plunger (velocity not reset after ball is shot out)
-- Flippers behave more naturally
 
 # Dependencies, Building, and Running
 
@@ -44,7 +37,7 @@ mkdir build
 cd build
 cmake ..
 make
-./PA10 ../config.json
+./PA11 ../config.json
 ```
 
 ## Keyboard Events
@@ -72,14 +65,8 @@ The following keyboard commands are used to interact with the program:
 |Z|Toggle zoom|
 
 
-## Mouse Events
-The following mouse commands are used to interact with the program:
-
-Left Mouse Click    - move plunger up
-
-
 ## Ubuntu.cse.unr.edu
 OpenGL 3.3 will run on the [ubuntu.cse.unr.edu](https://ubuntu.cse.unr.edu/) website. To do so follow the build instructions, but when running the executable use this line to execute.
 ```bash
-/usr/NX/scripts/vgl/vglrun ./PA10 ../config.json
+/usr/NX/scripts/vgl/vglrun ./PA11 ../config.json
 ```
