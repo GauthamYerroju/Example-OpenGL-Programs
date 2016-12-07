@@ -159,7 +159,7 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
       skyBox = new Object(modelFile.c_str());
 
-      skyBox->Set_Scaler(500);
+      skyBox->Set_Scaler(1000);
       skyBox->Update();
     }
     else
