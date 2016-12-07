@@ -382,10 +382,10 @@ void Graphics::HandleInput(Input *m_input)
   // Key Down
   if (m_input->KeyDown(SDLK_LEFT))
   {
-    ship->GetRigidBody()->setLinearVelocity(btVector3(-10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(-15, shipVelocity.y(), shipVelocity.z()));
   }
   if (m_input->KeyDown(SDLK_RIGHT))
-    ship->GetRigidBody()->setLinearVelocity(btVector3(10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(15, shipVelocity.y(), shipVelocity.z()));
   // Key Up
   if (m_input->KeyUp(SDLK_LEFT))
     ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
@@ -396,8 +396,8 @@ void Graphics::HandleInput(Input *m_input)
   // Key Down
   else if (m_input->KeyPressed(SDLK_UP))
   {
-    if (shipVelocity.z() > -25.0)
-      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -25));
+    if (shipVelocity.z() > -50.0)
+      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
   }
   else if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
@@ -405,7 +405,7 @@ void Graphics::HandleInput(Input *m_input)
   // Jump
   if (!jumping && m_input->KeyDown(SDLK_z))
   {
-    ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
+    ship->GetRigidBody()->applyCentralImpulse( btVector3(0, 30, 0) );
     jumping = true;
   }
 
