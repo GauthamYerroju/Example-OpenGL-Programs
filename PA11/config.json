@@ -18,5 +18,10 @@
     {
         "name":             "Track",
         "modelFile":        "models/Cube.obj"
+    },
+    {
+        "name":             "Skybox",
+        "modelFile":        "models/skyBox.obj"
     }
+
 ]

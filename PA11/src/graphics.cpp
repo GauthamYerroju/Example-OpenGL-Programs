@@ -154,6 +154,14 @@ bool Graphics::LoadConfig( char *configFile )
 
       world.AddRigidBody(ship->GetRigidBody());
     }
+    else if(label == "Skybox")
+    {
+      modelFile = objectConfig["modelFile"];
+      skyBox = new Object(modelFile.c_str());
+
+      skyBox->Set_Scaler(500);
+      skyBox->Update();
+    }
     else
     {
       printf("CONFIG: 'name: %s' no action taken\n", label.c_str() );
@@ -382,10 +390,10 @@ void Graphics::HandleInput(Input *m_input)
   // Key Down
   if (m_input->KeyDown(SDLK_LEFT))
   {
-    ship->GetRigidBody()->setLinearVelocity(btVector3(-10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(-15, shipVelocity.y(), shipVelocity.z()));
   }
   if (m_input->KeyDown(SDLK_RIGHT))
-    ship->GetRigidBody()->setLinearVelocity(btVector3(10, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(15, shipVelocity.y(), shipVelocity.z()));
   // Key Up
   if (m_input->KeyUp(SDLK_LEFT))
     ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
@@ -396,8 +404,8 @@ void Graphics::HandleInput(Input *m_input)
   // Key Down
   else if (m_input->KeyPressed(SDLK_UP))
   {
-    if (shipVelocity.z() > -25.0)
-      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -25));
+    if (shipVelocity.z() > -50.0)
+      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
   }
   else if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
@@ -405,7 +413,7 @@ void Graphics::HandleInput(Input *m_input)
   // Jump
   if (!jumping && m_input->KeyDown(SDLK_z))
   {
-    ship->GetRigidBody()->applyCentralImpulse( btVector3( 0, 30, 0));
+    ship->GetRigidBody()->applyCentralImpulse( btVector3(0, 30, 0) );
     jumping = true;
   }
 
@@ -513,7 +521,7 @@ void Graphics::Render()
   lights.dirLights.push_back(_dirLight);
 
   //Point Light
-  _pointLight.position = glm::vec3(mv[3][0], mv[3][1] + 3.0, mv[3][2]);
+  _pointLight.position = glm::vec3(mv[3][0], mv[3][1], mv[3][2]);
   _pointLight.ambient = glm::vec3(amb_Scalar * 0.4, amb_Scalar * 0.4, amb_Scalar * 0.4);
   _pointLight.diffuse = glm::vec3(diff_Scalar * 1.0, diff_Scalar * 1.0, diff_Scalar * 1.0);
   _pointLight.specular = glm::vec3(spec_Scalar * 1.0, spec_Scalar * 1.0, spec_Scalar * 1.0);
@@ -526,7 +534,7 @@ void Graphics::Render()
   lights.pointLights.push_back(_pointLight);
 
     //Spot Light #1 (Top light)
-  _spotLight.position = glm::vec3(mv[3][0], mv[3][1] + 3.0, mv[3][2]);
+  _spotLight.position = glm::vec3(mv[3][0], mv[3][1] + 2.0, mv[3][2]);
   _spotLight.direction = glm::vec3(mv[3][0], mv[3][1], mv[3][2]) - _spotLight.position;
   _spotLight.cutOffAngle = 50;
   _spotLight.ambient = glm::vec3(0.4, 0.4, 0.4);
@@ -550,8 +558,8 @@ void Graphics::Render()
 
   // Attenuation
   _spotLight.constant = 1.0;
-  _spotLight.linear = 0.09;
-  _spotLight.quadratic = 0.032;
+  _spotLight.linear = 0.08;
+  _spotLight.quadratic = 0.022;
 
   lights.spotLights.push_back(_spotLight);
 
@@ -611,6 +619,9 @@ void Graphics::Render()
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ship->GetModel()));
   ship->Render();
+
+  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(skyBox->GetModel()));
+  skyBox->Render();
 
   // Get any errors from OpenGL
   auto error = glGetError();

@@ -68,6 +68,7 @@ class Graphics
 
     GameTrack                             *track;
     PhysicsObject                         *ship;
+    Object                                *skyBox;
     PhysicsWorld                          world;
 
     struct CollisionCallback : public btCollisionWorld::ContactResultCallback

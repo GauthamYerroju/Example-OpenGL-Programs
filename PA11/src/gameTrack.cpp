@@ -42,26 +42,30 @@ bool GameTrack::Initialize()
 bool GameTrack::generateLevel(const char *filePath)
 {
 	// Level data
-	Tile tiles[10] = {
-		{ glm::vec2(0, 0), glm::vec2(0, 6), 1, BASE, 0 },
-		{ glm::vec2(1, 2), glm::vec2(1, 3), 1, BASE, 0 },
-		{ glm::vec2(1, 5), glm::vec2(1, 6), 1, BASE, 0 },
-		{ glm::vec2(2, 0), glm::vec2(4, 6), 1, BASE, 0 },
-		{ glm::vec2(5, 1), glm::vec2(5, 2), 1, BASE, 0 },
-		{ glm::vec2(5, 4), glm::vec2(5, 5), 1, BASE, 0 },
-		{ glm::vec2(6, 0), glm::vec2(6, 6), 1, BASE, 0 },
-		
-		{ glm::vec2(2, 5), glm::vec2(4, 5), 1, OBSTACLE, 0 },
-		{ glm::vec2(5, 4), glm::vec2(5, 4), 1, OBSTACLE, 0 },
-		{ glm::vec2(0, 3), glm::vec2(0, 3), 1, OBSTACLE, 0 }
+	Tile tiles[15] = {
+		{ glm::vec2(0, 0), glm::vec2(0, 27), 1, BASE, 0 },
+		{ glm::vec2(2, 0), glm::vec2(4, 27), 1, BASE, 0 },
+		{ glm::vec2(6, 0), glm::vec2(6, 27), 1, BASE, 0 },
+		{ glm::vec2(0, 2), glm::vec2(0, 4), 1, OBSTACLE, 0 },
+		{ glm::vec2(6, 2), glm::vec2(6, 4), 1, OBSTACLE, 0 },
+		{ glm::vec2(1, 2), glm::vec2(1, 4), 1, BASE, 0 },
+		{ glm::vec2(5, 2), glm::vec2(5, 4), 1, BASE, 0 },
+		{ glm::vec2(0, 15), glm::vec2(0, 17), 1, OBSTACLE, 0 },
+		{ glm::vec2(6, 15), glm::vec2(6, 17), 1, OBSTACLE, 0 },
+		{ glm::vec2(1, 15), glm::vec2(1, 17), 1, BASE, 0 },
+		{ glm::vec2(5, 15), glm::vec2(5, 17), 1, BASE, 0 },
+		{ glm::vec2(0, 25), glm::vec2(0, 27), 1, OBSTACLE, 0 },
+		{ glm::vec2(6, 25), glm::vec2(6, 27), 1, OBSTACLE, 0 },
+		{ glm::vec2(1, 25), glm::vec2(1, 27), 1, BASE, 0 },
+		{ glm::vec2(5, 25), glm::vec2(5, 27), 1, BASE, 0 }
 	};
 
 	// Level gen loop
-	glm::vec3 tileSize = glm::vec3(9, 3, 9);
-	glm::vec3 obstacleSize = glm::vec3(9, 9, 9);
+	glm::vec3 tileSize = glm::vec3(9, 1, 9);
+	glm::vec3 obstacleSize = glm::vec3(9, 8, 9);
 	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
-	for(unsigned int tileId = 0; tileId < 10; tileId++)
+	for(unsigned int tileId = 0; tileId < 15; tileId++)
 	{
 		Tile tile = tiles[tileId];
 		glm::vec3 layerSize;

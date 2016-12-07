@@ -46,23 +46,14 @@ The following keyboard commands are used to interact with the program:
 |Key|Event|
 |---|---|
 |Esc|Close program|
-|__Lighting Controls__|
-|1|Change to per-fregment lighting|
-|2|Change to per-vertex lighting|
-|A|Select ambient scalar|
-|D|Select diffuse scalar|
-|S|Select specular scalar|
-|C|Select spotlight angle|
-|=|Increase currently selected scalar|
-|-|Decrease currently selected scalar|
-|__Pinball Controls__|
-|Down|Activate plunger (hold for more power)|
-|Left|Left flipper|
-|Right|Right flipper|
+|__SkyRoads Controls__|
+|Up|Accelerate Forward|
+|Down|Deccelerate|
+|Left|Veer Left|
+|Right|Veer Right|
+|Z|Jump Up|
 |R|Reset game (works after game over)|
 |Shift+R|Force-reset game|
-|__Camera__|
-|Z|Toggle zoom|
 
 
 ## Ubuntu.cse.unr.edu
