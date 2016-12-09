@@ -139,15 +139,31 @@ bool Graphics::LoadConfig( char *configFile )
 
       modelFile = objectConfig["modelFile"];
       ship = new PhysicsObject( modelFile.c_str() );
-
-      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 5.0, -2.0) ),  //WorldTranformation
+      shipBody = new btCompoundShape();
+/*
+      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 2.0, -2.0) ),  //WorldTranformation
                           1,  //Mass
-                          0.0,  //Restitution
+                          0.4,  //Restitution
                           0.0,   //Friction
-                          btVector3(4.969, 1.405, 6.384)  //Box half extents
+                          btVector3(3.4, 1.405, 6.0)  //Box half extents
                           )
       )
         printf("PhysicsObject failed to initialize\n");
+*/
+
+      if( !ship->InitializeWithCompoundShape(shipBody,
+                                             btTransform( btQuaternion(0.0, 1.0, 0.0, 0), btVector3(0.0, 2.0, -2.0) ),  //WorldTranformation
+                                             1,  //Mass
+                                             0.4,  //Restitution
+                                             0.0   //Friction
+                                             )
+      )
+       printf("PhysicsObject failed to initialize\n");
+
+      shipBottom = new btBoxShape( btVector3(2.5, 0.1, 5.0) );
+      shipTop = new btBoxShape( btVector3(3.0, 1.405, 6.0) );
+      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, -2.0, -2.0) ), shipBottom);
+      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 0.0, 0.0) ), shipTop);
 
       ship->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
       ship->GetRigidBody()->setDamping(0.5, 30);
@@ -365,7 +381,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   // callback3 = new BumperContactResultCallback(&bumperHit3);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
-  m_camera->SetPosition(glm::vec3( 
+  m_camera->SetPosition(glm::vec3(
     ship->GetRigidBody()->getCenterOfMassPosition().getX(),
     ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
     ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0

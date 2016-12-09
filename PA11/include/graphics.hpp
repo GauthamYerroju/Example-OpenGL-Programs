@@ -50,7 +50,7 @@ class Graphics
 
     Camera *m_camera;
     Shader *m_shader;
-    
+
     GLint m_projectionMatrix;
     GLint m_viewMatrix;
     GLint m_modelMatrix;
@@ -68,6 +68,9 @@ class Graphics
 
     GameTrack                             *track;
     PhysicsObject                         *ship;
+    btCompoundShape                       *shipBody;
+    btCollisionShape                      *shipBottom;
+    btCollisionShape                      *shipTop;
     Object                                *skyBox;
     PhysicsWorld                          world;
 
