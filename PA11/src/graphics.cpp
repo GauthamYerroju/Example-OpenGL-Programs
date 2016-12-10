@@ -363,19 +363,28 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   bool obstacleHitTest;
   CollisionCallback *collTest;
 
-  collTest = new CollisionCallback(&groundHitTest);
+
+  collTest = new CollisionCallback(&groundHitTest, 0);
   world.GetWorld()->contactPairTest(ship->GetRigidBody(), track->GetBase()->GetRigidBody(), *collTest);
   delete collTest;
 
-  collTest = new CollisionCallback(&obstacleHitTest);
+  collTest = new CollisionCallback(&groundHitTest, 0);
   world.GetWorld()->contactPairTest(ship->GetRigidBody(), track->GetObstacles()->GetRigidBody(), *collTest);
   delete collTest;
 
-  if (groundHitTest || obstacleHitTest)
+  collTest = new CollisionCallback(&obstacleHitTest, 1);
+  world.GetWorld()->contactPairTest(ship->GetRigidBody(), track->GetObstacles()->GetRigidBody(), *collTest);
+  delete collTest;
+
+  if (groundHitTest)
     jumping = false;
 
   if (obstacleHitTest)
+  {
     printf("Hit an obstacle at speed: %f\n", ship->GetRigidBody()->getLinearVelocity().getZ());
+    resetShip();
+  }
+    
   // callback2 = new BumperContactResultCallback(&bumperHit2);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
   // callback3 = new BumperContactResultCallback(&bumperHit3);
@@ -405,25 +414,24 @@ void Graphics::HandleInput(Input *m_input)
   btVector3 shipVelocity = ship->GetRigidBody()->getLinearVelocity();
   // Key Down
   if (m_input->KeyDown(SDLK_LEFT))
-  {
-    ship->GetRigidBody()->setLinearVelocity(btVector3(-15, shipVelocity.y(), shipVelocity.z()));
-  }
+    ship->GetRigidBody()->setLinearVelocity(btVector3(-25, shipVelocity.y(), shipVelocity.z()));
   if (m_input->KeyDown(SDLK_RIGHT))
-    ship->GetRigidBody()->setLinearVelocity(btVector3(15, shipVelocity.y(), shipVelocity.z()));
+    ship->GetRigidBody()->setLinearVelocity(btVector3(25, shipVelocity.y(), shipVelocity.z()));
   // Key Up
   if (m_input->KeyUp(SDLK_LEFT))
     ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
-  else if (m_input->KeyUp(SDLK_RIGHT))
+  if (m_input->KeyUp(SDLK_RIGHT))
     ship->GetRigidBody()->setLinearVelocity(btVector3(0, shipVelocity.y(), shipVelocity.z()));
 
   // Movement: up and down (set velocity)
   // Key Down
-  else if (m_input->KeyPressed(SDLK_UP))
+  if (m_input->KeyPressed(SDLK_UP))
   {
     if (shipVelocity.z() > -50.0)
-      ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
+      ship->GetRigidBody()->applyCentralForce(btVector3(0, 0, -50));
+      //ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
   }
-  else if (m_input->KeyPressed(SDLK_DOWN))
+  if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
 
   // Jump

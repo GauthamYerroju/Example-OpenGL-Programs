@@ -76,7 +76,8 @@ class Graphics
 
     struct CollisionCallback : public btCollisionWorld::ContactResultCallback
     {
-        CollisionCallback(bool* ht) : hit(ht) {}
+        CollisionCallback(bool* ht) : hit(ht), index(-1) {}
+        CollisionCallback(bool* ht, int indx) : hit(ht), index(indx) {}
         btScalar addSingleResult(   btManifoldPoint& cp,
             const btCollisionObjectWrapper* colObj0Wrap,
             int partId0,
@@ -85,11 +86,28 @@ class Graphics
             int partId1,
             int index1)
         {
-            *hit= true;
+            if(index >= 0 && (index == index0))
+            {
+                *hit = true;
+            }
+            else  if(index >= 0 && (index == index1))
+            {
+                *hit = true;
+            }
+            else if(index < 0)
+            {
+                *hit= true;
+            }
+            
         }
 
         bool* hit;
+        int index;
     };
+
+
+    int btm_index;
+    int top_index;
 
     // BumperContactResultCallback *callback1;
     // BumperContactResultCallback *callback2;
