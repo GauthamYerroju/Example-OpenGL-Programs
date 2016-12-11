@@ -384,17 +384,44 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   // callback3 = new BumperContactResultCallback(&bumperHit3);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
-  m_camera->SetPosition(glm::vec3(
-    ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
-    ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
-  ));
+  BoundingBox shipBox(
+    // Position
+    glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
+    ),
+    // Size
+    glm::vec3(6.0, 4.2, 14.0)
+  );
+  bool inTunnelBool = track->inTunnel(shipBox);
+  if (inTunnelBool) {
+    m_camera->SetPosition(glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY() + 2.0,
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 2.75
+    ));
 
-  m_camera->SetFocusPoint(glm::vec3(
-    ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-    ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-    ship->GetRigidBody()->getCenterOfMassPosition().getZ()
-  ));
+    m_camera->SetFocusPoint(glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ() - 100.0
+    ));
+  }
+  else
+  {
+    m_camera->SetPosition(glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
+    ));
+
+    m_camera->SetFocusPoint(glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
+    ));
+  }
 
   m_camera->Update(zoom);
 }
@@ -558,24 +585,6 @@ void Graphics::Render()
   _spotLight.ambient = glm::vec3(0.4, 0.4, 0.4);
   _spotLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
   _spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
-
-  BoundingBox shipBox(
-    // Position
-    glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
-    ),
-    // Size
-    glm::vec3(6.0, 4.2, 14.0)
-  );
-  bool inTunnelBool = track->inTunnel(shipBox);
-  printf("%s\n", (inTunnelBool ? "Wooooooooooooooo!" : "Booooooooooooring :P"));
-  if (inTunnelBool) {
-    _spotLight.ambient = glm::vec3(0, 0, 0);
-    _spotLight.diffuse = glm::vec3(0, 0, 0);
-    _spotLight.specular = glm::vec3(0, 0, 0);
-  }
 
   // Attenuation (constant = 1.0, linear and quadratic = 0.0 -> No Attenuation)
   _spotLight.constant = 1.0;

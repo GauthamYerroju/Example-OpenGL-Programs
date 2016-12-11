@@ -162,7 +162,6 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 		// Add positions of tunnels
 		if (tile.terrainId == 2)
 		{
-			printf("Added tunnel\n");
 			tunnels.push_back(BoundingBox(
 				glm::vec3(modPosition.x, modPosition.y, modPosition.z),
 				glm::vec3(modScale.x, modScale.y, modScale.z))
