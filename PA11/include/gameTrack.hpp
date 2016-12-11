@@ -27,14 +27,52 @@ struct Tile
     start(strt), stop(stp), terrainId(tId), layer(lyr), hOffset(h) {}
 };
 
+struct BoundingBox
+{
+  glm::vec3 position;
+  glm::vec3 size;
+  BoundingBox(glm::vec3 pos, glm::vec3 sz): position(pos), size(sz) {}
+  bool collidesWith(BoundingBox other)
+  {
+    float left = position.x - size.x / 2;
+    float right = position.x + size.x / 2;
+    float top = position.y + size.y / 2;
+    float bottom = position.y - size.y / 2;
+    float front = position.z - size.z / 2;
+    float back = position.z + size.z / 2;
+
+    float other_left = other.position.x - other.size.x / 2;
+    float other_right = other.position.x + other.size.x / 2;
+    float other_top = other.position.y + other.size.y / 2;
+    float other_bottom = other.position.y - other.size.y / 2;
+    float other_front = other.position.z - other.size.z / 2;
+    float other_back = other.position.z + other.size.z / 2;
+
+    if (other_right < left)
+      return false;
+    if (other_left > right)
+      return false;
+    if (other_top < bottom)
+      return false;
+    if (other_bottom > top)
+      return false;
+    if (other_front > back)
+      return false;
+    if (other_back < front)
+      return false;
+    
+    return true;
+  }
+};
+
 class GameTrack
 {
   public:
     GameTrack(btTransform worldTrans);
     ~GameTrack();
     bool Initialize(std::string levelName, std::string skybox, float gravMod, std::vector<Tile> tiles);
-    // bool InitializeFromJson(std::string levelJson);
     bool InitializeFromJson(json levelDesc);
+    std::vector<Tile> loadTilesFromJson(json tileListJson);
     void Update();
     void Render();
     
@@ -47,15 +85,15 @@ class GameTrack
     std::string getSkyBoxFilename();
     float getGravityModifier();
 
-    std::vector<Tile> loadTilesFromJson(json tileListJson);
+    bool inTunnel(BoundingBox shipBox);
 
   private:
-    
-
     btTransform worldTransform;
     PhysicsObject *trackBase;
     PhysicsObject *trackObstacles;
     std::vector<PhysicsObject> trackObjects;
+
+    std::vector<BoundingBox> tunnels;
 
     std::string name;
     std::string skyboxFilename;

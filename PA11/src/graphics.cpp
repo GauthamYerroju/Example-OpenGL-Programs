@@ -559,6 +559,24 @@ void Graphics::Render()
   _spotLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
   _spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
+  BoundingBox shipBox(
+    // Position
+    glm::vec3(
+      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
+    ),
+    // Size
+    glm::vec3(6.0, 4.2, 14.0)
+  );
+  bool inTunnelBool = track->inTunnel(shipBox);
+  printf("%s\n", (inTunnelBool ? "Wooooooooooooooo!" : "Booooooooooooring :P"));
+  if (inTunnelBool) {
+    _spotLight.ambient = glm::vec3(0, 0, 0);
+    _spotLight.diffuse = glm::vec3(0, 0, 0);
+    _spotLight.specular = glm::vec3(0, 0, 0);
+  }
+
   // Attenuation (constant = 1.0, linear and quadratic = 0.0 -> No Attenuation)
   _spotLight.constant = 1.0;
   _spotLight.linear = 0.0;
