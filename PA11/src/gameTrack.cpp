@@ -132,9 +132,22 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 		}
 		else if (tile.layer == OBSTACLE) {
 			trackObstacles->addMesh(segment);
-			// Mesh shape
-			btCollisionShape *block = new btBoxShape( btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2) );
-			shapeObstacles->addChildShape( localTransform, block );
+			if (tile.terrainId == 2)
+			{
+				btTransform lt_left = btTransform( btQuaternion(0, 0, 0, 1), btVector3(modPosition.x - modScale.x/2, modPosition.y, modPosition.z));
+				btTransform lt_right = btTransform( btQuaternion(0, 0, 0, 1), btVector3(modPosition.x + modScale.x/2, modPosition.y, modPosition.z));
+				btTransform lt_top = btTransform( btQuaternion(0, 0, 0, 1), btVector3(modPosition.x, modPosition.y + modScale.y/2, modPosition.z));
+				btCollisionShape *wall_sides = new btBoxShape( btVector3(0.1 * modScale.x / 2, modScale.y / 2, modScale.z / 2) );
+				btCollisionShape *wall_top = new btBoxShape( btVector3(0.1 * modScale.x / 2, modScale.y / 2, modScale.z / 2) );
+
+				shapeObstacles->addChildShape( lt_left, wall_sides );
+				shapeObstacles->addChildShape( lt_right, wall_sides );
+				shapeObstacles->addChildShape( lt_top, wall_top );
+			}
+			else {
+				btCollisionShape *block = new btBoxShape( btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2) );
+				shapeObstacles->addChildShape( localTransform, block );
+			}
 		}
 		else if (tile.layer == OBJECT)
 		{
