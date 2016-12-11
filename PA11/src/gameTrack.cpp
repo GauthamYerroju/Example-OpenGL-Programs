@@ -61,6 +61,7 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 	// Level gen loop
 	glm::vec3 tileSize = glm::vec3(9, 1, 9);
 	glm::vec3 obstacleSize = glm::vec3(9, 4, 9);
+	glm::vec3 tunnelSize = glm::vec3(9, 9, 9);
 	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
 	for(auto& tile : tiles)
@@ -77,6 +78,11 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 		}
 		else {
 			layerSize = tileSize;
+		}
+
+		if (tile.terrainId == 2)
+		{
+			layerSize = tunnelSize;
 		}
 
 		// Get the scale along the x and z axes
@@ -151,6 +157,9 @@ Mesh* GameTrack::getTerrainMesh(short unsigned int terrainId)
 	switch (terrainId) {
 		case 1:
 			terrainModel = "models/terrainCube.obj";
+			break;
+		case 2:
+			terrainModel = "models/tunnel.obj";
 			break;
 		default:
 			terrainModel = "models/terrainCube.obj";
