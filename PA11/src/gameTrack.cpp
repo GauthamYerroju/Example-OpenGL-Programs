@@ -60,7 +60,7 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 {
 	// Level gen loop
 	glm::vec3 tileSize = glm::vec3(9, 1, 9);
-	glm::vec3 obstacleSize = glm::vec3(9, 6, 9);
+	glm::vec3 obstacleSize = glm::vec3(9, 4, 9);
 	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
 	for(auto& tile : tiles)
