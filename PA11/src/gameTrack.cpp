@@ -1,8 +1,7 @@
 #include "gameTrack.hpp"
 
-GameTrack::GameTrack(btTransform worldTrans, const char *lvlPath)
+GameTrack::GameTrack(btTransform worldTrans)
 {
-	levelFile = lvlPath;
 	worldTransform = worldTrans;
 	trackBase = new PhysicsObject();
 	trackObstacles = new PhysicsObject();
@@ -18,9 +17,27 @@ GameTrack::~GameTrack()
 	delete shapeObstacles;
 }
 
-bool GameTrack::Initialize()
+bool GameTrack::Initialize(std::string levelName, std::string skybox, float gravMod, std::vector<Tile> tiles)
 {
-	if ( !generateLevel( levelFile ) )
+	name = levelName;
+	skyboxFilename = skybox;
+	gravityModifier = gravMod;
+	return _initialize(tiles);
+}
+bool GameTrack::InitializeFromJson(json levelDesc)
+{
+	name = levelDesc["name"];
+	skyboxFilename = levelDesc["skybox"];
+	gravityModifier = levelDesc["gravity"];
+
+	std::vector<Tile> tiles = loadTilesFromJson(levelDesc["tiles"]);
+
+	return _initialize( tiles );
+}
+
+bool GameTrack::_initialize(std::vector<Tile> tiles)
+{
+	if ( !generateLevel(tiles) )
 	{
 		printf("Could not generate level\n");
 		return false;
@@ -39,40 +56,28 @@ bool GameTrack::Initialize()
 	return true;
 }
 
-bool GameTrack::generateLevel(const char *filePath)
+bool GameTrack::generateLevel(std::vector<Tile> tiles)
 {
-	// Level data
-	Tile tiles[15] = {
-		{ glm::vec2(0, 0), glm::vec2(0, 27), 1, BASE, 0 },
-		{ glm::vec2(2, 0), glm::vec2(4, 27), 1, BASE, 0 },
-		{ glm::vec2(6, 0), glm::vec2(6, 27), 1, BASE, 0 },
-		{ glm::vec2(0, 2), glm::vec2(0, 4), 1, OBSTACLE, 0 },
-		{ glm::vec2(6, 2), glm::vec2(6, 4), 1, OBSTACLE, 0 },
-		{ glm::vec2(1, 2), glm::vec2(1, 4), 1, BASE, 0 },
-		{ glm::vec2(5, 2), glm::vec2(5, 4), 1, BASE, 0 },
-		{ glm::vec2(0, 15), glm::vec2(0, 17), 1, OBSTACLE, 0 },
-		{ glm::vec2(6, 15), glm::vec2(6, 17), 1, OBSTACLE, 0 },
-		{ glm::vec2(1, 15), glm::vec2(1, 17), 1, BASE, 0 },
-		{ glm::vec2(5, 15), glm::vec2(5, 17), 1, BASE, 0 },
-		{ glm::vec2(0, 25), glm::vec2(0, 27), 1, OBSTACLE, 0 },
-		{ glm::vec2(6, 25), glm::vec2(6, 27), 1, OBSTACLE, 0 },
-		{ glm::vec2(1, 25), glm::vec2(1, 27), 1, BASE, 0 },
-		{ glm::vec2(5, 25), glm::vec2(5, 27), 1, BASE, 0 }
-	};
-
 	// Level gen loop
 	glm::vec3 tileSize = glm::vec3(9, 1, 9);
 	glm::vec3 obstacleSize = glm::vec3(9, 6, 9);
 	glm::vec3 objectSize = glm::vec3(9, 9, 9);
 
-	for(unsigned int tileId = 0; tileId < 15; tileId++)
+	for(auto& tile : tiles)
 	{
-		Tile tile = tiles[tileId];
 		glm::vec3 layerSize;
-		if			(tile.layer == BASE)			layerSize = tileSize;
-		else if (tile.layer == OBSTACLE)	layerSize = obstacleSize;
-		else if (tile.layer == OBJECT)		layerSize = objectSize;
-		else															layerSize = tileSize;
+		if (tile.layer == BASE) {
+			layerSize = tileSize;
+		}
+		else if (tile.layer == OBSTACLE) {
+			layerSize = obstacleSize;
+		}
+		else if (tile.layer == OBJECT) {
+			layerSize = objectSize;
+		}
+		else {
+			layerSize = tileSize;
+		}
 
 		// Get the scale along the x and z axes
 		float scaleX = tile.stop.x - tile.start.x + 1;
@@ -282,4 +287,43 @@ PhysicsObject* GameTrack::GetObstacles()
 std::vector<PhysicsObject> GameTrack::GetObjects()
 {
 	return trackObjects;
+}
+std::string GameTrack::getName()
+{
+	return name;
+}
+std::string GameTrack::getSkyBoxFilename()
+{
+	return skyboxFilename;
+}
+float GameTrack::getGravityModifier()
+{
+	return gravityModifier;
+}
+
+std::vector<Tile> GameTrack::loadTilesFromJson(json tileList)
+{
+	std::vector<Tile> tiles;
+	for(auto& tile : tileList)
+	{
+		float x, y;
+
+		x = tile[0][0];
+		y = tile[0][1];
+		glm::vec2 start(x, y);
+
+		x = tile[1][0];
+		y = tile[1][1];
+		glm::vec2 stop(x, y);
+
+		short unsigned int terrainId = tile[2];
+
+		int lyr = tile[3];
+		Layer layer = static_cast<Layer>(lyr);
+
+		float hOffset = tile[4];
+
+		tiles.push_back( Tile(start, stop, terrainId, layer, hOffset) );
+	}
+	return tiles;
 }

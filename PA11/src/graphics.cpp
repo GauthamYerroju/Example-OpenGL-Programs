@@ -121,14 +121,18 @@ bool Graphics::LoadConfig( char *configFile )
     }
     else if(label == "Track")
     {
-      modelFile = objectConfig["modelFile"];
+      json levels = objectConfig["levels"];
+      if (levels.size() == 0)
+      { 
+        printf("No level to laod.\n");
+        return false;
+      }
 
       track = new GameTrack(
-        btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ), // World tranform
-        modelFile.c_str()
+        btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
       );
 
-      if (!track->Initialize()) {
+      if (!track->InitializeFromJson(levels[0])) {
         printf("GameTrack failed to initialize\n");
       }
 
@@ -140,16 +144,11 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
       ship = new PhysicsObject( modelFile.c_str() );
       shipBody = new btCompoundShape();
-/*
-      if( !ship->Init_Box(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 2.0, -2.0) ),  //WorldTranformation
-                          1,  //Mass
-                          0.4,  //Restitution
-                          0.0,   //Friction
-                          btVector3(3.4, 1.405, 6.0)  //Box half extents
-                          )
-      )
-        printf("PhysicsObject failed to initialize\n");
-*/
+
+      shipBottom = new btBoxShape( btVector3(2.5, 0.1, 5.0) );
+      shipTop = new btBoxShape( btVector3(3.0, 1.405, 6.0) );
+      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, -2.0, -2.0) ), shipBottom);
+      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 0.0, 0.0) ), shipTop);
 
       if( !ship->InitializeWithCompoundShape(shipBody,
                                              btTransform( btQuaternion(0.0, 1.0, 0.0, 0), btVector3(0.0, 2.0, -2.0) ),  //WorldTranformation
@@ -158,12 +157,7 @@ bool Graphics::LoadConfig( char *configFile )
                                              0.0   //Friction
                                              )
       )
-       printf("PhysicsObject failed to initialize\n");
-
-      shipBottom = new btBoxShape( btVector3(2.5, 0.1, 5.0) );
-      shipTop = new btBoxShape( btVector3(3.0, 1.405, 6.0) );
-      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, -2.0, -2.0) ), shipBottom);
-      shipBody->addChildShape(btTransform( btQuaternion(0.0, 0.0, 0.0, 1), btVector3(0.0, 0.0, 0.0) ), shipTop);
+      printf("PhysicsObject failed to initialize\n");
 
       ship->GetRigidBody()->setActivationState(DISABLE_DEACTIVATION);
       ship->GetRigidBody()->setDamping(0.5, 30);
