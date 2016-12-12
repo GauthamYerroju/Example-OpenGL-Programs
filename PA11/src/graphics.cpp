@@ -123,11 +123,16 @@ bool Graphics::LoadConfig( char *configFile )
     }
     else if(label == "Track")
     {
-      json levels = objectConfig["levels"];
-      if (levels.size() == 0)
+      json lvls = objectConfig["levels"];
+      if (lvls.size() == 0)
       { 
         printf("No level to load.\n");
         return false;
+      }
+
+      for( auto& lvl : lvls )
+      {
+        levels.push_back(lvl);
       }
 
       track = new GameTrack(
@@ -416,12 +421,8 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   }
 
     
-  if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -20 )
+  if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -40 )
     resetShip();
-  // callback2 = new BumperContactResultCallback(&bumperHit2);
-  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
-  // callback3 = new BumperContactResultCallback(&bumperHit3);
-  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
 
   glm::vec3 shipPosition(
     ship->GetRigidBody()->getCenterOfMassPosition().getX(),
@@ -434,7 +435,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
     glm::vec3(6.0, 4.2, 14.0) // Ship size
   );
   bool inTunnelBool = track->inTunnel(shipBox);
-  if (inTunnelBool) {
+  if (inTunnelBool || explosion) {
     m_camera->SetPosition(glm::vec3(
       shipPosition.x,
       shipPosition.y + 2.0,
