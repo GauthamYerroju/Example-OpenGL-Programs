@@ -181,15 +181,8 @@ bool Object::Model_Loader(const char *filePath)
   return true;
 }
 
-std::map<const char*, GLuint> Object::textureIdMap; // Initialize the static variable
-
 bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
 {
-  if (textureIdMap.find(filePath) != textureIdMap.end())
-  {
-    printf("Using cached texture for: %s\n", filePath);
-    return true;
-  }
   GLuint textureID;
 
   Magick::Blob m_Blob;
