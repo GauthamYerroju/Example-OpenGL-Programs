@@ -416,7 +416,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   }
 
     
-  if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -40 )
+  if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -20 )
     resetShip();
   // callback2 = new BumperContactResultCallback(&bumperHit2);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
