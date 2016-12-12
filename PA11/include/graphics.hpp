@@ -109,19 +109,16 @@ class Graphics
     int btm_index;
     int top_index;
 
-    // BumperContactResultCallback *callback1;
-    // BumperContactResultCallback *callback2;
-    // BumperContactResultCallback *callback3;
-
     int score;
     int lives;
     bool jumping;
+
+    int currentLevelIndex;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
     std::string perFrag_vShaderFile;
     std::string perFrag_fShaderFile;
-
 };
 
 #endif /* GRAPHICS_H */

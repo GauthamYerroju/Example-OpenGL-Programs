@@ -32,8 +32,6 @@ bool Graphics::Initialize(int width, int height, char *configFile)
     }
   #endif
 
-  lives = 3;
-
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -79,7 +77,9 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   spotLightAngle = 10;
 
   score = 0;
+  lives = 3;
   jumping = false;
+  currentLevelIndex = 0;
 
   printToConsole();
 
@@ -124,7 +124,7 @@ bool Graphics::LoadConfig( char *configFile )
       json levels = objectConfig["levels"];
       if (levels.size() == 0)
       { 
-        printf("No level to laod.\n");
+        printf("No level to load.\n");
         return false;
       }
 
@@ -132,7 +132,7 @@ bool Graphics::LoadConfig( char *configFile )
         btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
       );
 
-      if (!track->InitializeFromJson(levels[0])) {
+      if (!track->InitializeFromJson(levels[currentLevelIndex])) {
         printf("GameTrack failed to initialize\n");
       }
 
