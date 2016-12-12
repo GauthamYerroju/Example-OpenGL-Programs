@@ -204,8 +204,6 @@ bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    textureIdMap[filePath] = textureID;
-
     mesh->textures.push_back(textureID);
   }
   catch( Magick::Error& error )
