@@ -8,6 +8,8 @@ class PhysicsWorld
 	public:
 		PhysicsWorld();
 		~PhysicsWorld();
+		
+		void RemoveRigidBody( btRigidBody *rBody );
 
 		void Initialize();
 		void AddRigidBody( btRigidBody *rBody );

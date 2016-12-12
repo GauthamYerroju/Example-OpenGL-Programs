@@ -42,6 +42,8 @@ class Graphics
     void Update(unsigned int dt, Input *m_input);
     void HandleInput(Input *m_input);
     void Render();
+    
+    void loadNextLevel();
 
   private:
     std::string ErrorString(GLenum error);
@@ -73,6 +75,7 @@ class Graphics
     btCollisionShape                      *shipTop;
     Object                                *skyBox;
     Object                                *cloud;
+    std::vector<Object*>                  speed;
     PhysicsWorld                          world;
 
     struct CollisionCallback : public btCollisionWorld::ContactResultCallback
@@ -112,9 +115,13 @@ class Graphics
 
     int score;
     int lives;
+    int currentSpeed;
     bool jumping;
     bool explosion;
     float expl_slr;
+
+    json levels;
+    bool loadingNextLevel;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;

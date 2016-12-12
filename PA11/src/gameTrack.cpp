@@ -144,7 +144,8 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 				shapeObstacles->addChildShape( lt_right, wall_sides );
 				shapeObstacles->addChildShape( lt_top, wall_top );
 			}
-			else {
+			else
+			{
 				btCollisionShape *block = new btBoxShape( btVector3(modScale.x / 2, modScale.y / 2, modScale.z / 2) );
 				shapeObstacles->addChildShape( localTransform, block );
 			}
@@ -167,6 +168,13 @@ bool GameTrack::generateLevel(std::vector<Tile> tiles)
 				glm::vec3(modScale.x, modScale.y, modScale.z))
 				);
 		}
+		if (tile.terrainId == 3)
+		{
+			finishBox = BoundingBox(
+				glm::vec3(modPosition.x, modPosition.y, modPosition.z),
+				glm::vec3(modScale.x, modScale.y, modScale.z)
+			);
+		}
 	}
 
 	return true;
@@ -182,6 +190,9 @@ Mesh* GameTrack::getTerrainMesh(short unsigned int terrainId)
 			break;
 		case 2:
 			terrainModel = "models/tunnel.obj";
+			break;
+		case 3:
+			terrainModel = "models/finish.obj";
 			break;
 		default:
 			terrainModel = "models/terrainCube.obj";
@@ -307,6 +318,16 @@ void GameTrack::addToWorld(PhysicsWorld *world)
 	}
 }
 
+void GameTrack::removeFromWorld(PhysicsWorld *world)
+{
+	world->RemoveRigidBody(trackBase->GetRigidBody());
+	world->RemoveRigidBody(trackObstacles->GetRigidBody());
+	for(auto & obj : trackObjects)
+	{
+		world->RemoveRigidBody(obj.GetRigidBody());
+	}
+}
+
 PhysicsObject* GameTrack::GetBase()
 {
 	return trackBase;
@@ -367,4 +388,10 @@ bool GameTrack::inTunnel(BoundingBox ship)
 			return true;
 	}
 	return false;
+}
+bool GameTrack::finished(BoundingBox ship)
+{
+	if (finishBox.size.x < 0)
+		return false;
+	return finishBox.collidesWith(ship);
 }

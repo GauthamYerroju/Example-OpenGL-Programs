@@ -53,6 +53,11 @@ void PhysicsWorld::AddRigidBody( btRigidBody *rBody )
 	dynamicsWorld->addRigidBody( rBody );
 }
 
+void PhysicsWorld::RemoveRigidBody( btRigidBody *rBody )
+{
+	dynamicsWorld->removeRigidBody( rBody );
+}
+
 void PhysicsWorld::Update(unsigned int dt)
 {
 	dynamicsWorld->stepSimulation(float(dt)/1000, 1/240);
