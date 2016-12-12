@@ -63,7 +63,7 @@ class Graphics
     float diff_Scalar;
     float spec_Scalar;
 
-    void printToConsole();
+    void refreshConsole();
     void resetShip();
 
     GameTrack                             *track;
@@ -115,9 +115,6 @@ class Graphics
     bool jumping;
     bool explosion;
     float expl_slr;
-
-    int currentLevelIndex;
-    std::vector<json> levels;
 
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;

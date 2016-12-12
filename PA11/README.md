@@ -48,10 +48,10 @@ The following keyboard commands are used to interact with the program:
 |Esc|Close program|
 |__SkyRoads Controls__|
 |Up|Accelerate Forward|
-|Down|Deccelerate|
+|Down|Decelerate|
 |Left|Veer Left|
 |Right|Veer Right|
-|Z|Jump Up|
+|B|Jump Up|
 |R|Reset game (works after game over)|
 |Shift+R|Force-reset game|
 

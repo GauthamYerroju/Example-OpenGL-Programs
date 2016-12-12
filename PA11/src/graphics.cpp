@@ -79,11 +79,10 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   score = 0;
   lives = 3;
   jumping = false;
-  currentLevelIndex = 0;
   explosion = false;
   expl_slr = 0.01;
 
-  printToConsole();
+  refreshConsole();
 
   return true;
 }
@@ -123,23 +122,20 @@ bool Graphics::LoadConfig( char *configFile )
     }
     else if(label == "Track")
     {
-      json lvls = objectConfig["levels"];
-      if (lvls.size() == 0)
+      json jsonObjLevels = objectConfig["levels"];
+      if (jsonObjLevels.size() == 0)
       { 
         printf("No level to load.\n");
         return false;
-      }
-
-      for( auto& lvl : lvls )
-      {
-        levels.push_back(lvl);
       }
 
       track = new GameTrack(
         btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
       );
 
-      if (!track->InitializeFromJson(levels[currentLevelIndex])) {
+      json currentLevel = jsonObjLevels[0];
+
+      if (!track->InitializeFromJson( currentLevel )) {
         printf("GameTrack failed to initialize\n");
       }
       
@@ -281,13 +277,13 @@ bool Graphics::SetShader()
 void Graphics::SetPerFragLighting()
 {
   perFragmentLighting = true;
-  printToConsole();
+  refreshConsole();
 }
 
 void Graphics::SetPerVertLighting()
 {
   perFragmentLighting = false;
-  printToConsole();
+  refreshConsole();
 }
 
 void Graphics::SetAmbientScalar(float a_slr)
@@ -298,7 +294,7 @@ void Graphics::SetAmbientScalar(float a_slr)
     amb_Scalar = 2.0;
   else
     amb_Scalar = a_slr;
-  printToConsole();
+  refreshConsole();
 }
 
 void Graphics::SetDiffuseScalar(float d_slr)
@@ -309,7 +305,7 @@ void Graphics::SetDiffuseScalar(float d_slr)
     diff_Scalar = 3.0;
   else
     diff_Scalar = d_slr;
-  printToConsole();
+  refreshConsole();
 }
 
 void Graphics::SetSpecularScalar(float s_slr)
@@ -321,7 +317,7 @@ void Graphics::SetSpecularScalar(float s_slr)
     spec_Scalar = 2.0;
   else
     spec_Scalar = s_slr;
-  printToConsole();
+  refreshConsole();
 }
 
 void Graphics::SetSpotLightAngle(int angle)
@@ -332,7 +328,7 @@ void Graphics::SetSpotLightAngle(int angle)
     spotLightAngle = 12;
   else
     spotLightAngle = angle;
-  printToConsole();
+  refreshConsole();
 }
 
 float Graphics::getAmbientScalar()
@@ -401,6 +397,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       cloud->Set_Scaler(1.0);
       expl_slr = 0.01;
       explosion = false;
+      --lives;
       resetShip();
     }
   }
@@ -423,7 +420,10 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
     
   if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -40 )
+  {
+    --lives;
     resetShip();
+  }
 
   glm::vec3 shipPosition(
     ship->GetRigidBody()->getCenterOfMassPosition().getX(),
@@ -468,6 +468,8 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   skyBox->Update();
 
   m_camera->Update(zoom);
+
+  refreshConsole();
 }
 
 void Graphics::HandleInput(Input *m_input)
@@ -512,57 +514,37 @@ void Graphics::HandleInput(Input *m_input)
       lives = 3;
       score = 0;
       resetShip();
-      printToConsole();
     }
   }
 }
 
-void Graphics::printToConsole()
+void Graphics::refreshConsole()
 {
-  return;
-  // clear();
-  // printf("\n============ Pinball ============\n");
-  // printf("  Launch power: ");
-  // for(size_t i = 0; i < round(launcherPower); i++)
-  //   printf("|");
-  // printf("\n  Score: %i\n", score);
-  // if (lives <= 0)
-  // {
-  //   printf("Game over! Press R to reset the game.");
-  // }
-  // else
-  // {
-  //   printf("  Balls left: ");
-  //   for(size_t i = 0; i < lives; i++)
-  //     printf("* ");
-  // }
-  // printf("\n\n------------- Status ------------\n");
-  // printf("  Shader: ");
-  // if (perFragmentLighting)
-  //   printf("Per-Fragment\n");
-  // else
-  //   printf("Per-Vertex\n");
-  // printf("  Ambient scalar:  %.2f\n", amb_Scalar);
-  // printf("  Specular scalar: %.2f\n", spec_Scalar);
-  // printf("  Diffuse scalar:  %.2f\n", diff_Scalar);
-  // printf("  Spotlight size:  %d degrees\n", spotLightAngle);
-  // printf("\n------------ Controls -----------\n");
-  // printf("  Pinball Controls:\n");
-  // printf("    Down:    Activate plunger (hold for more power)\n");
-  // printf("    Left:    Use left and right flippers\n");
-  // printf("    Right:   Use left and right flippers\n");
-  // printf("    R:       Reset game after game over\n");
-  // printf("    Shift+R: Force-reset game\n");
-  // printf("    Z:       Change zoom\n");
-  // printf("  Lighting Controls:\n");
-  // printf("    1:       Change to per-fragment lighting\n");
-  // printf("    2:       Change to per-vertex lighting\n");
-  // printf("    +:       Increase selected scalar\n");
-  // printf("    -:       Decrease selected scalar\n");
-  // printf("    A:       Select ambient scalar\n");
-  // printf("    S:       Select specular scalar\n");
-  // printf("    D:       Select diffuse scalar\n");
-  // printf("    C:       Select spotlight radius scalar\n");
+  clear();
+  printf("\n=========== Sky Roads ===========\n");
+  printf("  Speed: ");
+  for(size_t i = 0; i < round(-0.1 * ship->GetRigidBody()->getLinearVelocity().getZ()); i++)
+    printf("|");
+  printf("\n");
+  if (lives <= 0)
+  {
+    printf("Game over! Press R to reset the game.");
+  }
+  else
+  {
+    printf("  Ships left: ");
+    for(size_t i = 0; i < lives; i++)
+      printf("* ");
+  }
+  printf("\n------------ Controls -----------\n");
+  printf("  Pinball Controls:\n");
+  printf("    Up:      Accelerate\n");
+  printf("    Down:    Brake\n");
+  printf("    Left:    Veer left\n");
+  printf("    Right:   Veer right\n");
+  printf("    B:       Jump\n");
+  printf("    R:       Reset game after game over\n");
+  printf("    Shift+R: Force-reset game\n");
 }
 
 void Graphics::resetShip()
