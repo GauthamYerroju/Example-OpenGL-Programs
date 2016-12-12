@@ -400,13 +400,13 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY() + 2.0,
       ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 2.75
-    ));
+    ), true);
 
     m_camera->SetFocusPoint(glm::vec3(
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ() - 100.0
-    ));
+      ship->GetRigidBody()->getCenterOfMassPosition().getZ() - 10.0
+    ), true);
   }
   else
   {
@@ -414,13 +414,13 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
       ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
-    ));
+    ), true);
 
     m_camera->SetFocusPoint(glm::vec3(
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY(),
       ship->GetRigidBody()->getCenterOfMassPosition().getZ()
-    ));
+    ), true);
   }
 
   m_camera->Update(zoom);

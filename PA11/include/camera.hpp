@@ -14,16 +14,20 @@ class Camera
     glm::mat4 GetView();
     glm::vec3 GetPosition();
     glm::vec3 GetFocusPoint();
-    void SetPosition(glm::vec3 value);
-    void SetFocusPoint(glm::vec3 value);
+    void SetPosition(glm::vec3 value, bool tween=false);
+    void SetFocusPoint(glm::vec3 value, bool tween=false);
 
   private:
     glm::mat4 projection;
     glm::mat4 view;
     glm::vec3 position;
     glm::vec3 focusPoint;
+    glm::vec3 targetPosition;
+    glm::vec3 targetFocusPoint;
     int width;
     int height;
+
+    bool vec3Equal(glm::vec3, glm::vec3);
 };
 
 #endif /* CAMERA_H */
