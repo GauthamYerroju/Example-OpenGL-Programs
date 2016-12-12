@@ -12,6 +12,10 @@
 
     },
     {
+        "name":             "Cloud",
+        "modelFile":        "models/cloud.obj"
+    },
+    {
         "name":             "Ship",
         "modelFile":        "models/Ship.obj"
     },

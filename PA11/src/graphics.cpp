@@ -80,6 +80,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
 
   score = 0;
   jumping = false;
+  explosion = false;
+  expl_slr = 0.01;
 
   printToConsole();
 
@@ -169,8 +171,15 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
       skyBox = new Object(modelFile.c_str());
 
-      skyBox->Set_Scaler(1000);
+      skyBox->Set_Scaler(3000);
       skyBox->Update();
+    }
+    else if(label == "Cloud")
+    {
+      modelFile = objectConfig["modelFile"];
+      cloud = new Object(modelFile.c_str());
+
+      cloud->Update();
     }
     else
     {
@@ -373,12 +382,42 @@ void Graphics::Update(unsigned int dt, Input *m_input)
   if (groundHitTest)
     jumping = false;
 
+  if(explosion)
+  {
+    if(expl_slr < 50)
+    {
+      cloud->Set_Scaler(expl_slr);
+      expl_slr++;
+      cloud->Update();
+    }
+    else
+    {
+      cloud->Set_Scaler(1.0);
+      expl_slr = 0.01;
+      explosion = false;
+      resetShip();
+    }
+    
+  }
+
   if (obstacleHitTest)
   {
     printf("Hit an obstacle at speed: %f\n", ship->GetRigidBody()->getLinearVelocity().getZ());
-    resetShip();
+    if(ship->GetRigidBody()->getLinearVelocity().getZ() < -40)
+    {
+      
+      cloud->Set_TranslationVec(glm::vec3(ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+                                          ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+                                          ship->GetRigidBody()->getCenterOfMassPosition().getZ()));
+      cloud->Update();
+      explosion = true;
+
+      
+    }
   }
     
+  if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -20 )
+    resetShip();
   // callback2 = new BumperContactResultCallback(&bumperHit2);
   // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
   // callback3 = new BumperContactResultCallback(&bumperHit3);
@@ -414,13 +453,13 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
       ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
-    ), true);
+    ), false);
 
     m_camera->SetFocusPoint(glm::vec3(
       ship->GetRigidBody()->getCenterOfMassPosition().getX(),
       ship->GetRigidBody()->getCenterOfMassPosition().getY(),
       ship->GetRigidBody()->getCenterOfMassPosition().getZ()
-    ), true);
+    ), false);
   }
 
   m_camera->Update(zoom);
@@ -448,17 +487,17 @@ void Graphics::HandleInput(Input *m_input)
   // Key Down
   if (m_input->KeyPressed(SDLK_UP))
   {
-    if (shipVelocity.z() > -50.0)
-      ship->GetRigidBody()->applyCentralForce(btVector3(0, 0, -50));
+    if (shipVelocity.z() > -100.0)
+      ship->GetRigidBody()->applyCentralForce(btVector3(0, 0, -100));
       //ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
   }
   if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
 
   // Jump
-  if (!jumping && m_input->KeyDown(SDLK_z))
+  if (!jumping && m_input->KeyDown(SDLK_b))
   {
-    ship->GetRigidBody()->applyCentralImpulse( btVector3(0, 30, 0) );
+    ship->GetRigidBody()->applyCentralImpulse( btVector3(0, 40, 0) );
     jumping = true;
   }
 
@@ -533,6 +572,7 @@ void Graphics::resetShip()
 
   transform = ship->GetRigidBody()->getCenterOfMassTransform();
   transform.setOrigin( btVector3(0.0, 5.0, -2.0) );
+  transform.setRotation(btQuaternion(0.0, 1.0, 0.0, 0));
   ship->GetRigidBody()->setCenterOfMassTransform(transform);
 }
 
@@ -596,15 +636,15 @@ void Graphics::Render()
   // Spot Light #2 (Forward Light)
   _spotLight.position = glm::vec3(mv[3][0], mv[3][1], mv[3][2]);
   _spotLight.direction = glm::vec3(0,0,-1);
-  _spotLight.cutOffAngle = 50;
+  _spotLight.cutOffAngle = 45;
   _spotLight.ambient = glm::vec3(0.4, 0.4, 0.4);
   _spotLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
   _spotLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
   // Attenuation
   _spotLight.constant = 1.0;
-  _spotLight.linear = 0.08;
-  _spotLight.quadratic = 0.022;
+  _spotLight.linear = 0.07;
+  _spotLight.quadratic = 0.012;
 
   lights.spotLights.push_back(_spotLight);
 
@@ -649,6 +689,11 @@ void Graphics::Render()
   glUniform1f( m_shader->GetUniformLocation("shininess"), 50.0f ); // higher more concentrated specular reflection
 
 
+  if(explosion)
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(cloud->GetModel()));
+    cloud->Render();
+  }
   // Render the objects
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(track->GetBase()->GetModel()));
   track->GetBase()->Render();
@@ -662,8 +707,12 @@ void Graphics::Render()
     trackObj.Render();
   }
 
-  glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ship->GetModel()));
-  ship->Render();
+  if(!explosion)
+  {
+    glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(ship->GetModel()));
+    ship->Render();
+  }
+  
 
   glUniformMatrix4fv(m_modelMatrix, 1, GL_FALSE, glm::value_ptr(skyBox->GetModel()));
   skyBox->Render();
