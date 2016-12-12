@@ -142,7 +142,7 @@ bool Graphics::LoadConfig( char *configFile )
       if (!track->InitializeFromJson(levels[currentLevelIndex])) {
         printf("GameTrack failed to initialize\n");
       }
-
+      
       track->addToWorld(&world);
 
     }
