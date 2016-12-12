@@ -123,6 +123,7 @@ bool Graphics::LoadConfig( char *configFile )
     }
     else if(label == "Track")
     {
+      printf("track init\n");
       json levels = objectConfig["levels"];
       if (levels.size() == 0)
       { 
@@ -139,6 +140,7 @@ bool Graphics::LoadConfig( char *configFile )
       }
 
       track->addToWorld(&world);
+
     }
     else if(label == "Ship")
     {
