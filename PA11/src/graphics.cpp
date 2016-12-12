@@ -543,6 +543,7 @@ void Graphics::HandleInput(Input *m_input)
 
 void Graphics::refreshConsole()
 {
+
   //return;
   clear();
   printf("\n=========== Sky Roads ===========\n");
