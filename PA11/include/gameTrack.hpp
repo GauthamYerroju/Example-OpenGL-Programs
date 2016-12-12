@@ -31,6 +31,7 @@ struct BoundingBox
 {
   glm::vec3 position;
   glm::vec3 size;
+  BoundingBox(): position(glm::vec3(0.0, 0.0, 0.0)), size(glm::vec3(-1.0, -1.0, -1.0)) {}
   BoundingBox(glm::vec3 pos, glm::vec3 sz): position(pos), size(sz) {}
   bool collidesWith(BoundingBox other)
   {
@@ -77,6 +78,7 @@ class GameTrack
     void Render();
     
     void addToWorld(PhysicsWorld *world);
+    void removeFromWorld(PhysicsWorld *world);
     PhysicsObject* GetBase();
     PhysicsObject* GetObstacles();
     std::vector<PhysicsObject> GetObjects();
@@ -86,6 +88,7 @@ class GameTrack
     float getGravityModifier();
 
     bool inTunnel(BoundingBox shipBox);
+    bool finished(BoundingBox shipBox);
 
   private:
     btTransform worldTransform;
@@ -94,6 +97,7 @@ class GameTrack
     std::vector<PhysicsObject> trackObjects;
 
     std::vector<BoundingBox> tunnels;
+    BoundingBox finishBox;
 
     std::string name;
     std::string skyboxFilename;

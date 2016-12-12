@@ -82,6 +82,8 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   explosion = false;
   expl_slr = 0.01;
 
+  loadingNextLevel = false;
+
   refreshConsole();
 
   return true;
@@ -123,6 +125,7 @@ bool Graphics::LoadConfig( char *configFile )
     else if(label == "Track")
     {
       json jsonObjLevels = objectConfig["levels"];
+      levels = objectConfig["levels"];
       if (jsonObjLevels.size() == 0)
       { 
         printf("No level to load.\n");
@@ -192,6 +195,25 @@ bool Graphics::LoadConfig( char *configFile )
   return true;
 }
 
+void Graphics::loadNextLevel()
+{
+  track->removeFromWorld(&world);
+  delete track;
+
+  track = new GameTrack(
+    btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
+  );
+
+  json currentLevel = levels[1];
+
+  if (!track->InitializeFromJson( currentLevel )) {
+    printf("GameTrack failed to initialize\n");
+  }
+
+  track->addToWorld(&world);
+  resetShip();
+  loadingNextLevel = false;
+}
 
 bool Graphics::SetShader()
 {
@@ -273,85 +295,13 @@ bool Graphics::SetShader()
   return true;
 }
 
-void Graphics::SetPerFragLighting()
-{
-  perFragmentLighting = true;
-  refreshConsole();
-}
-
-void Graphics::SetPerVertLighting()
-{
-  perFragmentLighting = false;
-  refreshConsole();
-}
-
-void Graphics::SetAmbientScalar(float a_slr)
-{
-  if (a_slr < 0.0)
-    amb_Scalar = 0.0;
-  else if (a_slr > 2.0)
-    amb_Scalar = 2.0;
-  else
-    amb_Scalar = a_slr;
-  refreshConsole();
-}
-
-void Graphics::SetDiffuseScalar(float d_slr)
-{
-  if (d_slr < 0.0)
-    diff_Scalar = 0.0;
-  else if (d_slr > 3.0)
-    diff_Scalar = 3.0;
-  else
-    diff_Scalar = d_slr;
-  refreshConsole();
-}
-
-void Graphics::SetSpecularScalar(float s_slr)
-{
-  spec_Scalar = s_slr;
-  if (s_slr < 0.0)
-    spec_Scalar = 0.0;
-  else if (s_slr > 2.0)
-    spec_Scalar = 2.0;
-  else
-    spec_Scalar = s_slr;
-  refreshConsole();
-}
-
-void Graphics::SetSpotLightAngle(int angle)
-{
-  if (angle < 0)
-    spotLightAngle = 0;
-  else if (angle > 90)
-    spotLightAngle = 12;
-  else
-    spotLightAngle = angle;
-  refreshConsole();
-}
-
-float Graphics::getAmbientScalar()
-{
-  return amb_Scalar;
-}
-
-float Graphics::getDiffuseScalar()
-{
-  return diff_Scalar;
-}
-
-float Graphics::getSpecularScalar()
-{
-  return spec_Scalar;
-}
-
-int Graphics::getSpotLightAngle()
-{
-  return spotLightAngle;
-}
-
 void Graphics::Update(unsigned int dt, Input *m_input)
 {
+  if (loadingNextLevel) {
+    loadNextLevel();
+    return;
+  }
+
   // Handle input
   HandleInput(m_input);
 
@@ -403,7 +353,6 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
   if (obstacleHitTest)
   {
-    printf("Hit an obstacle at speed: %f\n", ship->GetRigidBody()->getLinearVelocity().getZ());
     if(ship->GetRigidBody()->getLinearVelocity().getZ() < -40)
     {
       
@@ -416,8 +365,7 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       
     }
   }
-
-    
+  
   if(ship->GetRigidBody()->getCenterOfMassPosition().getY() < -40 )
   {
     --lives;
@@ -434,6 +382,14 @@ void Graphics::Update(unsigned int dt, Input *m_input)
     shipPosition,
     glm::vec3(6.0, 4.2, 14.0) // Ship size
   );
+
+  if (track->finished(shipBox) )
+  {
+    printf("Level complete!\n");
+    loadingNextLevel = true;
+    return;
+  }
+
   bool inTunnelBool = track->inTunnel(shipBox);
   if (inTunnelBool || explosion) {
     m_camera->SetPosition(glm::vec3(
@@ -473,6 +429,8 @@ void Graphics::Update(unsigned int dt, Input *m_input)
 
 void Graphics::HandleInput(Input *m_input)
 {
+  if (loadingNextLevel) return;
+
   // NOTE!!! This is just placeholder code,
   //  should be replaced by flags for movement, like pinship flippers
 
@@ -519,6 +477,7 @@ void Graphics::HandleInput(Input *m_input)
 
 void Graphics::refreshConsole()
 {
+  return;
   clear();
   printf("\n=========== Sky Roads ===========\n");
   printf("  Speed: ");
@@ -563,9 +522,12 @@ void Graphics::resetShip()
 
 void Graphics::Render()
 {
+  if (loadingNextLevel) return;
+
   //clear the screen
   glClearColor(0.0, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
   // Start the correct program
   m_shader->Enable();
@@ -709,6 +671,84 @@ void Graphics::Render()
     string val = ErrorString( error );
     std::cout<< "Error initializing OpenGL! " << error << ", " << val << std::endl;
   }
+}
+
+
+void Graphics::SetPerFragLighting()
+{
+  perFragmentLighting = true;
+  refreshConsole();
+}
+
+void Graphics::SetPerVertLighting()
+{
+  perFragmentLighting = false;
+  refreshConsole();
+}
+
+void Graphics::SetAmbientScalar(float a_slr)
+{
+  if (a_slr < 0.0)
+    amb_Scalar = 0.0;
+  else if (a_slr > 2.0)
+    amb_Scalar = 2.0;
+  else
+    amb_Scalar = a_slr;
+  refreshConsole();
+}
+
+void Graphics::SetDiffuseScalar(float d_slr)
+{
+  if (d_slr < 0.0)
+    diff_Scalar = 0.0;
+  else if (d_slr > 3.0)
+    diff_Scalar = 3.0;
+  else
+    diff_Scalar = d_slr;
+  refreshConsole();
+}
+
+void Graphics::SetSpecularScalar(float s_slr)
+{
+  spec_Scalar = s_slr;
+  if (s_slr < 0.0)
+    spec_Scalar = 0.0;
+  else if (s_slr > 2.0)
+    spec_Scalar = 2.0;
+  else
+    spec_Scalar = s_slr;
+  refreshConsole();
+}
+
+void Graphics::SetSpotLightAngle(int angle)
+{
+  if (angle < 0)
+    spotLightAngle = 0;
+  else if (angle > 90)
+    spotLightAngle = 12;
+  else
+    spotLightAngle = angle;
+  refreshConsole();
+}
+
+float Graphics::getAmbientScalar()
+{
+  return amb_Scalar;
+}
+
+float Graphics::getDiffuseScalar()
+{
+  return diff_Scalar;
+}
+
+float Graphics::getSpecularScalar()
+{
+  return spec_Scalar;
+}
+
+int Graphics::getSpotLightAngle()
+{
+  return spotLightAngle;
 }
 
 std::string Graphics::ErrorString(GLenum error)
