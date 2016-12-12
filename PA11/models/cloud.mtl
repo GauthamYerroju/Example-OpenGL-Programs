@@ -8,7 +8,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd boston-university-red-solid-color.jpg
+map_Kd 4638.jpg
 
 newmtl None_boston-university-red-solid-color.jpg.001
 Ns 0
@@ -17,4 +17,4 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd boston-university-red-solid-color.jpg
+map_Kd 27372627-blaze-fire-flame-texture-background-Stock-Photo.jpg

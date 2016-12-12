@@ -32,8 +32,6 @@ bool Graphics::Initialize(int width, int height, char *configFile)
     }
   #endif
 
-  lives = 3;
-
   // For OpenGL 3
   GLuint vao;
   glGenVertexArrays(1, &vao);
@@ -79,7 +77,9 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   spotLightAngle = 10;
 
   score = 0;
+  lives = 3;
   jumping = false;
+  currentLevelIndex = 0;
   explosion = false;
   expl_slr = 0.01;
 
@@ -126,7 +126,7 @@ bool Graphics::LoadConfig( char *configFile )
       json levels = objectConfig["levels"];
       if (levels.size() == 0)
       { 
-        printf("No level to laod.\n");
+        printf("No level to load.\n");
         return false;
       }
 
@@ -134,7 +134,7 @@ bool Graphics::LoadConfig( char *configFile )
         btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
       );
 
-      if (!track->InitializeFromJson(levels[0])) {
+      if (!track->InitializeFromJson(levels[currentLevelIndex])) {
         printf("GameTrack failed to initialize\n");
       }
 
@@ -171,7 +171,7 @@ bool Graphics::LoadConfig( char *configFile )
       modelFile = objectConfig["modelFile"];
       skyBox = new Object(modelFile.c_str());
 
-      skyBox->Set_Scaler(3000);
+      skyBox->Set_Scaler(1000);
       skyBox->Update();
     }
     else if(label == "Cloud")
@@ -397,7 +397,6 @@ void Graphics::Update(unsigned int dt, Input *m_input)
       explosion = false;
       resetShip();
     }
-    
   }
 
   if (obstacleHitTest)
@@ -493,7 +492,6 @@ void Graphics::HandleInput(Input *m_input)
   {
     if (shipVelocity.z() > -100.0)
       ship->GetRigidBody()->applyCentralForce(btVector3(0, 0, -100));
-      //ship->GetRigidBody()->applyCentralForce(btVector3(shipVelocity.x(), shipVelocity.y(), -50));
   }
   if (m_input->KeyPressed(SDLK_DOWN))
     ship->GetRigidBody()->applyDamping(0.1);
