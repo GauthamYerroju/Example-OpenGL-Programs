@@ -79,7 +79,6 @@ bool Graphics::Initialize(int width, int height, char *configFile)
   score = 0;
   lives = 3;
   jumping = false;
-  currentLevelIndex = 0;
   explosion = false;
   expl_slr = 0.01;
 
@@ -123,25 +122,20 @@ bool Graphics::LoadConfig( char *configFile )
     }
     else if(label == "Track")
     {
-      json lvls = objectConfig["levels"];
-      if (lvls.size() == 0)
+      json jsonObjLevels = objectConfig["levels"];
+      if (jsonObjLevels.size() == 0)
       { 
         printf("No level to load.\n");
         return false;
-      }
-
-      for( auto& lvl : lvls )
-      {
-        levels.push_back(lvl);
       }
 
       track = new GameTrack(
         btTransform( btQuaternion(0, 0, 0, 1), btVector3(0.0, 0.0, 0.0) ) // World tranform
       );
 
-      json lvl = levels[currentLevelIndex];
+      json currentLevel = jsonObjLevels[0];
 
-      if (!track->InitializeFromJson(lvl)) {
+      if (!track->InitializeFromJson( currentLevel )) {
         printf("GameTrack failed to initialize\n");
       }
 

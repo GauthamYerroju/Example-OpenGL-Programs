@@ -116,9 +116,6 @@ class Graphics
     bool explosion;
     float expl_slr;
 
-    int currentLevelIndex;
-    std::vector<json> levels;
-
     std::string perVert_vShaderFile;
     std::string perVert_fShaderFile;
     std::string perFrag_vShaderFile;
