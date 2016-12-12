@@ -45,7 +45,7 @@ void PhysicsWorld::Initialize()
 	dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfig);
 
 	// Set the gravity
-	setGravity( glm::vec3(0.0, -9.81 * 5.0, 0.0) );
+	setGravity( glm::vec3(0.0, -9.81 * 10.0, 0.0) );
 }
 
 void PhysicsWorld::AddRigidBody( btRigidBody *rBody )

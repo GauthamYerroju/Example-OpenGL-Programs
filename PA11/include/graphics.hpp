@@ -72,6 +72,7 @@ class Graphics
     btCollisionShape                      *shipBottom;
     btCollisionShape                      *shipTop;
     Object                                *skyBox;
+    Object                                *cloud;
     PhysicsWorld                          world;
 
     struct CollisionCallback : public btCollisionWorld::ContactResultCallback
@@ -112,6 +113,8 @@ class Graphics
     int score;
     int lives;
     bool jumping;
+    bool explosion;
+    float expl_slr;
 
     int currentLevelIndex;
 
