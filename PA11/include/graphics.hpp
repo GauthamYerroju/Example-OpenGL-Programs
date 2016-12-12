@@ -63,7 +63,7 @@ class Graphics
     float diff_Scalar;
     float spec_Scalar;
 
-    void printToConsole();
+    void refreshConsole();
     void resetShip();
 
     GameTrack                             *track;
