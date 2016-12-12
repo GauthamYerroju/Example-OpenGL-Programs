@@ -378,50 +378,48 @@ void Graphics::Update(unsigned int dt, Input *m_input)
     printf("Hit an obstacle at speed: %f\n", ship->GetRigidBody()->getLinearVelocity().getZ());
     resetShip();
   }
-    
-  // callback2 = new BumperContactResultCallback(&bumperHit2);
-  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper2->GetRigidBody(), *callback2);
-  // callback3 = new BumperContactResultCallback(&bumperHit3);
-  // world.GetWorld()->contactPairTest(ship->GetRigidBody(), oBumper3->GetRigidBody(), *callback3);
+
+  glm::vec3 shipPosition(
+    ship->GetRigidBody()->getCenterOfMassPosition().getX(),
+    ship->GetRigidBody()->getCenterOfMassPosition().getY(),
+    ship->GetRigidBody()->getCenterOfMassPosition().getZ()
+  );
 
   BoundingBox shipBox(
-    // Position
-    glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
-    ),
-    // Size
-    glm::vec3(6.0, 4.2, 14.0)
+    shipPosition,
+    glm::vec3(6.0, 4.2, 14.0) // Ship size
   );
   bool inTunnelBool = track->inTunnel(shipBox);
   if (inTunnelBool) {
     m_camera->SetPosition(glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY() + 2.0,
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 2.75
+      shipPosition.x,
+      shipPosition.y + 2.0,
+      shipPosition.z + 2.75
     ), true);
 
     m_camera->SetFocusPoint(glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ() - 10.0
+      shipPosition.x,
+      shipPosition.y,
+      shipPosition.z - 10.0
     ), true);
   }
   else
   {
     m_camera->SetPosition(glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY() + 16.0,
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ() + 40.0
+      shipPosition.x,
+      shipPosition.y + 16.0,
+      shipPosition.z + 40.0
     ), true);
 
     m_camera->SetFocusPoint(glm::vec3(
-      ship->GetRigidBody()->getCenterOfMassPosition().getX(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getY(),
-      ship->GetRigidBody()->getCenterOfMassPosition().getZ()
+      shipPosition.x,
+      shipPosition.y,
+      shipPosition.z
     ), true);
   }
+
+  skyBox->Set_TranslationVec(shipPosition);
+  skyBox->Update();
 
   m_camera->Update(zoom);
 }
