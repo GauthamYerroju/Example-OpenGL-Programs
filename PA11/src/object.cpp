@@ -181,8 +181,15 @@ bool Object::Model_Loader(const char *filePath)
   return true;
 }
 
+std::map<const char*, GLuint> Object::textureIdMap; // Initialize the static variable
+
 bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
 {
+  if (textureIdMap.find(filePath) != textureIdMap.end())
+  {
+    printf("Using cached texture for: %s\n", filePath);
+    return true;
+  }
   GLuint textureID;
 
   Magick::Blob m_Blob;
@@ -203,6 +210,8 @@ bool Object::Texture_Loader(const char *filePath, Mesh *mesh )
     glGenerateMipmap(GL_TEXTURE_2D);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    textureIdMap[filePath] = textureID;
 
     mesh->textures.push_back(textureID);
   }

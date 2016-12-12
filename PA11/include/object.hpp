@@ -46,6 +46,8 @@ class Object
     float scaler;
 
     std::vector<Mesh> meshes;
+
+    static std::map<const char*, GLuint> textureIdMap;
 };
 
 #endif /* OBJECT_H */
